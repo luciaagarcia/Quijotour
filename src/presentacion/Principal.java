@@ -11,6 +11,8 @@ import java.awt.Insets;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
+import javax.swing.UIManager;
+
 import java.awt.Color;
 import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
@@ -28,6 +30,8 @@ public class Principal {
 	private JPanel pnlPrincipal;
 	private JPanel pnlRutas;
 	private JPanel pnlGuias;
+	private JPanel pnlGrupoTuristas;
+	private JPanel pnlHistorial;
 
 
 	private JButton btnPerfil;
@@ -46,6 +50,7 @@ public class Principal {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
 					Principal window = new Principal();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
@@ -115,6 +120,7 @@ public class Principal {
 		pnlMenu.add(btnRutas, gbc_btnRutas);
 		
 		btnHistorial = new JButton("Historial");
+		btnHistorial.addActionListener(new BtnHistorialActionListener());
 		GridBagConstraints gbc_btnHistorial = new GridBagConstraints();
 		gbc_btnHistorial.insets = new Insets(0, 0, 5, 0);
 		gbc_btnHistorial.gridx = 0;
@@ -122,6 +128,7 @@ public class Principal {
 		pnlMenu.add(btnHistorial, gbc_btnHistorial);
 		
 		btnTuristas = new JButton("Turistas");
+		btnTuristas.addActionListener(new BtnTuristasActionListener());
 		GridBagConstraints gbc_btnTuristas = new GridBagConstraints();
 		gbc_btnTuristas.insets = new Insets(0, 0, 5, 0);
 		gbc_btnTuristas.gridx = 0;
@@ -169,8 +176,12 @@ public class Principal {
 		
 		pnlRutas = new Rutas();
 		pnlGuias = new Guias();
+		pnlHistorial = new Historial();
+		pnlGrupoTuristas = new GrupoTuristas();
 		pnlPrincipal.add(pnlRutas, "Rutas");
 		pnlPrincipal.add(pnlGuias, "Guias");
+		pnlPrincipal.add(pnlGrupoTuristas, "Grupo Turistas");
+		pnlPrincipal.add(pnlHistorial, "Historial");
 		
 	}
 	private class BtnSalirActionListener implements ActionListener {
@@ -187,6 +198,18 @@ public class Principal {
 	private class BtnGuiasActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			((CardLayout) pnlPrincipal.getLayout()).show(pnlPrincipal, "Guias");
+		}
+	}
+	private class BtnTuristasActionListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			((CardLayout) pnlPrincipal.getLayout()).show(pnlPrincipal, "Grupo Turistas");
+
+		}
+	}
+	private class BtnHistorialActionListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			((CardLayout) pnlPrincipal.getLayout()).show(pnlPrincipal, "Historial");
+
 		}
 	}
 }
