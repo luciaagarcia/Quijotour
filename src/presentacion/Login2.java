@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import javax.swing.JTextField;
+import javax.swing.JButton;
 
 public class Login2 {
 
@@ -25,6 +26,7 @@ public class Login2 {
 	private JLabel lblUsuario;
 	private JLabel lblContrasea;
 	private JLabel lblIcono;
+	private JButton btnEntrar;
 
 	/**
 	 * Launch the application.
@@ -108,6 +110,12 @@ public class Login2 {
 		gbc_textField.gridy = 4;
 		panel.add(textField, gbc_textField);
 		textField.setColumns(10);
+		
+		btnEntrar = new JButton("Entrar");
+		GridBagConstraints gbc_btnEntrar = new GridBagConstraints();
+		gbc_btnEntrar.gridx = 1;
+		gbc_btnEntrar.gridy = 5;
+		panel.add(btnEntrar, gbc_btnEntrar);
 		
 		panel_1 = new JPanel();
 		frame.getContentPane().add(panel_1, BorderLayout.EAST);
