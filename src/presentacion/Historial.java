@@ -44,10 +44,10 @@ public class Historial extends JPanel {
 	 */
 	public Historial() {
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[]{33, 0, 0, 0, 27, 0};
-		gridBagLayout.rowHeights = new int[]{33, 430, 275, 97, 36, 0};
-		gridBagLayout.columnWeights = new double[]{0.0, 1.0, 1.0, 1.0, 0.0, Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{0.0, 1.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
+		gridBagLayout.columnWidths = new int[]{33, 500, 500, 700, 10, 0};
+		gridBagLayout.rowHeights = new int[]{10, 430, 300, 200, 10, 0};
+		gridBagLayout.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gridBagLayout.rowWeights = new double[]{0.0, 1.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		setLayout(gridBagLayout);
 		
 		scrollPane = new JScrollPane();
@@ -70,6 +70,38 @@ public class Historial extends JPanel {
 				{null, null, null, null},
 				{null, null, null, null},
 				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
 			},
 			new String[] {
 				"New column", "New column", "New column", "New column"
@@ -80,6 +112,7 @@ public class Historial extends JPanel {
 		
 		
 		panel_Incidencias = new JPanel();
+		panel_Incidencias.setAutoscrolls(true);
 		panel_Incidencias.setBorder(new TitledBorder(null, "Incidencias", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		GridBagConstraints gbc_panel_Incidencias = new GridBagConstraints();
 		gbc_panel_Incidencias.insets = new Insets(0, 0, 5, 5);

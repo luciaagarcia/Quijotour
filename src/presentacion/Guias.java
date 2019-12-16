@@ -28,6 +28,8 @@ import java.awt.Insets;
 import javax.swing.ImageIcon;
 import java.awt.Font;
 import javax.swing.border.TitledBorder;
+import java.awt.Component;
+import java.awt.GridLayout;
 
 public class Guias extends JPanel {
 	private JPanel pnlListaGuias;
@@ -36,11 +38,6 @@ public class Guias extends JPanel {
 	private JPanel panel_listaguias;
 	private JButton btnGuia;
 	private JButton btnGuia_1;
-	private JButton btnNewButton;
-	private JButton btnNewButton_1;
-	private JButton btnNewButton_2;
-	private JButton btnNewButton_3;
-	private JButton btnNewButton_4;
 	private JPanel panel_botonesgenerales;
 	private JButton btnAadirGuia;
 	private JButton btnEliminarGuia;
@@ -64,19 +61,23 @@ public class Guias extends JPanel {
 	 * Create the panel.
 	 */
 	public Guias() {
+		setOpaque(false);
 		setAutoscrolls(true);
 		setLayout(new BorderLayout(0, 0));
 		
 		pnlListaGuias = new JPanel();
+		pnlListaGuias.setOpaque(false);
 		add(pnlListaGuias, BorderLayout.WEST);
 		
 		scrollPane = new JScrollPane();
+		scrollPane.setOpaque(false);
 		scrollPane.getVerticalScrollBar().setUnitIncrement(16);
 		pnlListaGuias.setLayout(new BorderLayout(0, 0));
 		scrollPane.setSize(new Dimension(pnlListaGuias.getSize()));
 		pnlListaGuias.add(scrollPane);
 		
 		panel_listaguias = new JPanel();
+		panel_listaguias.setOpaque(false);
 		panel_listaguias.setAutoscrolls(true);
 		scrollPane.setViewportView(panel_listaguias);
 		panel_listaguias.setLayout(new BoxLayout(panel_listaguias, BoxLayout.Y_AXIS));
@@ -87,37 +88,27 @@ public class Guias extends JPanel {
 		btnGuia_1 = new JButton("Guia 2");
 		panel_listaguias.add(btnGuia_1);
 		
-		btnNewButton = new JButton("New button");
-		panel_listaguias.add(btnNewButton);
-		
-		btnNewButton_1 = new JButton("New button");
-		panel_listaguias.add(btnNewButton_1);
-		
-		btnNewButton_2 = new JButton("New button");
-		panel_listaguias.add(btnNewButton_2);
-		
-		btnNewButton_3 = new JButton("New button");
-		panel_listaguias.add(btnNewButton_3);
-		
-		btnNewButton_4 = new JButton("New button");
-		panel_listaguias.add(btnNewButton_4);
-		
 		panel_botonesgenerales = new JPanel();
-		pnlListaGuias.add(panel_botonesgenerales, BorderLayout.SOUTH);
+		panel_botonesgenerales.setOpaque(false);
+		pnlListaGuias.add(panel_botonesgenerales, BorderLayout.NORTH);
 		panel_botonesgenerales.setLayout(new BoxLayout(panel_botonesgenerales, BoxLayout.Y_AXIS));
 		
 		btnAadirGuia = new JButton("Añadir guia");
+		btnAadirGuia.setAlignmentX(Component.CENTER_ALIGNMENT);
 		panel_botonesgenerales.add(btnAadirGuia);
 		
 		btnEliminarGuia = new JButton("Eliminar guia");
+		btnEliminarGuia.setAlignmentX(Component.CENTER_ALIGNMENT);
 		panel_botonesgenerales.add(btnEliminarGuia);
 		 
 		panel_principal = new JPanel();
+		panel_principal.setOpaque(false);
 		panel_principal.setBounds(new Rectangle(0, 10, 0, 0));
 		add(panel_principal, BorderLayout.CENTER);
 		panel_principal.setLayout(new BorderLayout(0, 0));
 		
 		panel_informacion = new JPanel();
+		panel_informacion.setOpaque(false);
 		panel_principal.add(panel_informacion, BorderLayout.NORTH);
 		GridBagLayout gbl_panel_informacion = new GridBagLayout();
 		gbl_panel_informacion.columnWidths = new int[]{0, 0, 0, 0, 107, 36, 139, 35, 0};
@@ -172,14 +163,16 @@ public class Guias extends JPanel {
 		panel_informacion.add(lblPrecio, gbc_lblPrecio);
 		
 		btnCambiarFoto = new JButton("Cambiar foto");
+		btnCambiarFoto.setIcon(new ImageIcon(Guias.class.getResource("/res/icons8-foto-24.png")));
 		GridBagConstraints gbc_btnCambiarFoto = new GridBagConstraints();
-		gbc_btnCambiarFoto.gridwidth = 2;
+		gbc_btnCambiarFoto.gridwidth = 3;
 		gbc_btnCambiarFoto.insets = new Insets(0, 0, 5, 5);
-		gbc_btnCambiarFoto.gridx = 1;
+		gbc_btnCambiarFoto.gridx = 0;
 		gbc_btnCambiarFoto.gridy = 7;
 		panel_informacion.add(btnCambiarFoto, gbc_btnCambiarFoto);
 		
 		btnModificarDatos = new JButton("Modificar datos");
+		btnModificarDatos.setIcon(new ImageIcon(Guias.class.getResource("/res/icons8-editar-24.png")));
 		GridBagConstraints gbc_btnModificarDatos = new GridBagConstraints();
 		gbc_btnModificarDatos.insets = new Insets(0, 0, 5, 5);
 		gbc_btnModificarDatos.gridx = 4;
@@ -187,6 +180,7 @@ public class Guias extends JPanel {
 		panel_informacion.add(btnModificarDatos, gbc_btnModificarDatos);
 		
 		btnModificarCalendario = new JButton("Modificar calendario");
+		btnModificarCalendario.setIcon(new ImageIcon(Guias.class.getResource("/res/icons8-calendario-24.png")));
 		GridBagConstraints gbc_btnModificarCalendario = new GridBagConstraints();
 		gbc_btnModificarCalendario.insets = new Insets(0, 0, 5, 5);
 		gbc_btnModificarCalendario.gridx = 6;
@@ -194,11 +188,22 @@ public class Guias extends JPanel {
 		panel_informacion.add(btnModificarCalendario, gbc_btnModificarCalendario);
 		
 		panel_horario = new JPanel();
+		panel_horario.setOpaque(false);
 		panel_principal.add(panel_horario, BorderLayout.CENTER);
-		panel_horario.setLayout(new BorderLayout(0, 0));
+		GridBagLayout gbl_panel_horario = new GridBagLayout();
+		gbl_panel_horario.columnWidths = new int[]{21, 1265, 32, 0};
+		gbl_panel_horario.rowHeights = new int[]{37, 430, 0};
+		gbl_panel_horario.columnWeights = new double[]{0.0, 0.0, 1.0, Double.MIN_VALUE};
+		gbl_panel_horario.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+		panel_horario.setLayout(gbl_panel_horario);
 		
 		scrollPane_1 = new JScrollPane();
-		panel_horario.add(scrollPane_1, BorderLayout.CENTER);
+		GridBagConstraints gbc_scrollPane_1 = new GridBagConstraints();
+		gbc_scrollPane_1.insets = new Insets(0, 0, 0, 5);
+		gbc_scrollPane_1.fill = GridBagConstraints.BOTH;
+		gbc_scrollPane_1.gridx = 1;
+		gbc_scrollPane_1.gridy = 1;
+		panel_horario.add(scrollPane_1, gbc_scrollPane_1);
 		
 		table = new JTable();
 		table.setRowHeight(50);
@@ -219,14 +224,17 @@ public class Guias extends JPanel {
 			}
 		));
 		scrollPane_1.setViewportView(table);
+		TableColumnModel columnModel = table.getColumnModel();
 		
 		panel_historial = new JPanel();
+		panel_historial.setOpaque(false);
 		panel_historial.setPreferredSize(new Dimension(300, 300));
 		panel_historial.setBorder(new TitledBorder(null, "Historial de rutas", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel_principal.add(panel_historial, BorderLayout.SOUTH);
 		panel_historial.setLayout(new BorderLayout(0, 0));
 		
 		scrollPane_2 = new JScrollPane();
+		scrollPane_2.setOpaque(false);
 		panel_historial.add(scrollPane_2, BorderLayout.CENTER);
 		
 		table_1 = new JTable();
@@ -236,12 +244,47 @@ public class Guias extends JPanel {
 				{null, null, null, null},
 				{null, null, null, null},
 				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
 			},
 			new String[] {
-				"Nombre ruta", "Grupo turista", "Precio(€)", "Duración"
+				"Nombre ruta", "Grupo turista", "Precio(\u20AC)", "Duraci\u00F3n"
 			}
 		));
-		TableColumnModel columnModel = table.getColumnModel();
 	    columnModel.getColumn(0).setPreferredWidth(50);
 	    columnModel.getColumn(1).setPreferredWidth(200);
 	    columnModel.getColumn(2).setPreferredWidth(200);
