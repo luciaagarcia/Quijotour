@@ -5,6 +5,8 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import java.awt.CardLayout;
 import java.awt.GridBagLayout;
+import java.awt.Image;
+
 import javax.swing.JPanel;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -14,6 +16,8 @@ import javax.swing.JTextArea;
 import javax.swing.UIManager;
 
 import java.awt.Color;
+
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -21,6 +25,8 @@ import java.awt.Window.Type;
 import java.awt.Dialog.ModalExclusionType;
 import java.awt.Frame;
 import java.awt.Toolkit;
+import javax.swing.border.BevelBorder;
+import javax.swing.JSeparator;
 
 public class Principal {
 
@@ -72,6 +78,7 @@ public class Principal {
 	 */
 	private void initialize() {
 		frame = new JFrame();
+		frame.setBackground(new Color(45,51,74));
 		frame.setResizable(false);
 		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(Principal.class.getResource("/presentacion/recursos/pngocean.com(2).png")));
 		frame.setUndecorated(true);
@@ -87,7 +94,8 @@ public class Principal {
 		frame.getContentPane().setLayout(gridBagLayout);
 		
 		pnlMenu = new JPanel();
-		pnlMenu.setBackground(Color.WHITE);
+		pnlMenu.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		pnlMenu.setBackground(new Color(45,51,74));
 		GridBagConstraints gbc_pnlMenu = new GridBagConstraints();
 		gbc_pnlMenu.insets = new Insets(0, 0, 0, 5);
 		gbc_pnlMenu.fill = GridBagConstraints.BOTH;
@@ -96,76 +104,123 @@ public class Principal {
 		frame.getContentPane().add(pnlMenu, gbc_pnlMenu);
 		GridBagLayout gbl_pnlMenu = new GridBagLayout();
 		gbl_pnlMenu.columnWidths = new int[]{57, 0};
-		gbl_pnlMenu.rowHeights = new int[]{0, 23, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		gbl_pnlMenu.rowHeights = new int[]{0, 90, 50, 70, 20, 70, 20, 70, 20, 70, 70, 70, 20, 70, 20, 70, 10, 0};
 		gbl_pnlMenu.columnWeights = new double[]{0.0, Double.MIN_VALUE};
-		gbl_pnlMenu.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_pnlMenu.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		pnlMenu.setLayout(gbl_pnlMenu);
 		
-		btnPerfil = new JButton("Perfil");
+		btnPerfil = new JButton("");
+		btnPerfil.setToolTipText("Perfil");
+		btnPerfil.setContentAreaFilled(false);
+		btnPerfil.setBorderPainted(false);
+		btnPerfil.setOpaque(false);
+		ImageIcon imageIcon = new ImageIcon(new ImageIcon(Guias.class.getResource("/presentacion/recursos/pngocean.com(2).png")).getImage().getScaledInstance(100, 100, Image.SCALE_DEFAULT));
+		btnPerfil.setIcon(imageIcon);
 		GridBagConstraints gbc_btnPerfil = new GridBagConstraints();
+		gbc_btnPerfil.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnPerfil.insets = new Insets(0, 0, 5, 0);
-		gbc_btnPerfil.anchor = GridBagConstraints.NORTHWEST;
 		gbc_btnPerfil.gridx = 0;
 		gbc_btnPerfil.gridy = 1;
 		pnlMenu.add(btnPerfil, gbc_btnPerfil);
 		
 		btnRutas = new JButton("");
+		btnRutas.setBorderPainted(false);
+		btnRutas.setContentAreaFilled(false);
+		btnRutas.setOpaque(false);
 		btnRutas.addActionListener(new BtnRutasActionListener());
 		btnRutas.setToolTipText("Rutas");
-		btnRutas.setIcon(new ImageIcon(Principal.class.getResource("/presentacion/recursos/icons8-ruta-64.png")));
+		btnRutas.setIcon(new ImageIcon(Principal.class.getResource("/res/icons8-ruta-64.png")));
 		GridBagConstraints gbc_btnRutas = new GridBagConstraints();
+		gbc_btnRutas.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnRutas.insets = new Insets(0, 0, 5, 0);
 		gbc_btnRutas.gridx = 0;
 		gbc_btnRutas.gridy = 3;
 		pnlMenu.add(btnRutas, gbc_btnRutas);
 		
-		btnHistorial = new JButton("Historial");
+		btnHistorial = new JButton("");
+		btnHistorial.setOpaque(false);
+		btnHistorial.setContentAreaFilled(false);
+		btnHistorial.setBorderPainted(false);
+		btnHistorial.setToolTipText("Historial");
+		btnHistorial.setIcon(new ImageIcon(Principal.class.getResource("/res/icons8-historial-de-pedidos-64.png")));
 		btnHistorial.addActionListener(new BtnHistorialActionListener());
 		GridBagConstraints gbc_btnHistorial = new GridBagConstraints();
+		gbc_btnHistorial.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnHistorial.insets = new Insets(0, 0, 5, 0);
 		gbc_btnHistorial.gridx = 0;
 		gbc_btnHistorial.gridy = 5;
 		pnlMenu.add(btnHistorial, gbc_btnHistorial);
 		
-		btnTuristas = new JButton("Turistas");
+		btnTuristas = new JButton("");
+		btnTuristas.setIcon(new ImageIcon(Principal.class.getResource("/res/icons8-grupo-de-usuarios-hombre-hombre-64.png")));
+		btnTuristas.setToolTipText("Turistas");
+		btnTuristas.setContentAreaFilled(false);
+		btnTuristas.setBorderPainted(false);
+		btnTuristas.setOpaque(false);
 		btnTuristas.addActionListener(new BtnTuristasActionListener());
 		GridBagConstraints gbc_btnTuristas = new GridBagConstraints();
+		gbc_btnTuristas.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnTuristas.insets = new Insets(0, 0, 5, 0);
 		gbc_btnTuristas.gridx = 0;
 		gbc_btnTuristas.gridy = 7;
 		pnlMenu.add(btnTuristas, gbc_btnTuristas);
 		
-		btnGuias = new JButton("Guias");
+		btnGuias = new JButton("");
+		btnGuias.setContentAreaFilled(false);
+		btnGuias.setBorderPainted(false);
+		btnGuias.setOpaque(false);
+		btnGuias.setIcon(new ImageIcon(Principal.class.getResource("/res/icons8-tourist-guide-1-64.png")));
 		btnGuias.addActionListener(new BtnGuiasActionListener());
 		btnGuias.setToolTipText("Guias");
 		GridBagConstraints gbc_btnGuias = new GridBagConstraints();
+		gbc_btnGuias.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnGuias.insets = new Insets(0, 0, 5, 0);
 		gbc_btnGuias.gridx = 0;
 		gbc_btnGuias.gridy = 9;
 		pnlMenu.add(btnGuias, gbc_btnGuias);
 		
-		btnAjustes = new JButton("Ajustes");
+		btnAjustes = new JButton("");
+		btnAjustes.setContentAreaFilled(false);
+		btnAjustes.setBorderPainted(false);
+		btnAjustes.setOpaque(false);
+		btnAjustes.setIcon(new ImageIcon(Principal.class.getResource("/res/icons8-ajustes-64.png")));
+		btnAjustes.setToolTipText("Ajustes");
 		GridBagConstraints gbc_btnAjustes = new GridBagConstraints();
+		gbc_btnAjustes.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnAjustes.insets = new Insets(0, 0, 5, 0);
 		gbc_btnAjustes.gridx = 0;
 		gbc_btnAjustes.gridy = 11;
 		pnlMenu.add(btnAjustes, gbc_btnAjustes);
 		
-		btnCerrarSesion = new JButton("Cerrar sesion");
+		btnCerrarSesion = new JButton("");
+		btnCerrarSesion.setOpaque(false);
+		btnCerrarSesion.setContentAreaFilled(false);
+		btnCerrarSesion.setBorderPainted(false);
+		btnCerrarSesion.setIcon(new ImageIcon(Principal.class.getResource("/res/icons8-salida-de-emergencia-64 (2).png")));
+		btnCerrarSesion.setToolTipText("Cerrar sesion");
 		GridBagConstraints gbc_btnCerrarSesion = new GridBagConstraints();
+		gbc_btnCerrarSesion.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnCerrarSesion.insets = new Insets(0, 0, 5, 0);
 		gbc_btnCerrarSesion.gridx = 0;
 		gbc_btnCerrarSesion.gridy = 13;
 		pnlMenu.add(btnCerrarSesion, gbc_btnCerrarSesion);
 		
-		btnSalir = new JButton("Salir");
+		btnSalir = new JButton("");
+		btnSalir.setToolTipText("Salir");
+		btnSalir.setIcon(new ImageIcon(Principal.class.getResource("/res/icons8-botón-de-apagado-64.png")));
+		btnSalir.setBorderPainted(false);
+		btnSalir.setContentAreaFilled(false);
 		btnSalir.addActionListener(new BtnSalirActionListener());
 		GridBagConstraints gbc_btnSalir = new GridBagConstraints();
+		gbc_btnSalir.insets = new Insets(0, 0, 5, 0);
+		gbc_btnSalir.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnSalir.gridx = 0;
 		gbc_btnSalir.gridy = 15;
 		pnlMenu.add(btnSalir, gbc_btnSalir);
 		
 		pnlPrincipal = new JPanel();
+		pnlPrincipal.setBackground(new Color(45,51,74));
+
 		GridBagConstraints gbc_pnlPrincipal = new GridBagConstraints();
 		gbc_pnlPrincipal.fill = GridBagConstraints.BOTH;
 		gbc_pnlPrincipal.gridx = 1;
@@ -176,8 +231,11 @@ public class Principal {
 		
 		pnlRutas = new Rutas();
 		pnlGuias = new Guias();
+		pnlGuias.setOpaque(false);
 		pnlHistorial = new Historial();
+		pnlHistorial.setOpaque(false);
 		pnlGrupoTuristas = new GrupoTuristas();
+		pnlGrupoTuristas.setOpaque(false);
 		pnlPrincipal.add(pnlRutas, "Rutas");
 		pnlPrincipal.add(pnlGuias, "Guias");
 		pnlPrincipal.add(pnlGrupoTuristas, "Grupo Turistas");
