@@ -14,6 +14,9 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import java.awt.Color;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Login2 {
 
@@ -27,6 +30,8 @@ public class Login2 {
 	private JLabel lblContrasea;
 	private JLabel lblIcono;
 	private JButton btnEntrar;
+	private JLabel lblLucaAlfonsoGarca;
+	private JLabel lblSergioGarcaMoraleda;
 
 	/**
 	 * Launch the application.
@@ -61,24 +66,26 @@ public class Login2 {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		panel = new JPanel();
+		panel.setBackground(new Color(45,51,74));
 		frame.getContentPane().add(panel, BorderLayout.WEST);
 		GridBagLayout gbl_panel = new GridBagLayout();
-		gbl_panel.columnWidths = new int[]{67, 0, 0};
-		gbl_panel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0};
-		gbl_panel.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
-		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel.columnWidths = new int[]{67, 0, 38, 0};
+		gbl_panel.rowHeights = new int[]{0, 70, 0, 0, 0, 0, 40, 0, 0, 0};
+		gbl_panel.columnWeights = new double[]{0.0, 1.0, 0.0, Double.MIN_VALUE};
+		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		panel.setLayout(gbl_panel);
+		ImageIcon imageIcon2 = new ImageIcon(new ImageIcon(Login2.class.getResource("/presentacion/recursos/Quijotour.png")).getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT));
 		
 		lblIcono = new JLabel();
-		ImageIcon imageIcon2 = new ImageIcon(new ImageIcon(Login2.class.getResource("/presentacion/recursos/Quijotour.png")).getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT));
 		lblIcono.setIcon(imageIcon2);
 		GridBagConstraints gbc_lblIcono = new GridBagConstraints();
 		gbc_lblIcono.insets = new Insets(0, 0, 5, 5);
-		gbc_lblIcono.gridx = 0;
+		gbc_lblIcono.gridx = 1;
 		gbc_lblIcono.gridy = 1;
 		panel.add(lblIcono, gbc_lblIcono);
 		
 		lblUsuario = new JLabel("Usuario");
+		lblUsuario.setForeground(Color.WHITE);
 		GridBagConstraints gbc_lblUsuario = new GridBagConstraints();
 		gbc_lblUsuario.insets = new Insets(0, 0, 5, 5);
 		gbc_lblUsuario.anchor = GridBagConstraints.EAST;
@@ -88,7 +95,7 @@ public class Login2 {
 		
 		textField_1 = new JTextField();
 		GridBagConstraints gbc_textField_1 = new GridBagConstraints();
-		gbc_textField_1.insets = new Insets(0, 0, 5, 0);
+		gbc_textField_1.insets = new Insets(0, 0, 5, 5);
 		gbc_textField_1.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textField_1.gridx = 1;
 		gbc_textField_1.gridy = 3;
@@ -96,6 +103,7 @@ public class Login2 {
 		textField_1.setColumns(10);
 		
 		lblContrasea = new JLabel("Contrase\u00F1a");
+		lblContrasea.setForeground(Color.WHITE);
 		GridBagConstraints gbc_lblContrasea = new GridBagConstraints();
 		gbc_lblContrasea.insets = new Insets(0, 0, 5, 5);
 		gbc_lblContrasea.anchor = GridBagConstraints.EAST;
@@ -105,7 +113,7 @@ public class Login2 {
 		
 		textField = new JTextField();
 		GridBagConstraints gbc_textField = new GridBagConstraints();
-		gbc_textField.insets = new Insets(0, 0, 5, 0);
+		gbc_textField.insets = new Insets(0, 0, 5, 5);
 		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textField.gridx = 1;
 		gbc_textField.gridy = 4;
@@ -113,10 +121,28 @@ public class Login2 {
 		textField.setColumns(10);
 		
 		btnEntrar = new JButton("Entrar");
+		btnEntrar.addActionListener(new BtnEntrarActionListener());
 		GridBagConstraints gbc_btnEntrar = new GridBagConstraints();
+		gbc_btnEntrar.insets = new Insets(0, 0, 5, 5);
 		gbc_btnEntrar.gridx = 1;
 		gbc_btnEntrar.gridy = 5;
 		panel.add(btnEntrar, gbc_btnEntrar);
+		
+		lblLucaAlfonsoGarca = new JLabel("Luc\u00EDa Alfonso Garc\u00EDa");
+		lblLucaAlfonsoGarca.setForeground(Color.WHITE);
+		GridBagConstraints gbc_lblLucaAlfonsoGarca = new GridBagConstraints();
+		gbc_lblLucaAlfonsoGarca.insets = new Insets(0, 0, 5, 5);
+		gbc_lblLucaAlfonsoGarca.gridx = 1;
+		gbc_lblLucaAlfonsoGarca.gridy = 7;
+		panel.add(lblLucaAlfonsoGarca, gbc_lblLucaAlfonsoGarca);
+		
+		lblSergioGarcaMoraleda = new JLabel("Sergio Garc\u00EDa Moraleda");
+		lblSergioGarcaMoraleda.setForeground(Color.WHITE);
+		GridBagConstraints gbc_lblSergioGarcaMoraleda = new GridBagConstraints();
+		gbc_lblSergioGarcaMoraleda.insets = new Insets(0, 0, 0, 5);
+		gbc_lblSergioGarcaMoraleda.gridx = 1;
+		gbc_lblSergioGarcaMoraleda.gridy = 8;
+		panel.add(lblSergioGarcaMoraleda, gbc_lblSergioGarcaMoraleda);
 		
 		panel_1 = new JPanel();
 		frame.getContentPane().add(panel_1, BorderLayout.EAST);
@@ -139,4 +165,10 @@ public class Login2 {
 		panel_1.add(lblNewLabel, gbc_lblNewLabel);
 	}
 
+	private class BtnEntrarActionListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			frame.dispose();
+			Principal princi = new Principal();
+		}
+	}
 }

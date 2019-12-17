@@ -77,7 +77,7 @@ public class Rutas extends JPanel {
 		panelBotonesRuta.add(btnEnviarruta, gbc_btnEnviarruta);
 		
 		btnAadirruta = new JButton("Añadir ruta");
-		btnAadirruta.setIcon(new ImageIcon(Rutas.class.getResource("/res/icons8-añadir-24.png")));
+		btnAadirruta.setIcon(new ImageIcon(Rutas.class.getResource("/res/icons8-anadir-24.png")));
 		btnAadirruta.setAlignmentX(Component.CENTER_ALIGNMENT);
 		GridBagConstraints gbc_btnAadirruta = new GridBagConstraints();
 		gbc_btnAadirruta.fill = GridBagConstraints.BOTH;

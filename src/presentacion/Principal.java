@@ -71,6 +71,7 @@ public class Principal {
 	 */
 	public Principal() {
 		initialize();
+		frame.setVisible(true);
 	}
 
 	/**
@@ -207,7 +208,7 @@ public class Principal {
 		
 		btnSalir = new JButton("");
 		btnSalir.setToolTipText("Salir");
-		btnSalir.setIcon(new ImageIcon(Principal.class.getResource("/res/icons8-botón-de-apagado-64.png")));
+		btnSalir.setIcon(new ImageIcon(Principal.class.getResource("/res/icons8-boton-de-apagado-64.png")));
 		btnSalir.setBorderPainted(false);
 		btnSalir.setContentAreaFilled(false);
 		btnSalir.addActionListener(new BtnSalirActionListener());
