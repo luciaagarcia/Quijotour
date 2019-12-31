@@ -12,6 +12,7 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.UIManager;
 
@@ -30,15 +31,14 @@ import javax.swing.JSeparator;
 
 public class Principal {
 
-	private JFrame frame;	
-	
+	private JFrame frame;
+
 	private JPanel pnlMenu;
 	private JPanel pnlPrincipal;
 	private JPanel pnlRutas;
 	private JPanel pnlGuias;
 	private JPanel pnlGrupoTuristas;
 	private JPanel pnlHistorial;
-
 
 	private JButton btnPerfil;
 	private JButton btnRutas;
@@ -79,24 +79,26 @@ public class Principal {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBackground(new Color(45,51,74));
+		frame.getContentPane().setBackground(Color.WHITE);
+		frame.setBackground(Color.WHITE);
 		frame.setResizable(false);
-		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(Principal.class.getResource("/presentacion/recursos/pngocean.com(2).png")));
+		frame.setIconImage(Toolkit.getDefaultToolkit()
+				.getImage(Principal.class.getResource("/presentacion/recursos/pngocean.com(2).png")));
 		frame.setUndecorated(true);
 		frame.setType(Type.UTILITY);
 		frame.setExtendedState(frame.MAXIMIZED_BOTH);
 		frame.setBounds(100, 100, 1185, 824);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[]{0, 0, 0};
-		gridBagLayout.rowHeights = new int[]{0, 0};
-		gridBagLayout.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{1.0, Double.MIN_VALUE};
+		gridBagLayout.columnWidths = new int[] { 0, 0, 0 };
+		gridBagLayout.rowHeights = new int[] { 0, 0 };
+		gridBagLayout.columnWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
+		gridBagLayout.rowWeights = new double[] { 1.0, Double.MIN_VALUE };
 		frame.getContentPane().setLayout(gridBagLayout);
-		
+
 		pnlMenu = new JPanel();
-		pnlMenu.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		pnlMenu.setBackground(new Color(45,51,74));
+		pnlMenu.setBorder(null);
+		pnlMenu.setBackground(new Color(45, 51, 74));
 		GridBagConstraints gbc_pnlMenu = new GridBagConstraints();
 		gbc_pnlMenu.insets = new Insets(0, 0, 0, 5);
 		gbc_pnlMenu.fill = GridBagConstraints.BOTH;
@@ -104,18 +106,21 @@ public class Principal {
 		gbc_pnlMenu.gridy = 0;
 		frame.getContentPane().add(pnlMenu, gbc_pnlMenu);
 		GridBagLayout gbl_pnlMenu = new GridBagLayout();
-		gbl_pnlMenu.columnWidths = new int[]{57, 0};
-		gbl_pnlMenu.rowHeights = new int[]{0, 90, 50, 70, 20, 70, 20, 70, 20, 70, 70, 70, 20, 70, 20, 70, 10, 0};
-		gbl_pnlMenu.columnWeights = new double[]{0.0, Double.MIN_VALUE};
-		gbl_pnlMenu.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_pnlMenu.columnWidths = new int[] { 57, 0 };
+		gbl_pnlMenu.rowHeights = new int[] { 0, 90, 50, 70, 20, 70, 20, 70, 20, 70, 70, 70, 20, 70, 20, 70, 10, 0 };
+		gbl_pnlMenu.columnWeights = new double[] { 0.0, Double.MIN_VALUE };
+		gbl_pnlMenu.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0,
+				0.0, 0.0, 0.0, Double.MIN_VALUE };
 		pnlMenu.setLayout(gbl_pnlMenu);
-		
+
 		btnPerfil = new JButton("");
 		btnPerfil.setToolTipText("Perfil");
 		btnPerfil.setContentAreaFilled(false);
 		btnPerfil.setBorderPainted(false);
 		btnPerfil.setOpaque(false);
-		ImageIcon imageIcon = new ImageIcon(new ImageIcon(Guias.class.getResource("/presentacion/recursos/pngocean.com(2).png")).getImage().getScaledInstance(100, 100, Image.SCALE_DEFAULT));
+		ImageIcon imageIcon = new ImageIcon(
+				new ImageIcon(Guias.class.getResource("/presentacion/recursos/pngocean.com(2).png")).getImage()
+						.getScaledInstance(100, 100, Image.SCALE_DEFAULT));
 		btnPerfil.setIcon(imageIcon);
 		GridBagConstraints gbc_btnPerfil = new GridBagConstraints();
 		gbc_btnPerfil.fill = GridBagConstraints.HORIZONTAL;
@@ -123,10 +128,10 @@ public class Principal {
 		gbc_btnPerfil.gridx = 0;
 		gbc_btnPerfil.gridy = 1;
 		pnlMenu.add(btnPerfil, gbc_btnPerfil);
-		
+
 		btnRutas = new JButton("");
-		btnRutas.setBorderPainted(false);
 		btnRutas.setContentAreaFilled(false);
+		btnRutas.setBorderPainted(false);
 		btnRutas.setOpaque(false);
 		btnRutas.addActionListener(new BtnRutasActionListener());
 		btnRutas.setToolTipText("Rutas");
@@ -137,7 +142,7 @@ public class Principal {
 		gbc_btnRutas.gridx = 0;
 		gbc_btnRutas.gridy = 3;
 		pnlMenu.add(btnRutas, gbc_btnRutas);
-		
+
 		btnHistorial = new JButton("");
 		btnHistorial.setOpaque(false);
 		btnHistorial.setContentAreaFilled(false);
@@ -151,9 +156,10 @@ public class Principal {
 		gbc_btnHistorial.gridx = 0;
 		gbc_btnHistorial.gridy = 5;
 		pnlMenu.add(btnHistorial, gbc_btnHistorial);
-		
+
 		btnTuristas = new JButton("");
-		btnTuristas.setIcon(new ImageIcon(Principal.class.getResource("/res/icons8-grupo-de-usuarios-hombre-hombre-64.png")));
+		btnTuristas.setIcon(
+				new ImageIcon(Principal.class.getResource("/res/icons8-grupo-de-usuarios-hombre-hombre-64.png")));
 		btnTuristas.setToolTipText("Turistas");
 		btnTuristas.setContentAreaFilled(false);
 		btnTuristas.setBorderPainted(false);
@@ -165,7 +171,7 @@ public class Principal {
 		gbc_btnTuristas.gridx = 0;
 		gbc_btnTuristas.gridy = 7;
 		pnlMenu.add(btnTuristas, gbc_btnTuristas);
-		
+
 		btnGuias = new JButton("");
 		btnGuias.setContentAreaFilled(false);
 		btnGuias.setBorderPainted(false);
@@ -179,7 +185,7 @@ public class Principal {
 		gbc_btnGuias.gridx = 0;
 		gbc_btnGuias.gridy = 9;
 		pnlMenu.add(btnGuias, gbc_btnGuias);
-		
+
 		btnAjustes = new JButton("");
 		btnAjustes.setContentAreaFilled(false);
 		btnAjustes.setBorderPainted(false);
@@ -192,12 +198,13 @@ public class Principal {
 		gbc_btnAjustes.gridx = 0;
 		gbc_btnAjustes.gridy = 11;
 		pnlMenu.add(btnAjustes, gbc_btnAjustes);
-		
+
 		btnCerrarSesion = new JButton("");
 		btnCerrarSesion.setOpaque(false);
 		btnCerrarSesion.setContentAreaFilled(false);
 		btnCerrarSesion.setBorderPainted(false);
-		btnCerrarSesion.setIcon(new ImageIcon(Principal.class.getResource("/res/icons8-salida-de-emergencia-64 (2).png")));
+		btnCerrarSesion
+				.setIcon(new ImageIcon(Principal.class.getResource("/res/icons8-salida-de-emergencia-64 (2).png")));
 		btnCerrarSesion.setToolTipText("Cerrar sesion");
 		GridBagConstraints gbc_btnCerrarSesion = new GridBagConstraints();
 		gbc_btnCerrarSesion.fill = GridBagConstraints.HORIZONTAL;
@@ -205,7 +212,7 @@ public class Principal {
 		gbc_btnCerrarSesion.gridx = 0;
 		gbc_btnCerrarSesion.gridy = 13;
 		pnlMenu.add(btnCerrarSesion, gbc_btnCerrarSesion);
-		
+
 		btnSalir = new JButton("");
 		btnSalir.setToolTipText("Salir");
 		btnSalir.setIcon(new ImageIcon(Principal.class.getResource("/res/icons8-boton-de-apagado-64.png")));
@@ -218,9 +225,9 @@ public class Principal {
 		gbc_btnSalir.gridx = 0;
 		gbc_btnSalir.gridy = 15;
 		pnlMenu.add(btnSalir, gbc_btnSalir);
-		
+
 		pnlPrincipal = new JPanel();
-		pnlPrincipal.setBackground(new Color(45,51,74));
+		pnlPrincipal.setBackground(Color.WHITE);
 
 		GridBagConstraints gbc_pnlPrincipal = new GridBagConstraints();
 		gbc_pnlPrincipal.fill = GridBagConstraints.BOTH;
@@ -228,9 +235,9 @@ public class Principal {
 		gbc_pnlPrincipal.gridy = 0;
 		frame.getContentPane().add(pnlPrincipal, gbc_pnlPrincipal);
 		pnlPrincipal.setLayout(new CardLayout(0, 0));
-		
-		
+
 		pnlRutas = new Rutas();
+		pnlRutas.setBackground(new Color(255, 255, 255));
 		pnlGuias = new Guias();
 		pnlGuias.setOpaque(false);
 		pnlHistorial = new Historial();
@@ -241,30 +248,39 @@ public class Principal {
 		pnlPrincipal.add(pnlGuias, "Guias");
 		pnlPrincipal.add(pnlGrupoTuristas, "Grupo Turistas");
 		pnlPrincipal.add(pnlHistorial, "Historial");
-		
+
 	}
+
 	private class BtnSalirActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
-			System.exit(0);
+			//System.exit(0);
+			int resp = JOptionPane.showConfirmDialog(null, "¿Está seguro?", "Salir", JOptionPane.YES_NO_OPTION);
+			if (resp == 0) {
+				System.exit(0);
+			}
 		}
 	}
+
 	private class BtnRutasActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			((CardLayout) pnlPrincipal.getLayout()).show(pnlPrincipal, "Rutas");
-			
+
 		}
 	}
+
 	private class BtnGuiasActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			((CardLayout) pnlPrincipal.getLayout()).show(pnlPrincipal, "Guias");
 		}
 	}
+
 	private class BtnTuristasActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			((CardLayout) pnlPrincipal.getLayout()).show(pnlPrincipal, "Grupo Turistas");
 
 		}
 	}
+
 	private class BtnHistorialActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			((CardLayout) pnlPrincipal.getLayout()).show(pnlPrincipal, "Historial");

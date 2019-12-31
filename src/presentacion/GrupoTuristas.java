@@ -1,12 +1,15 @@
 package presentacion;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
 
 import javax.swing.BoxLayout;
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -15,28 +18,34 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextPane;
+import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+
+import dominio.ConstTurista;
+import persistencia.InfoTuristas;
+
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.awt.event.ActionEvent;
 import javax.swing.JSeparator;
 import java.awt.Dimension;
-
+import javax.swing.JList;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class GrupoTuristas extends JPanel {
-	private JPanel panel_izquierda;
+	private JPanel panelBotones;
 	private JScrollPane scrollPane;
 	private JPanel panel_1;
-	private JButton btnNewButton;
-	private JButton btnNewButton_1;
-	private JButton btnNewButton_2;
 	private JPanel panel_2;
 	private JButton btnAadirGrupo;
 	private JButton btnEliminarGrupo;
 	private JPanel panel_principal;
 	private JPanel panel_3;
 	private JScrollPane scrollPane_1;
-	private JTable table;
+	private JTable tableGrupoTuristas;
 	private JPanel panel_derecha;
 	private JLabel lblFoto;
 	private JButton btnCambiarFoto;
@@ -53,6 +62,10 @@ public class GrupoTuristas extends JPanel {
 	private JCheckBox chckbxIdioma;
 	private JCheckBox chckbxAlergias;
 	private JCheckBox chckbxMuseos;
+	private JList lista_grupos;
+
+	InfoTuristas infoturistas = new InfoTuristas();
+	ArrayList<ConstTurista> turistas = infoturistas.getTuristas();
 
 	/**
 	 * Create the panel.
@@ -60,32 +73,27 @@ public class GrupoTuristas extends JPanel {
 	public GrupoTuristas() {
 		setLayout(new BorderLayout(0, 0));
 
-		panel_izquierda = new JPanel();
-		panel_izquierda.setOpaque(false);
-		add(panel_izquierda, BorderLayout.WEST);
-		panel_izquierda.setLayout(new BorderLayout(0, 0));
-
-		scrollPane = new JScrollPane();
-		scrollPane.setOpaque(false);
-		panel_izquierda.add(scrollPane, BorderLayout.CENTER);
-
-		panel_1 = new JPanel();
-		panel_1.setOpaque(false);
-		scrollPane.setViewportView(panel_1);
-		panel_1.setLayout(new BoxLayout(panel_1, BoxLayout.Y_AXIS));
-
-		btnNewButton = new JButton("Turista1");
-		panel_1.add(btnNewButton);
-
-		btnNewButton_1 = new JButton("Turista 2");
-		panel_1.add(btnNewButton_1);
-
-		btnNewButton_2 = new JButton("Turista 3 jajajajjajajaaja");
-		panel_1.add(btnNewButton_2);
+		panelBotones = new JPanel();
+		panelBotones.setPreferredSize(new Dimension(200, 200));
+		panelBotones.setBorder(new LineBorder(new Color(0, 0, 0)));
+		panelBotones.setOpaque(false);
+		add(panelBotones, BorderLayout.WEST);
+		GridBagLayout gbl_panelBotones = new GridBagLayout();
+		gbl_panelBotones.columnWidths = new int[] { 126, 0 };
+		gbl_panelBotones.rowHeights = new int[] { 40, 72, 20, 777, 0 };
+		gbl_panelBotones.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
+		gbl_panelBotones.rowWeights = new double[] { 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE };
+		panelBotones.setLayout(gbl_panelBotones);
 
 		panel_2 = new JPanel();
 		panel_2.setOpaque(false);
-		panel_izquierda.add(panel_2, BorderLayout.NORTH);
+		GridBagConstraints gbc_panel_2 = new GridBagConstraints();
+		gbc_panel_2.fill = GridBagConstraints.HORIZONTAL;
+		gbc_panel_2.anchor = GridBagConstraints.NORTH;
+		gbc_panel_2.insets = new Insets(0, 0, 5, 0);
+		gbc_panel_2.gridx = 0;
+		gbc_panel_2.gridy = 1;
+		panelBotones.add(panel_2, gbc_panel_2);
 		panel_2.setLayout(new BoxLayout(panel_2, BoxLayout.Y_AXIS));
 
 		btnAadirGrupo = new JButton("Añadir grupo");
@@ -93,6 +101,38 @@ public class GrupoTuristas extends JPanel {
 
 		btnEliminarGrupo = new JButton("Eliminar grupo");
 		panel_2.add(btnEliminarGrupo);
+
+		scrollPane = new JScrollPane();
+		scrollPane.setOpaque(false);
+		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
+		gbc_scrollPane.fill = GridBagConstraints.BOTH;
+		gbc_scrollPane.gridx = 0;
+		gbc_scrollPane.gridy = 3;
+		panelBotones.add(scrollPane, gbc_scrollPane);
+
+		panel_1 = new JPanel();
+		panel_1.setOpaque(false);
+		scrollPane.setViewportView(panel_1);
+		GridBagLayout gbl_panel_1 = new GridBagLayout();
+		gbl_panel_1.columnWidths = new int[] { 0, 0 };
+		gbl_panel_1.rowHeights = new int[] { 0, 0 };
+		gbl_panel_1.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
+		gbl_panel_1.rowWeights = new double[] { 1.0, Double.MIN_VALUE };
+		panel_1.setLayout(gbl_panel_1);
+
+		DefaultListModel<String> modeloTuristas = new DefaultListModel();
+		for (int i = 0; i < turistas.size(); i++) {
+			modeloTuristas.add(i, turistas.get(i).getNombreTurista());
+		}
+		lista_grupos = new JList();
+		lista_grupos.addMouseListener(new Lista_gruposMouseListener());
+		lista_grupos.setSelectedIndex(0);
+		GridBagConstraints gbc_lista_grupos = new GridBagConstraints();
+		gbc_lista_grupos.fill = GridBagConstraints.BOTH;
+		gbc_lista_grupos.gridx = 0;
+		gbc_lista_grupos.gridy = 0;
+		lista_grupos.setModel(modeloTuristas);
+		panel_1.add(lista_grupos, gbc_lista_grupos);
 
 		panel_principal = new JPanel();
 		panel_principal.setOpaque(false);
@@ -110,56 +150,8 @@ public class GrupoTuristas extends JPanel {
 		scrollPane_1.setOpaque(false);
 		panel_3.add(scrollPane_1, BorderLayout.NORTH);
 
-		table = new JTable();
-		table.setModel(
-				new DefaultTableModel(
-			new Object[][] {
-				{"Quijotito", "De la mancha y los molinos", "35", "611223344"},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-			},
-			new String[] {
-				"Nombre", "Apellidos", "Edad", "Contacto"
-			}
-		));
-		scrollPane_1.setViewportView(table);
+		tableGrupoTuristas = new JTable();
+		scrollPane_1.setViewportView(tableGrupoTuristas);
 
 		panel_5 = new JPanel();
 		panel_5.setOpaque(false);
@@ -231,14 +223,14 @@ public class GrupoTuristas extends JPanel {
 		gbl_panel_restricciones.columnWeights = new double[] { 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		gbl_panel_restricciones.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		panel_restricciones.setLayout(gbl_panel_restricciones);
-		
-				chckbxMovilidad = new JCheckBox("Movilidad");
-				GridBagConstraints gbc_chckbxMovilidad = new GridBagConstraints();
-				gbc_chckbxMovilidad.fill = GridBagConstraints.HORIZONTAL;
-				gbc_chckbxMovilidad.insets = new Insets(0, 0, 5, 5);
-				gbc_chckbxMovilidad.gridx = 1;
-				gbc_chckbxMovilidad.gridy = 1;
-				panel_restricciones.add(chckbxMovilidad, gbc_chckbxMovilidad);
+
+		chckbxMovilidad = new JCheckBox("Movilidad");
+		GridBagConstraints gbc_chckbxMovilidad = new GridBagConstraints();
+		gbc_chckbxMovilidad.fill = GridBagConstraints.HORIZONTAL;
+		gbc_chckbxMovilidad.insets = new Insets(0, 0, 5, 5);
+		gbc_chckbxMovilidad.gridx = 1;
+		gbc_chckbxMovilidad.gridy = 1;
+		panel_restricciones.add(chckbxMovilidad, gbc_chckbxMovilidad);
 
 		chckbxIdioma = new JCheckBox("Idioma");
 		GridBagConstraints gbc_chckbxIdioma = new GridBagConstraints();
@@ -262,36 +254,57 @@ public class GrupoTuristas extends JPanel {
 		ImageIcon imageIcon = new ImageIcon(
 				new ImageIcon(Guias.class.getResource("/presentacion/recursos/pngocean.com(2).png")).getImage()
 						.getScaledInstance(200, 200, Image.SCALE_DEFAULT));
-				GridBagLayout gbl_panel_derecha = new GridBagLayout();
-				gbl_panel_derecha.columnWidths = new int[]{200, 0};
-				gbl_panel_derecha.rowHeights = new int[]{200, 33, 20, 33, 0};
-				gbl_panel_derecha.columnWeights = new double[]{0.0, Double.MIN_VALUE};
-				gbl_panel_derecha.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-				panel_derecha.setLayout(gbl_panel_derecha);
-						
-								lblFoto = new JLabel("");
-								GridBagConstraints gbc_lblFoto = new GridBagConstraints();
-								gbc_lblFoto.insets = new Insets(0, 0, 5, 0);
-								gbc_lblFoto.gridx = 0;
-								gbc_lblFoto.gridy = 0;
-								panel_derecha.add(lblFoto, gbc_lblFoto);
-								lblFoto.setIcon(imageIcon);
-										
-												btnCambiarFoto = new JButton("Cambiar foto");
-												GridBagConstraints gbc_btnCambiarFoto = new GridBagConstraints();
-												gbc_btnCambiarFoto.insets = new Insets(0, 0, 5, 0);
-												gbc_btnCambiarFoto.gridx = 0;
-												gbc_btnCambiarFoto.gridy = 1;
-												panel_derecha.add(btnCambiarFoto, gbc_btnCambiarFoto);
-												btnCambiarFoto.setIcon(new ImageIcon(GrupoTuristas.class.getResource("/res/icons8-foto-24.png")));
-								
-										btnModificarGrupo = new JButton("Modificar grupo");
-										btnModificarGrupo.setIcon(new ImageIcon(GrupoTuristas.class.getResource("/res/icons8-editar-24.png")));
-										GridBagConstraints gbc_btnModificarGrupo = new GridBagConstraints();
-										gbc_btnModificarGrupo.gridx = 0;
-										gbc_btnModificarGrupo.gridy = 3;
-										panel_derecha.add(btnModificarGrupo, gbc_btnModificarGrupo);
+		GridBagLayout gbl_panel_derecha = new GridBagLayout();
+		gbl_panel_derecha.columnWidths = new int[] { 200, 0 };
+		gbl_panel_derecha.rowHeights = new int[] { 200, 33, 20, 33, 0 };
+		gbl_panel_derecha.columnWeights = new double[] { 0.0, Double.MIN_VALUE };
+		gbl_panel_derecha.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		panel_derecha.setLayout(gbl_panel_derecha);
+
+		lblFoto = new JLabel("");
+		GridBagConstraints gbc_lblFoto = new GridBagConstraints();
+		gbc_lblFoto.insets = new Insets(0, 0, 5, 0);
+		gbc_lblFoto.gridx = 0;
+		gbc_lblFoto.gridy = 0;
+		panel_derecha.add(lblFoto, gbc_lblFoto);
+		lblFoto.setIcon(imageIcon);
+
+		btnCambiarFoto = new JButton("Cambiar foto");
+		GridBagConstraints gbc_btnCambiarFoto = new GridBagConstraints();
+		gbc_btnCambiarFoto.insets = new Insets(0, 0, 5, 0);
+		gbc_btnCambiarFoto.gridx = 0;
+		gbc_btnCambiarFoto.gridy = 1;
+		panel_derecha.add(btnCambiarFoto, gbc_btnCambiarFoto);
+		btnCambiarFoto.setIcon(new ImageIcon(GrupoTuristas.class.getResource("/res/icons8-foto-24.png")));
+
+		btnModificarGrupo = new JButton("Modificar grupo");
+		btnModificarGrupo.setIcon(new ImageIcon(GrupoTuristas.class.getResource("/res/icons8-editar-24.png")));
+		GridBagConstraints gbc_btnModificarGrupo = new GridBagConstraints();
+		gbc_btnModificarGrupo.gridx = 0;
+		gbc_btnModificarGrupo.gridy = 3;
+		panel_derecha.add(btnModificarGrupo, gbc_btnModificarGrupo);
 
 	}
 
+	private class Lista_gruposMouseListener extends MouseAdapter {
+		@Override
+		public void mousePressed(MouseEvent arg0) {
+
+			DefaultTableModel modeloTablaGrupoTuristas = new DefaultTableModel();
+			modeloTablaGrupoTuristas.addColumn("Nombre");
+			modeloTablaGrupoTuristas.addColumn("Apellidos");
+			modeloTablaGrupoTuristas.addColumn("Edad");
+			modeloTablaGrupoTuristas.addColumn("Contacto");
+			
+			for(ConstTurista tur : turistas) {
+				Object[] fila = new Object[4];
+				fila[0] = tur.getNombreTurista();
+				fila[1] = tur.getApellidosTurista();
+				fila[2] = tur.getEdad();
+				fila[3] = tur.getContacto();
+				modeloTablaGrupoTuristas.addRow(fila);
+			}
+			tableGrupoTuristas.setModel(modeloTablaGrupoTuristas);
+		}
+	}
 }

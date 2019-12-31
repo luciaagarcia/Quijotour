@@ -17,6 +17,7 @@ import javax.swing.JButton;
 import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Toolkit;
 
 public class Login2 {
 
@@ -61,6 +62,8 @@ public class Login2 {
 	 */
 	private void initialize() {
 		frame = new JFrame();
+		frame.setUndecorated(true);
+		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(Login2.class.getResource("/presentacion/recursos/Quijotour.png")));
 		frame.setResizable(false);
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -160,6 +163,7 @@ public class Login2 {
 		lblNewLabel.setIcon(imageIcon);
 
 		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
+		gbc_lblNewLabel.anchor = GridBagConstraints.EAST;
 		gbc_lblNewLabel.gridx = 0;
 		gbc_lblNewLabel.gridy = 0;
 		panel_1.add(lblNewLabel, gbc_lblNewLabel);
