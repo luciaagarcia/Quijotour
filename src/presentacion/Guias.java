@@ -14,20 +14,35 @@ import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.TitledBorder;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
 import dominio.ConstGuia;
+import persistencia.InfoCalendario;
 import persistencia.InfoGuias;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.JTextField;
+import javax.swing.JFormattedTextField;
+import javax.swing.border.LineBorder;
+import javax.swing.SwingConstants;
 
 public class Guias extends JPanel {
 	private JPanel pnlListaGuias;
@@ -35,15 +50,14 @@ public class Guias extends JPanel {
 	private JScrollPane scrollPaneBotones;
 	private JButton btnGuia;
 	private JButton btnGuia_1;
-	private JPanel panel_botonesgenerales;
 	private JButton btnAadirGuia;
 	private JButton btnEliminarGuia;
 	private JPanel panel_informacion;
 	private JLabel lblFoto;
-	private JLabel lblNombre;
-	private JLabel lblCorreo;
-	private JLabel lblTelefono;
-	private JLabel lblPrecio;
+	private JTextField lblNombre;
+	private JTextField lblCorreo;
+	private JFormattedTextField lblTelefono;
+	private JTextField lblPrecio;
 	private JButton btnCambiarFoto;
 	private JPanel panel_horario;
 	private JScrollPane scrollPane_1;
@@ -55,7 +69,11 @@ public class Guias extends JPanel {
 	private JButton btnModificarCalendario;
 	private JList lista_guias;
 	InfoGuias infoguias = new InfoGuias();
-	ArrayList<ConstGuia> rutas = infoguias.getGuias();
+	SeleccionarImagen selim = new SeleccionarImagen();
+	ArrayList<ConstGuia> guias = infoguias.getGuias();
+	ArrayList<Object[][]> calen = InfoCalendario.getCalendario();
+	DefaultTableModel modeloCalendario = new DefaultTableModel();
+
 	private JPanel panel;
 
 	/**
@@ -67,68 +85,88 @@ public class Guias extends JPanel {
 		setLayout(new BorderLayout(0, 0));
 
 		pnlListaGuias = new JPanel();
+		pnlListaGuias.setBorder(new LineBorder(new Color(0, 0, 0)));
 		pnlListaGuias.setOpaque(false);
 		add(pnlListaGuias, BorderLayout.WEST);
 		GridBagLayout gbl_pnlListaGuias = new GridBagLayout();
-		gbl_pnlListaGuias.columnWidths = new int[] { 91, 0 };
-		gbl_pnlListaGuias.rowHeights = new int[] { 40, 46, 40, 782, 0 };
-		gbl_pnlListaGuias.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
-		gbl_pnlListaGuias.rowWeights = new double[] { 0.0, 0.0, 0.0, 1.0, 0.0 };
+		gbl_pnlListaGuias.columnWidths = new int[] { 200, 0 };
+		gbl_pnlListaGuias.rowHeights = new int[] { 40, 20, 20, 10, 777, 0 };
+		gbl_pnlListaGuias.columnWeights = new double[] { 0.0, Double.MIN_VALUE };
+		gbl_pnlListaGuias.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE };
 		pnlListaGuias.setLayout(gbl_pnlListaGuias);
 
-		panel_botonesgenerales = new JPanel();
-		panel_botonesgenerales.setOpaque(false);
-		GridBagConstraints gbc_panel_botonesgenerales = new GridBagConstraints();
-		gbc_panel_botonesgenerales.fill = GridBagConstraints.HORIZONTAL;
-		gbc_panel_botonesgenerales.insets = new Insets(0, 0, 5, 0);
-		gbc_panel_botonesgenerales.gridx = 0;
-		gbc_panel_botonesgenerales.gridy = 1;
-		pnlListaGuias.add(panel_botonesgenerales, gbc_panel_botonesgenerales);
-		panel_botonesgenerales.setLayout(new BoxLayout(panel_botonesgenerales, BoxLayout.Y_AXIS));
-
-		btnAadirGuia = new JButton("Añadir guia");
-		btnAadirGuia.setPreferredSize(new Dimension(200, 28));
-		btnAadirGuia.setIcon(new ImageIcon(Rutas.class.getResource("/res/icons8-anadir-24.png")));
-		btnAadirGuia.setFont(new Font("Georgia", Font.PLAIN, 17));
-		btnAadirGuia.setAlignmentX(Component.CENTER_ALIGNMENT);
-		panel_botonesgenerales.add(btnAadirGuia);
-
-		btnEliminarGuia = new JButton("Eliminar guia");
-		btnEliminarGuia.setFont(new Font("Georgia", Font.PLAIN, 17));
-		btnEliminarGuia.setPreferredSize(new Dimension(200, 28));
-		btnEliminarGuia.setIcon(new ImageIcon(Rutas.class.getResource("/res/icons8-eliminar-24.png")));
-		btnEliminarGuia.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-		panel_botonesgenerales.add(btnEliminarGuia);
-		
-		
 		DefaultListModel<String> modelo = new DefaultListModel();
-		for (int i = 0; i < rutas.size(); i++) {
-			modelo.add(i, rutas.get(i).getNombre()); // button[i].setUI(buttonUI);
+		for (int i = 0; i < guias.size(); i++) {
+			modelo.add(i, guias.get(i).getNombre()); // button[i].setUI(buttonUI);
 		}
 
 		scrollPaneBotones = new JScrollPane();
+		scrollPaneBotones.setViewportBorder(null);
 		scrollPaneBotones.setOpaque(false);
 		scrollPaneBotones.getVerticalScrollBar().setUnitIncrement(16);
+
+		btnAadirGuia = new JButton(" Añadir guia ");
+		btnAadirGuia.setHorizontalAlignment(SwingConstants.LEFT);
+		GridBagConstraints gbc_btnAadirGuia = new GridBagConstraints();
+		gbc_btnAadirGuia.fill = GridBagConstraints.BOTH;
+		gbc_btnAadirGuia.insets = new Insets(0, 0, 5, 0);
+		gbc_btnAadirGuia.gridx = 0;
+		gbc_btnAadirGuia.gridy = 1;
+		pnlListaGuias.add(btnAadirGuia, gbc_btnAadirGuia);
+		btnAadirGuia.setIcon(new ImageIcon(Guias.class.getResource("/res/icons8-añadir-24.png")));
+		btnAadirGuia.setFont(new Font("Verdana", Font.BOLD, 17));
+
+		btnAadirGuia.setBackground(new Color(45, 51, 74));
+		btnAadirGuia.setForeground(Color.WHITE);
+		btnAadirGuia.setFont(new Font("Verdana", Font.BOLD, 17));
+
+		btnEliminarGuia = new JButton("Eliminar guia");
+		btnEliminarGuia.setHorizontalAlignment(SwingConstants.LEFT);
+		GridBagConstraints gbc_btnEliminarGuia = new GridBagConstraints();
+		gbc_btnEliminarGuia.fill = GridBagConstraints.BOTH;
+		gbc_btnEliminarGuia.insets = new Insets(0, 0, 5, 0);
+		gbc_btnEliminarGuia.gridx = 0;
+		gbc_btnEliminarGuia.gridy = 2;
+		pnlListaGuias.add(btnEliminarGuia, gbc_btnEliminarGuia);
+		btnEliminarGuia.setFont(new Font("Verdana", Font.BOLD, 17));
+		btnEliminarGuia.setIcon(new ImageIcon(Guias.class.getResource("/res/icons8-borrar-24.png")));
+		btnEliminarGuia.setBackground(new Color(45, 51, 74));
+		btnEliminarGuia.setForeground(Color.WHITE);
+		btnEliminarGuia.setFont(new Font("Verdana", Font.BOLD, 17));
+
 		scrollPaneBotones.setSize(new Dimension(pnlListaGuias.getSize()));
 		GridBagConstraints gbc_scrollPaneBotones = new GridBagConstraints();
-		gbc_scrollPaneBotones.insets = new Insets(0, 0, 5, 0);
 		gbc_scrollPaneBotones.fill = GridBagConstraints.BOTH;
 		gbc_scrollPaneBotones.gridx = 0;
-		gbc_scrollPaneBotones.gridy = 3;
+		gbc_scrollPaneBotones.gridy = 4;
 		pnlListaGuias.add(scrollPaneBotones, gbc_scrollPaneBotones);
 
 		panel = new JPanel();
+		panel.setBackground(Color.WHITE);
+		panel.setBorder(null);
 		scrollPaneBotones.setViewportView(panel);
-		panel.setLayout(new BorderLayout(0, 0));
+		GridBagLayout gbl_panel = new GridBagLayout();
+		gbl_panel.columnWidths = new int[] { 200, 0 };
+		gbl_panel.rowHeights = new int[] { 891, 0 };
+		gbl_panel.columnWeights = new double[] { 0.0, Double.MIN_VALUE };
+		gbl_panel.rowWeights = new double[] { 1.0, Double.MIN_VALUE };
+		panel.setLayout(gbl_panel);
 
 		lista_guias = new JList();
-		lista_guias.setPreferredSize(new Dimension(200, 0));
-		panel.add(lista_guias);
+		lista_guias.setBorder(null);
+		lista_guias.setFont(new Font("Verdana", Font.PLAIN, 11));
+		lista_guias.addMouseListener(new Lista_guiasMouseListener());
+		GridBagConstraints gbc_lista_guias = new GridBagConstraints();
+		gbc_lista_guias.anchor = GridBagConstraints.WEST;
+		gbc_lista_guias.fill = GridBagConstraints.VERTICAL;
+		gbc_lista_guias.gridx = 0;
+		gbc_lista_guias.gridy = 0;
+		panel.add(lista_guias, gbc_lista_guias);
 		lista_guias.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		lista_guias.setSelectionForeground(new Color(45, 51, 74));
 		lista_guias.setSelectionBackground(new Color(251, 227, 185));
 		lista_guias.setModel(modelo);
+		lista_guias.setSelectedIndex(0);
 
 		panel_principal = new JPanel();
 		panel_principal.setOpaque(false);
@@ -140,10 +178,11 @@ public class Guias extends JPanel {
 		panel_informacion.setOpaque(false);
 		panel_principal.add(panel_informacion, BorderLayout.NORTH);
 		GridBagLayout gbl_panel_informacion = new GridBagLayout();
-		gbl_panel_informacion.columnWidths = new int[] { 0, 0, 0, 0, 107, 36, 139, 35, 0 };
-		gbl_panel_informacion.rowHeights = new int[] { 39, 36, 0, 43, 0, 0, 51, 53, 0, 0 };
-		gbl_panel_informacion.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE };
-		gbl_panel_informacion.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0,
+		gbl_panel_informacion.columnWidths = new int[] { 0, 0, 0, 0, 107, 36, 139, 91, 35, 0 };
+		gbl_panel_informacion.rowHeights = new int[] { 10, 36, 0, 43, 0, 0, 51, 53, 10, 0 };
+		gbl_panel_informacion.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0,
+				Double.MIN_VALUE };
+		gbl_panel_informacion.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
 				Double.MIN_VALUE };
 		panel_informacion.setLayout(gbl_panel_informacion);
 
@@ -160,25 +199,31 @@ public class Guias extends JPanel {
 		gbc_lblFoto.gridy = 1;
 		panel_informacion.add(lblFoto, gbc_lblFoto);
 
-		lblNombre = new JLabel("Don quijote de la Mancha y los Caballeros");
+		lblNombre = new JTextField("Don quijote de la Mancha y los Caballeros");
+		lblNombre.setToolTipText("Nombre");
+		lblNombre.setEditable(false);
 		lblNombre.setFont(new Font("Tahoma", Font.BOLD, 16));
 		GridBagConstraints gbc_lblNombre = new GridBagConstraints();
 		gbc_lblNombre.anchor = GridBagConstraints.WEST;
-		gbc_lblNombre.gridwidth = 3;
+		gbc_lblNombre.gridwidth = 4;
 		gbc_lblNombre.insets = new Insets(0, 0, 5, 5);
 		gbc_lblNombre.gridx = 4;
 		gbc_lblNombre.gridy = 2;
 		panel_informacion.add(lblNombre, gbc_lblNombre);
 
-		lblCorreo = new JLabel("DonQuijote@alu.uclm.es");
+		lblCorreo = new JTextField("DonQuijote@alu.uclm.es");
+		lblCorreo.setToolTipText("Correo");
 		GridBagConstraints gbc_lblCorreo = new GridBagConstraints();
+		gbc_lblCorreo.gridwidth = 2;
 		gbc_lblCorreo.anchor = GridBagConstraints.WEST;
 		gbc_lblCorreo.insets = new Insets(0, 0, 5, 5);
 		gbc_lblCorreo.gridx = 4;
 		gbc_lblCorreo.gridy = 4;
 		panel_informacion.add(lblCorreo, gbc_lblCorreo);
 
-		lblTelefono = new JLabel("6551132145");
+		lblTelefono = new JFormattedTextField();
+		lblTelefono.setToolTipText("Telefono");
+		lblTelefono.setText("622116645");
 		GridBagConstraints gbc_lblTelefono = new GridBagConstraints();
 		gbc_lblTelefono.anchor = GridBagConstraints.WEST;
 		gbc_lblTelefono.insets = new Insets(0, 0, 5, 5);
@@ -186,7 +231,8 @@ public class Guias extends JPanel {
 		gbc_lblTelefono.gridy = 4;
 		panel_informacion.add(lblTelefono, gbc_lblTelefono);
 
-		lblPrecio = new JLabel("Precio: 8.5€/hora");
+		lblPrecio = new JTextField("Precio: 8.5€/hora");
+		lblPrecio.setToolTipText("Sueldo");
 		GridBagConstraints gbc_lblPrecio = new GridBagConstraints();
 		gbc_lblPrecio.anchor = GridBagConstraints.WEST;
 		gbc_lblPrecio.insets = new Insets(0, 0, 5, 5);
@@ -195,6 +241,7 @@ public class Guias extends JPanel {
 		panel_informacion.add(lblPrecio, gbc_lblPrecio);
 
 		btnCambiarFoto = new JButton("Cambiar foto");
+		btnCambiarFoto.addActionListener(new BtnCambiarFotoActionListener());
 		btnCambiarFoto.setFont(new Font("Verdana", Font.PLAIN, 15));
 		btnCambiarFoto.setIcon(new ImageIcon(Guias.class.getResource("/res/icons8-foto-24.png")));
 		GridBagConstraints gbc_btnCambiarFoto = new GridBagConstraints();
@@ -203,22 +250,6 @@ public class Guias extends JPanel {
 		gbc_btnCambiarFoto.gridx = 0;
 		gbc_btnCambiarFoto.gridy = 7;
 		panel_informacion.add(btnCambiarFoto, gbc_btnCambiarFoto);
-
-		btnModificarDatos = new JButton("Modificar datos");
-		btnModificarDatos.setIcon(new ImageIcon(Guias.class.getResource("/res/icons8-editar-24.png")));
-		GridBagConstraints gbc_btnModificarDatos = new GridBagConstraints();
-		gbc_btnModificarDatos.insets = new Insets(0, 0, 5, 5);
-		gbc_btnModificarDatos.gridx = 4;
-		gbc_btnModificarDatos.gridy = 7;
-		panel_informacion.add(btnModificarDatos, gbc_btnModificarDatos);
-
-		btnModificarCalendario = new JButton("Modificar calendario");
-		btnModificarCalendario.setIcon(new ImageIcon(Guias.class.getResource("/res/icons8-calendario-24.png")));
-		GridBagConstraints gbc_btnModificarCalendario = new GridBagConstraints();
-		gbc_btnModificarCalendario.insets = new Insets(0, 0, 5, 5);
-		gbc_btnModificarCalendario.gridx = 6;
-		gbc_btnModificarCalendario.gridy = 7;
-		panel_informacion.add(btnModificarCalendario, gbc_btnModificarCalendario);
 
 		panel_horario = new JPanel();
 		panel_horario.setOpaque(false);
@@ -303,6 +334,60 @@ public class Guias extends JPanel {
 		columnModel.getColumn(7).setPreferredWidth(100);
 
 		scrollPane_2.setViewportView(table_1);
+		btnCambiarFoto.setBackground(new Color(45, 51, 74));
+		btnCambiarFoto.setForeground(Color.WHITE);
+		btnCambiarFoto.setFont(new Font("Verdana", Font.BOLD, 17));
+
+		btnModificarDatos = new JButton("Modificar datos");
+		btnModificarDatos.setIcon(new ImageIcon(Guias.class.getResource("/res/icons8-editar-24.png")));
+		GridBagConstraints gbc_btnModificarDatos = new GridBagConstraints();
+		gbc_btnModificarDatos.insets = new Insets(0, 0, 5, 5);
+		gbc_btnModificarDatos.gridx = 4;
+		gbc_btnModificarDatos.gridy = 7;
+		panel_informacion.add(btnModificarDatos, gbc_btnModificarDatos);
+		btnModificarDatos.setBackground(new Color(45, 51, 74));
+		btnModificarDatos.setForeground(Color.WHITE);
+		btnModificarDatos.setFont(new Font("Verdana", Font.BOLD, 17));
+
+		btnModificarCalendario = new JButton("Modificar calendario");
+		btnModificarCalendario.setIcon(new ImageIcon(Guias.class.getResource("/res/icons8-calendario-24.png")));
+		GridBagConstraints gbc_btnModificarCalendario = new GridBagConstraints();
+		gbc_btnModificarCalendario.insets = new Insets(0, 0, 5, 5);
+		gbc_btnModificarCalendario.gridx = 6;
+		gbc_btnModificarCalendario.gridy = 7;
+		panel_informacion.add(btnModificarCalendario, gbc_btnModificarCalendario);
+		btnModificarCalendario.setBackground(new Color(45, 51, 74));
+		btnModificarCalendario.setForeground(Color.WHITE);
+		btnModificarCalendario.setFont(new Font("Verdana", Font.BOLD, 17));
+
+	}
+
+	private class BtnCambiarFotoActionListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			Image img = selim.SelectImage();
+			Image newImg = img.getScaledInstance(lblFoto.getWidth(), lblFoto.getHeight(), Image.SCALE_SMOOTH);
+			ImageIcon image = new ImageIcon(newImg);
+
+			lblFoto.setIcon(image);
+
+		}
+	}
+
+	private class Lista_guiasMouseListener extends MouseAdapter {
+		@Override
+		public void mousePressed(MouseEvent e) {
+			int guiaSeleccionado = lista_guias.getSelectedIndex();
+			lblNombre.setText(guias.get(guiaSeleccionado).getNombre());
+			lblCorreo.setText(guias.get(guiaSeleccionado).getCorreo());
+			lblPrecio.setText(guias.get(guiaSeleccionado).getSueldo());
+			if (guias.get(guiaSeleccionado).getFoto() != "") {
+				ImageIcon guia = new ImageIcon(
+						new ImageIcon(Guias.class.getResource(guias.get(guiaSeleccionado).getSueldo())).getImage()
+								.getScaledInstance(lblFoto.getWidth(), lblFoto.getHeight(), Image.SCALE_DEFAULT));
+
+				lblFoto.setIcon(guia);
+			}
+		}
 	}
 
 }

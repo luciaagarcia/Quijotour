@@ -21,6 +21,7 @@ import javax.swing.JTextPane;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 
 import dominio.ConstTurista;
 import persistencia.InfoTuristas;
@@ -28,18 +29,23 @@ import persistencia.InfoTuristas;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Random;
 import java.awt.event.ActionEvent;
 import javax.swing.JSeparator;
 import java.awt.Dimension;
+import java.awt.Font;
+
 import javax.swing.JList;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.border.EmptyBorder;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 
 public class GrupoTuristas extends JPanel {
 	private JPanel panelBotones;
 	private JScrollPane scrollPane;
 	private JPanel panel_1;
-	private JPanel panel_2;
 	private JButton btnAadirGrupo;
 	private JButton btnEliminarGrupo;
 	private JPanel panel_principal;
@@ -64,8 +70,13 @@ public class GrupoTuristas extends JPanel {
 	private JCheckBox chckbxMuseos;
 	private JList lista_grupos;
 
+	private int filasTabla;
+	private int columnasTabla;
+
+	SeleccionarImagen selim = new SeleccionarImagen();
 	InfoTuristas infoturistas = new InfoTuristas();
 	ArrayList<ConstTurista> turistas = infoturistas.getTuristas();
+	ModeloTabla modeloTablaGrupoTuristas;// modelo definido en la clase ModeloTabla
 
 	/**
 	 * Create the panel.
@@ -74,43 +85,56 @@ public class GrupoTuristas extends JPanel {
 		setLayout(new BorderLayout(0, 0));
 
 		panelBotones = new JPanel();
-		panelBotones.setPreferredSize(new Dimension(200, 200));
 		panelBotones.setBorder(new LineBorder(new Color(0, 0, 0)));
 		panelBotones.setOpaque(false);
 		add(panelBotones, BorderLayout.WEST);
 		GridBagLayout gbl_panelBotones = new GridBagLayout();
-		gbl_panelBotones.columnWidths = new int[] { 126, 0 };
-		gbl_panelBotones.rowHeights = new int[] { 40, 72, 20, 777, 0 };
-		gbl_panelBotones.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
-		gbl_panelBotones.rowWeights = new double[] { 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE };
+		gbl_panelBotones.columnWidths = new int[] { 200, 0 };
+		gbl_panelBotones.rowHeights = new int[] { 40, 20, 20, 5, 777, 0 };
+		gbl_panelBotones.columnWeights = new double[] { 0.0, Double.MIN_VALUE };
+		gbl_panelBotones.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE };
 		panelBotones.setLayout(gbl_panelBotones);
 
-		panel_2 = new JPanel();
-		panel_2.setOpaque(false);
-		GridBagConstraints gbc_panel_2 = new GridBagConstraints();
-		gbc_panel_2.fill = GridBagConstraints.HORIZONTAL;
-		gbc_panel_2.anchor = GridBagConstraints.NORTH;
-		gbc_panel_2.insets = new Insets(0, 0, 5, 0);
-		gbc_panel_2.gridx = 0;
-		gbc_panel_2.gridy = 1;
-		panelBotones.add(panel_2, gbc_panel_2);
-		panel_2.setLayout(new BoxLayout(panel_2, BoxLayout.Y_AXIS));
+		btnAadirGrupo = new JButton(" Añadir grupo  ");
+		btnAadirGrupo.setHorizontalAlignment(SwingConstants.LEFT);
+		GridBagConstraints gbc_btnAadirGrupo = new GridBagConstraints();
+		gbc_btnAadirGrupo.fill = GridBagConstraints.VERTICAL;
+		gbc_btnAadirGrupo.insets = new Insets(0, 0, 5, 0);
+		gbc_btnAadirGrupo.gridx = 0;
+		gbc_btnAadirGrupo.gridy = 1;
+		panelBotones.add(btnAadirGrupo, gbc_btnAadirGrupo);
+		btnAadirGrupo.setIcon(new ImageIcon(GrupoTuristas.class.getResource("/res/icons8-añadir-24.png")));
+		btnAadirGrupo.setFont(new Font("Verdana", Font.BOLD, 17));
 
-		btnAadirGrupo = new JButton("Añadir grupo");
-		panel_2.add(btnAadirGrupo);
+		btnAadirGrupo.setBackground(new Color(45, 51, 74));
+		btnAadirGrupo.setForeground(Color.WHITE);
+		btnAadirGrupo.setFont(new Font("Verdana", Font.BOLD, 17));
 
 		btnEliminarGrupo = new JButton("Eliminar grupo");
-		panel_2.add(btnEliminarGrupo);
+		btnEliminarGrupo.setHorizontalAlignment(SwingConstants.LEFT);
+		GridBagConstraints gbc_btnEliminarGrupo = new GridBagConstraints();
+		gbc_btnEliminarGrupo.fill = GridBagConstraints.VERTICAL;
+		gbc_btnEliminarGrupo.insets = new Insets(0, 0, 5, 0);
+		gbc_btnEliminarGrupo.gridx = 0;
+		gbc_btnEliminarGrupo.gridy = 2;
+		panelBotones.add(btnEliminarGrupo, gbc_btnEliminarGrupo);
+		btnEliminarGrupo.setIcon(new ImageIcon(GrupoTuristas.class.getResource("/res/icons8-borrar-24.png")));
+		btnEliminarGrupo.setFont(new Font("Verdana", Font.BOLD, 17));
+		btnEliminarGrupo.setBackground(new Color(45, 51, 74));
+		btnEliminarGrupo.setForeground(Color.WHITE);
+		btnEliminarGrupo.setFont(new Font("Verdana", Font.BOLD, 17));
 
 		scrollPane = new JScrollPane();
+		scrollPane.setViewportBorder(null);
 		scrollPane.setOpaque(false);
 		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
 		gbc_scrollPane.fill = GridBagConstraints.BOTH;
 		gbc_scrollPane.gridx = 0;
-		gbc_scrollPane.gridy = 3;
+		gbc_scrollPane.gridy = 4;
 		panelBotones.add(scrollPane, gbc_scrollPane);
 
 		panel_1 = new JPanel();
+		panel_1.setBorder(null);
 		panel_1.setOpaque(false);
 		scrollPane.setViewportView(panel_1);
 		GridBagLayout gbl_panel_1 = new GridBagLayout();
@@ -125,6 +149,9 @@ public class GrupoTuristas extends JPanel {
 			modeloTuristas.add(i, turistas.get(i).getNombreTurista());
 		}
 		lista_grupos = new JList();
+		lista_grupos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		lista_grupos.setBorder(null);
+		lista_grupos.setFont(new Font("Verdana", Font.PLAIN, 11));
 		lista_grupos.addMouseListener(new Lista_gruposMouseListener());
 		lista_grupos.setSelectedIndex(0);
 		GridBagConstraints gbc_lista_grupos = new GridBagConstraints();
@@ -141,8 +168,8 @@ public class GrupoTuristas extends JPanel {
 
 		panel_3 = new JPanel();
 		panel_3.setOpaque(false);
-		panel_3.setBorder(
-				new TitledBorder(null, "Miembros del grupo", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel_3.setBorder(new TitledBorder(null, "Miembros del grupo", TitledBorder.LEADING, TitledBorder.TOP, null,
+				Color.BLACK));
 		panel_principal.add(panel_3, BorderLayout.CENTER);
 		panel_3.setLayout(new BorderLayout(0, 0));
 
@@ -255,56 +282,124 @@ public class GrupoTuristas extends JPanel {
 				new ImageIcon(Guias.class.getResource("/presentacion/recursos/pngocean.com(2).png")).getImage()
 						.getScaledInstance(200, 200, Image.SCALE_DEFAULT));
 		GridBagLayout gbl_panel_derecha = new GridBagLayout();
-		gbl_panel_derecha.columnWidths = new int[] { 200, 0 };
-		gbl_panel_derecha.rowHeights = new int[] { 200, 33, 20, 33, 0 };
-		gbl_panel_derecha.columnWeights = new double[] { 0.0, Double.MIN_VALUE };
-		gbl_panel_derecha.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		gbl_panel_derecha.columnWidths = new int[] { 14, 200, 9, 0 };
+		gbl_panel_derecha.rowHeights = new int[] { 36, 200, 10, 33, 20, 33, 0 };
+		gbl_panel_derecha.columnWeights = new double[] { 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		gbl_panel_derecha.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		panel_derecha.setLayout(gbl_panel_derecha);
 
 		lblFoto = new JLabel("");
 		GridBagConstraints gbc_lblFoto = new GridBagConstraints();
-		gbc_lblFoto.insets = new Insets(0, 0, 5, 0);
-		gbc_lblFoto.gridx = 0;
-		gbc_lblFoto.gridy = 0;
+		gbc_lblFoto.fill = GridBagConstraints.HORIZONTAL;
+		gbc_lblFoto.insets = new Insets(0, 0, 5, 5);
+		gbc_lblFoto.gridx = 1;
+		gbc_lblFoto.gridy = 1;
 		panel_derecha.add(lblFoto, gbc_lblFoto);
 		lblFoto.setIcon(imageIcon);
 
 		btnCambiarFoto = new JButton("Cambiar foto");
+		btnCambiarFoto.addActionListener(new BtnCambiarFotoActionListener());
 		GridBagConstraints gbc_btnCambiarFoto = new GridBagConstraints();
-		gbc_btnCambiarFoto.insets = new Insets(0, 0, 5, 0);
-		gbc_btnCambiarFoto.gridx = 0;
-		gbc_btnCambiarFoto.gridy = 1;
+		gbc_btnCambiarFoto.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnCambiarFoto.insets = new Insets(0, 0, 5, 5);
+		gbc_btnCambiarFoto.gridx = 1;
+		gbc_btnCambiarFoto.gridy = 3;
 		panel_derecha.add(btnCambiarFoto, gbc_btnCambiarFoto);
 		btnCambiarFoto.setIcon(new ImageIcon(GrupoTuristas.class.getResource("/res/icons8-foto-24.png")));
 
 		btnModificarGrupo = new JButton("Modificar grupo");
 		btnModificarGrupo.setIcon(new ImageIcon(GrupoTuristas.class.getResource("/res/icons8-editar-24.png")));
 		GridBagConstraints gbc_btnModificarGrupo = new GridBagConstraints();
-		gbc_btnModificarGrupo.gridx = 0;
-		gbc_btnModificarGrupo.gridy = 3;
+		gbc_btnModificarGrupo.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnModificarGrupo.insets = new Insets(0, 0, 0, 5);
+		gbc_btnModificarGrupo.gridx = 1;
+		gbc_btnModificarGrupo.gridy = 5;
 		panel_derecha.add(btnModificarGrupo, gbc_btnModificarGrupo);
+		btnCambiarFoto.setBackground(new Color(45, 51, 74));
+		btnModificarGrupo.setBackground(new Color(45, 51, 74));
+		btnCambiarFoto.setForeground(Color.WHITE);
+		btnModificarGrupo.setForeground(Color.WHITE);
+		btnCambiarFoto.setFont(new Font("Verdana", Font.BOLD, 17));
+		btnModificarGrupo.setFont(new Font("Verdana", Font.BOLD, 17));
 
 	}
 
 	private class Lista_gruposMouseListener extends MouseAdapter {
 		@Override
 		public void mousePressed(MouseEvent arg0) {
+			Random random = new Random();
+			chckbxAlergias.setSelected(random.nextBoolean());
+			chckbxIdioma.setSelected(random.nextBoolean());
+			chckbxMonumentos.setSelected(random.nextBoolean());
+			chckbxMovilidad.setSelected(random.nextBoolean());
+			chckbxMuseos.setSelected(random.nextBoolean());
+			chckbxNaturaleza.setSelected(random.nextBoolean());
+			chckbxPlaya.setSelected(random.nextBoolean());
 
-			DefaultTableModel modeloTablaGrupoTuristas = new DefaultTableModel();
-			modeloTablaGrupoTuristas.addColumn("Nombre");
-			modeloTablaGrupoTuristas.addColumn("Apellidos");
-			modeloTablaGrupoTuristas.addColumn("Edad");
-			modeloTablaGrupoTuristas.addColumn("Contacto");
-			
-			for(ConstTurista tur : turistas) {
-				Object[] fila = new Object[4];
-				fila[0] = tur.getNombreTurista();
-				fila[1] = tur.getApellidosTurista();
-				fila[2] = tur.getEdad();
-				fila[3] = tur.getContacto();
-				modeloTablaGrupoTuristas.addRow(fila);
-			}
-			tableGrupoTuristas.setModel(modeloTablaGrupoTuristas);
+			construirTabla();
 		}
+	}
+
+	private class BtnCambiarFotoActionListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			Image img = selim.SelectImage();
+			Image newImg = img.getScaledInstance(lblFoto.getWidth(), lblFoto.getHeight(), Image.SCALE_SMOOTH);
+			ImageIcon image = new ImageIcon(newImg);
+
+			lblFoto.setIcon(image);
+		}
+	}
+
+	private void construirTabla() {
+		ArrayList<String> titulosList = new ArrayList<>();
+		titulosList.add("Nombre");
+		titulosList.add("Apellidos");
+		titulosList.add("Edad");
+		titulosList.add("Contacto");
+
+		String titulos[] = new String[titulosList.size()];
+		for (int i = 0; i < titulos.length; i++) {
+			titulos[i] = titulosList.get(i);
+		}
+		Object[][] data = obtenerMatrizDatos(titulosList);
+		construirTabla(titulos, data);
+	}
+
+	private Object[][] obtenerMatrizDatos(ArrayList<String> titulosList) {
+		String informacion[][] = new String[turistas.size()][titulosList.size()];
+		int num = (int) (Math.random() * (6) + 4);
+		for (int i = 0; i < num; i++) {
+			int sel = (int) (Math.random() * turistas.size());
+
+			informacion[i][0] = turistas.get(sel).getNombreTurista();
+			informacion[i][1] = turistas.get(sel).getApellidosTurista();
+			informacion[i][2] = turistas.get(sel).getEdad();
+			informacion[i][3] = turistas.get(sel).getContacto();
+		}
+		return informacion;
+	}
+
+	private void construirTabla(String[] titulos, Object[][] data) {
+		modeloTablaGrupoTuristas = new ModeloTabla(data, titulos);
+		tableGrupoTuristas.setModel(modeloTablaGrupoTuristas);
+		System.out.println(tableGrupoTuristas.getRowCount());
+		filasTabla = tableGrupoTuristas.getRowCount();
+		columnasTabla = tableGrupoTuristas.getColumnCount();
+
+		tableGrupoTuristas.getColumnModel().getColumn(0).setCellRenderer(new GestionCeldas("texto"));
+		tableGrupoTuristas.getColumnModel().getColumn(0).setCellRenderer(new GestionCeldas("texto"));
+		tableGrupoTuristas.getColumnModel().getColumn(0).setCellRenderer(new GestionCeldas("numerico"));
+		tableGrupoTuristas.getColumnModel().getColumn(0).setCellRenderer(new GestionCeldas("texto"));
+
+		tableGrupoTuristas.getTableHeader().setReorderingAllowed(false);
+		tableGrupoTuristas.setRowHeight(35);
+		tableGrupoTuristas.setGridColor(new Color(0, 0, 0));
+
+		JTableHeader jtableHeader = tableGrupoTuristas.getTableHeader();
+		jtableHeader.setDefaultRenderer(new GestionEncabezadoTabla());
+		tableGrupoTuristas.setTableHeader(jtableHeader);
+
+		scrollPane_1.setViewportView(tableGrupoTuristas);
+
 	}
 }

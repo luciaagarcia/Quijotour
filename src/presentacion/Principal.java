@@ -130,6 +130,7 @@ public class Principal {
 		pnlMenu.add(btnPerfil, gbc_btnPerfil);
 
 		btnRutas = new JButton("");
+		btnRutas.setBackground(Color.WHITE);
 		btnRutas.setContentAreaFilled(false);
 		btnRutas.setBorderPainted(false);
 		btnRutas.setOpaque(false);
@@ -144,8 +145,8 @@ public class Principal {
 		pnlMenu.add(btnRutas, gbc_btnRutas);
 
 		btnHistorial = new JButton("");
-		btnHistorial.setOpaque(false);
 		btnHistorial.setContentAreaFilled(false);
+		btnHistorial.setBackground(Color.WHITE);
 		btnHistorial.setBorderPainted(false);
 		btnHistorial.setToolTipText("Historial");
 		btnHistorial.setIcon(new ImageIcon(Principal.class.getResource("/res/icons8-historial-de-pedidos-64.png")));
@@ -158,6 +159,7 @@ public class Principal {
 		pnlMenu.add(btnHistorial, gbc_btnHistorial);
 
 		btnTuristas = new JButton("");
+		btnTuristas.setBackground(Color.WHITE);
 		btnTuristas.setIcon(
 				new ImageIcon(Principal.class.getResource("/res/icons8-grupo-de-usuarios-hombre-hombre-64.png")));
 		btnTuristas.setToolTipText("Turistas");
@@ -173,6 +175,7 @@ public class Principal {
 		pnlMenu.add(btnTuristas, gbc_btnTuristas);
 
 		btnGuias = new JButton("");
+		btnGuias.setBackground(Color.WHITE);
 		btnGuias.setContentAreaFilled(false);
 		btnGuias.setBorderPainted(false);
 		btnGuias.setOpaque(false);
@@ -253,7 +256,6 @@ public class Principal {
 
 	private class BtnSalirActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
-			//System.exit(0);
 			int resp = JOptionPane.showConfirmDialog(null, "¿Está seguro?", "Salir", JOptionPane.YES_NO_OPTION);
 			if (resp == 0) {
 				System.exit(0);
@@ -263,6 +265,14 @@ public class Principal {
 
 	private class BtnRutasActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
+			btnRutas.setEnabled(false);
+			btnRutas.setOpaque(true);
+			btnGuias.setEnabled(true);
+			btnGuias.setOpaque(false);
+			btnHistorial.setEnabled(true);
+			btnHistorial.setOpaque(false);
+			btnTuristas.setEnabled(true);
+			btnTuristas.setOpaque(false);
 			((CardLayout) pnlPrincipal.getLayout()).show(pnlPrincipal, "Rutas");
 
 		}
@@ -270,12 +280,28 @@ public class Principal {
 
 	private class BtnGuiasActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
+			btnRutas.setEnabled(true);
+			btnRutas.setOpaque(false);
+			btnGuias.setEnabled(false);
+			btnGuias.setOpaque(true);
+			btnHistorial.setEnabled(true);
+			btnHistorial.setOpaque(false);
+			btnTuristas.setEnabled(true);
+			btnTuristas.setOpaque(false);
 			((CardLayout) pnlPrincipal.getLayout()).show(pnlPrincipal, "Guias");
 		}
 	}
 
 	private class BtnTuristasActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
+			btnRutas.setEnabled(true);
+			btnRutas.setOpaque(false);
+			btnGuias.setEnabled(true);
+			btnGuias.setOpaque(false);
+			btnHistorial.setEnabled(true);
+			btnHistorial.setOpaque(false);
+			btnTuristas.setEnabled(false);
+			btnTuristas.setOpaque(true);
 			((CardLayout) pnlPrincipal.getLayout()).show(pnlPrincipal, "Grupo Turistas");
 
 		}
@@ -283,6 +309,14 @@ public class Principal {
 
 	private class BtnHistorialActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
+			btnRutas.setEnabled(true);
+			btnRutas.setOpaque(false);
+			btnGuias.setEnabled(true);
+			btnGuias.setOpaque(false);
+			btnHistorial.setEnabled(false);
+			btnHistorial.setOpaque(true);
+			btnTuristas.setEnabled(true);
+			btnTuristas.setOpaque(false);
 			((CardLayout) pnlPrincipal.getLayout()).show(pnlPrincipal, "Historial");
 
 		}

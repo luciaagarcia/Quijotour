@@ -16,6 +16,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Random;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -53,8 +54,6 @@ public class Rutas extends JPanel {
 	private JButton btnReservar;
 	private JButton btnEnviar;
 	private JButton btnModificar;
-	private JButton btnAceptar;
-	private JButton btnCancelar;
 
 	private JComboBox cbGuiasDisponibles;
 	private JComboBox cbTipoRuta;
@@ -74,7 +73,6 @@ public class Rutas extends JPanel {
 	private JList listParadas;
 
 	private JPanel pnlBotones;
-	private JPanel pnlAcciones;
 	private JPanel pnl_buttonRutas;
 	private JPanel pnlGeneral;
 	private JPanel pnlMapa;
@@ -96,6 +94,8 @@ public class Rutas extends JPanel {
 	InfoParadas infoparadas = new InfoParadas();
 	ArrayList<ConstRuta> rutas = inforutas.getRutas();
 	ArrayList<ConstParada> paradas = infoparadas.getParadas();
+	DefaultListModel<String> modeloRutas = new DefaultListModel();
+	DefaultListModel<String> modeloParadas = new DefaultListModel();
 
 	/**
 	 * Create the panel.
@@ -113,78 +113,93 @@ public class Rutas extends JPanel {
 		gbc_tableRutasHeader.gridy = 2;
 
 		pnlBotones = new JPanel();
-		pnlBotones.setPreferredSize(new Dimension(200, 200));
 		pnlBotones.setBorder(new LineBorder(new Color(0, 0, 0)));
 		pnlBotones.setOpaque(false);
 		add(pnlBotones, BorderLayout.WEST);
 		GridBagLayout gbl_pnlBotones = new GridBagLayout();
-		gbl_pnlBotones.columnWidths = new int[] { 126, 0 };
-		gbl_pnlBotones.rowHeights = new int[] { 40, 72, 20, 777, 0 };
-		gbl_pnlBotones.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
-		gbl_pnlBotones.rowWeights = new double[] { 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE };
+		gbl_pnlBotones.columnWidths = new int[] { 200, 0 };
+		gbl_pnlBotones.rowHeights = new int[] { 40, 20, 20, 5, 777, 0 };
+		gbl_pnlBotones.columnWeights = new double[] { 0.0, Double.MIN_VALUE };
+		gbl_pnlBotones.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE };
 		pnlBotones.setLayout(gbl_pnlBotones);
-
-		pnlAcciones = new JPanel();
-		pnlAcciones.setPreferredSize(new Dimension(200, 200));
-		pnlAcciones.setOpaque(false);
-		GridBagConstraints gbc_pnlAcciones = new GridBagConstraints();
-		gbc_pnlAcciones.fill = GridBagConstraints.HORIZONTAL;
-		gbc_pnlAcciones.insets = new Insets(0, 0, 5, 0);
-		gbc_pnlAcciones.gridx = 0;
-		gbc_pnlAcciones.gridy = 1;
-		pnlBotones.add(pnlAcciones, gbc_pnlAcciones);
-		pnlAcciones.setLayout(new BoxLayout(pnlAcciones, BoxLayout.Y_AXIS));
-
-		btnAadirruta = new JButton(" Añadir ruta  ");
-		btnAadirruta.addActionListener(new BtnAadirrutaActionListener());
-		btnAadirruta.setPreferredSize(new Dimension(200, 28));
-		pnlAcciones.add(btnAadirruta);
-		btnAadirruta.setIcon(new ImageIcon(Rutas.class.getResource("/res/icons8-anadir-24.png")));
-		btnAadirruta.setFont(new Font("Georgia", Font.PLAIN, 17));
-
-		btnAadirruta.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-		btnEliminarruta = new JButton("Eliminar ruta");
-		btnEliminarruta.setFont(new Font("Georgia", Font.PLAIN, 17));
-		btnEliminarruta.setPreferredSize(new Dimension(200, 28));
-		pnlAcciones.add(btnEliminarruta);
-		btnEliminarruta.setIcon(new ImageIcon(Rutas.class.getResource("/res/icons8-eliminar-24.png")));
-		btnEliminarruta.setAlignmentX(Component.CENTER_ALIGNMENT);
+				
+						btnAadirruta = new JButton(" Añadir ruta  ");
+						btnAadirruta.setHorizontalAlignment(SwingConstants.LEFT);
+						GridBagConstraints gbc_btnAadirruta = new GridBagConstraints();
+						gbc_btnAadirruta.fill = GridBagConstraints.BOTH;
+						gbc_btnAadirruta.insets = new Insets(0, 0, 5, 0);
+						gbc_btnAadirruta.gridx = 0;
+						gbc_btnAadirruta.gridy = 1;
+						pnlBotones.add(btnAadirruta, gbc_btnAadirruta);
+						btnAadirruta.addActionListener(new BtnAadirrutaActionListener());
+						btnAadirruta.setIcon(new ImageIcon(Rutas.class.getResource("/res/icons8-añadir-24.png")));
+						btnAadirruta.setFont(new Font("Verdana", Font.BOLD, 17));
+						
+								btnAadirruta.setAlignmentX(Component.CENTER_ALIGNMENT);
+								
+										btnAadirruta.setBackground(new Color(45, 51, 74));
+										btnAadirruta.setForeground(Color.WHITE);
+		
+				btnEliminarruta = new JButton("Eliminar ruta");
+				btnEliminarruta.setHorizontalAlignment(SwingConstants.LEFT);
+				GridBagConstraints gbc_btnEliminarruta = new GridBagConstraints();
+				gbc_btnEliminarruta.fill = GridBagConstraints.BOTH;
+				gbc_btnEliminarruta.insets = new Insets(0, 0, 5, 0);
+				gbc_btnEliminarruta.gridx = 0;
+				gbc_btnEliminarruta.gridy = 2;
+				pnlBotones.add(btnEliminarruta, gbc_btnEliminarruta);
+				btnEliminarruta.setFont(new Font("Verdana", Font.BOLD, 17));
+				btnEliminarruta.setIcon(new ImageIcon(Rutas.class.getResource("/res/icons8-borrar-24.png")));
+				btnEliminarruta.setAlignmentX(Component.CENTER_ALIGNMENT);
+				btnEliminarruta.setBackground(new Color(45, 51, 74));
+				
+				btnEliminarruta.setForeground(Color.WHITE);
 
 		scrollPaneBtns = new JScrollPane();
+		scrollPaneBtns.setViewportBorder(null);
 		scrollPaneBtns.setOpaque(false);
-		scrollPaneBtns.setPreferredSize(new Dimension(200, 200));
 		GridBagConstraints gbc_scrollPaneBtns = new GridBagConstraints();
 		gbc_scrollPaneBtns.fill = GridBagConstraints.BOTH;
 		gbc_scrollPaneBtns.gridx = 0;
-		gbc_scrollPaneBtns.gridy = 3;
+		gbc_scrollPaneBtns.gridy = 4;
 		pnlBotones.add(scrollPaneBtns, gbc_scrollPaneBtns);
 
 		pnl_buttonRutas = new JPanel();
-		pnl_buttonRutas.setPreferredSize(new Dimension(200, 200));
-		pnl_buttonRutas.setOpaque(false);
+		pnl_buttonRutas.setBackground(Color.WHITE);
+		pnl_buttonRutas.setBorder(null);
 		scrollPaneBtns.setViewportView(pnl_buttonRutas);
-		pnl_buttonRutas.setLayout(new BorderLayout(0, 0));
-		DefaultListModel<String> modeloRutas = new DefaultListModel();
 		for (int i = 0; i < rutas.size(); i++) {
 			modeloRutas.add(i, rutas.get(i).getNombreRuta());
 		}
+		GridBagLayout gbl_pnl_buttonRutas = new GridBagLayout();
+		gbl_pnl_buttonRutas.columnWidths = new int[]{200, 0};
+		gbl_pnl_buttonRutas.rowHeights = new int[]{674, 0};
+		gbl_pnl_buttonRutas.columnWeights = new double[]{0.0, Double.MIN_VALUE};
+		gbl_pnl_buttonRutas.rowWeights = new double[]{1.0, Double.MIN_VALUE};
+		pnl_buttonRutas.setLayout(gbl_pnl_buttonRutas);
 		lista_rutas = new JList();
+		lista_rutas.setBorder(null);
+		lista_rutas.setFont(new Font("Verdana", Font.PLAIN, 11));
 		lista_rutas.setPreferredSize(new Dimension(200, 200));
 		lista_rutas.addMouseListener(new Lista_rutasMouseListener());
 		lista_rutas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		lista_rutas.setSelectionForeground(new Color(45, 51, 74));
 		lista_rutas.setSelectionBackground(new Color(251, 227, 185));
-
-		pnl_buttonRutas.add(lista_rutas, BorderLayout.CENTER);
-		lista_rutas.setModel(modeloRutas);
-		lista_rutas.setSelectedIndex(0);
+		
+				GridBagConstraints gbc_lista_rutas = new GridBagConstraints();
+				gbc_lista_rutas.anchor = GridBagConstraints.WEST;
+				gbc_lista_rutas.fill = GridBagConstraints.VERTICAL;
+				gbc_lista_rutas.gridx = 0;
+				gbc_lista_rutas.gridy = 0;
+				pnl_buttonRutas.add(lista_rutas, gbc_lista_rutas);
+				lista_rutas.setModel(modeloRutas);
+				lista_rutas.setSelectedIndex(0);
 		pnlGeneral = new JPanel();
 
 		pnlGeneral.setOpaque(false);
 		add(pnlGeneral, BorderLayout.CENTER);
 		GridBagLayout gbl_pnlGeneral = new GridBagLayout();
-		gbl_pnlGeneral.columnWidths = new int[] { 40, 150, 100, 40, 10, 0, 20, 100, 100, 100, 128, 0, 0, 10 };
+		gbl_pnlGeneral.columnWidths = new int[] { 80, 150, 100, 40, 10, 0, 20, 100, 100, 100, 128, 0, 0, 10 };
 		gbl_pnlGeneral.rowHeights = new int[] { 40, 20, 50, 0, 24, 50, 50, 50, 50, 50, 50, 50, 0, 0, 50, 400, 0, 20 };
 		gbl_pnlGeneral.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0,
 				Double.MIN_VALUE };
@@ -201,12 +216,12 @@ public class Rutas extends JPanel {
 		gbc_lblNombreRuta.gridwidth = 10;
 		gbc_lblNombreRuta.insets = new Insets(0, 0, 5, 5);
 		gbc_lblNombreRuta.gridx = 1;
-		gbc_lblNombreRuta.gridy = 1;
+		gbc_lblNombreRuta.gridy = 2;
 		pnlGeneral.add(lblNombreRuta, gbc_lblNombreRuta);
 
 		btnReservar = new JButton("Reservar");
-		btnReservar.setFont(new Font("Georgia", Font.PLAIN, 17));
-		btnReservar.setIcon(new ImageIcon(Rutas.class.getResource("/res/icons8-billete-de-tren-24.png")));
+		btnReservar.setFont(new Font("Verdana", Font.BOLD, 24));
+		btnReservar.setIcon(new ImageIcon(Rutas.class.getResource("/res/icons8-comprar-50.png")));
 		GridBagConstraints gbc_btnReservar = new GridBagConstraints();
 		gbc_btnReservar.fill = GridBagConstraints.VERTICAL;
 		gbc_btnReservar.gridheight = 2;
@@ -217,8 +232,8 @@ public class Rutas extends JPanel {
 		pnlGeneral.add(btnReservar, gbc_btnReservar);
 
 		btnEnviar = new JButton("Enviar");
-		btnEnviar.setFont(new Font("Georgia", Font.PLAIN, 17));
-		btnEnviar.setIcon(new ImageIcon(Rutas.class.getResource("/res/icons8-enviar-24.png")));
+		btnEnviar.setFont(new Font("Verdana", Font.BOLD, 17));
+		btnEnviar.setIcon(new ImageIcon(Rutas.class.getResource("/res/icons8-mensaje-de-promoción-24.png")));
 		GridBagConstraints gbc_btnEnviar = new GridBagConstraints();
 		gbc_btnEnviar.anchor = GridBagConstraints.EAST;
 		gbc_btnEnviar.fill = GridBagConstraints.VERTICAL;
@@ -229,7 +244,7 @@ public class Rutas extends JPanel {
 		pnlGeneral.add(btnEnviar, gbc_btnEnviar);
 
 		btnModificar = new JButton("Modificar");
-		btnModificar.setFont(new Font("Georgia", Font.PLAIN, 17));
+		btnModificar.setFont(new Font("Verdana", Font.BOLD, 17));
 		btnModificar.setIcon(new ImageIcon(Rutas.class.getResource("/res/icons8-editar-24.png")));
 		GridBagConstraints gbc_btnModificar = new GridBagConstraints();
 		gbc_btnModificar.gridwidth = 2;
@@ -240,7 +255,6 @@ public class Rutas extends JPanel {
 		gbc_btnModificar.gridy = 3;
 		pnlGeneral.add(btnModificar, gbc_btnModificar);
 
-		DefaultListModel<String> modeloParadas = new DefaultListModel();
 		for (int i = 0; i < paradas.size(); i++) {
 			modeloParadas.add(i, paradas.get(i).getNombreParada());
 		}
@@ -427,22 +441,6 @@ public class Rutas extends JPanel {
 		gbc_cbTipoRuta.gridy = 12;
 		pnlGeneral.add(cbTipoRuta, gbc_cbTipoRuta);
 
-		btnCancelar = new JButton("Cancelar");
-		btnCancelar.setVisible(false);
-		GridBagConstraints gbc_btnCancelar = new GridBagConstraints();
-		gbc_btnCancelar.insets = new Insets(0, 0, 5, 5);
-		gbc_btnCancelar.gridx = 5;
-		gbc_btnCancelar.gridy = 13;
-		pnlGeneral.add(btnCancelar, gbc_btnCancelar);
-
-		btnAceptar = new JButton("Aceptar");
-		btnAceptar.setVisible(false);
-		GridBagConstraints gbc_btnAceptar = new GridBagConstraints();
-		gbc_btnAceptar.insets = new Insets(0, 0, 5, 5);
-		gbc_btnAceptar.gridx = 9;
-		gbc_btnAceptar.gridy = 13;
-		pnlGeneral.add(btnAceptar, gbc_btnAceptar);
-
 		txtComentariosAdicionales = new JTextPane();
 		txtComentariosAdicionales.setBorder(
 				new TitledBorder(null, "Comentarios adicionales", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -470,6 +468,14 @@ public class Rutas extends JPanel {
 		lblLblmapa.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		lblLblmapa.setIcon(new ImageIcon(Rutas.class.getResource("/presentacion/recursos/Callejero-de-Madrid.jpeg")));
 		pnlMapa.add(lblLblmapa);
+		btnReservar.setBackground(new Color(45, 51, 74));
+		btnEnviar.setBackground(new Color(45, 51, 74));
+		btnModificar.setBackground(new Color(45, 51, 74));
+		btnReservar.setForeground(Color.WHITE);
+		btnEnviar.setForeground(Color.WHITE);
+		btnModificar.setForeground(Color.WHITE);
+
+
 	}
 
 	public class Mover extends MouseInputAdapter {
@@ -548,6 +554,13 @@ public class Rutas extends JPanel {
 			txtDuracin.setText(rutas.get(rutaSeleccionada).getDuracionRuta().toString());
 			SeleccionarRadioButton(rutaSeleccionada);
 
+			modeloParadas.clear();
+
+			for (int i = 0; i < 4; i++) {
+				int elemento = (int) (Math.random() * paradas.size());
+				modeloParadas.add(i, paradas.get(elemento).getNombreParada());
+			}
+
 		}
 	}
 
@@ -561,8 +574,6 @@ public class Rutas extends JPanel {
 			cbGuiasDisponibles.setSelectedItem("");
 			cbTipoRuta.setSelectedItem("");
 			txtDuracin.setText("");
-			btnAceptar.setVisible(true);
-			btnCancelar.setVisible(true);
 
 		}
 	}

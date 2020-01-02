@@ -65,7 +65,7 @@ public class Login2 {
 		frame.setUndecorated(true);
 		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(Login2.class.getResource("/presentacion/recursos/Quijotour.png")));
 		frame.setResizable(false);
-		frame.setBounds(100, 100, 450, 300);
+		frame.setBounds(100, 100, 1118, 706);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		panel = new JPanel();
