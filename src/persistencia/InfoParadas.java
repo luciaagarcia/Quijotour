@@ -12,7 +12,7 @@ public class InfoParadas {
 		paradas.add(new ConstParada("Lagunas de Ruidera", "/res/resParadas/LagunasRuidera.jpg"));
 		paradas.add(new ConstParada("Solana", "/res/resParadas/Solana.jpg"));
 		paradas.add(new ConstParada("Catedral de Santa María del Prado", "/res/resParadas/CatedralSantaMaria.jpg"));
-		paradas.add(new ConstParada("Iglesia Parroquial de San Pedo", "/res/resParadas/IglesiaSanPedro.jpg"));
+		paradas.add(new ConstParada("Iglesia Parroquial de San Pedro", "/res/resParadas/IglesiaSanPedro.jpg"));
 		paradas.add(new ConstParada("Plaza Mayor Ciudad Real", "/res/resParadas/PlazaMayorCR.jpg"));
 		paradas.add(new ConstParada("Puerta de Toledo", "/res/resParadas/PuertaToledo.jfif"));
 		paradas.add(new ConstParada("Museo Cervantino", "/res/resParadas/MueoCervantino.jpg"));

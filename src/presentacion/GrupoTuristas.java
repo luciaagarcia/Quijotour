@@ -70,9 +70,6 @@ public class GrupoTuristas extends JPanel {
 	private JCheckBox chckbxMuseos;
 	private JList lista_grupos;
 
-	private int filasTabla;
-	private int columnasTabla;
-
 	SeleccionarImagen selim = new SeleccionarImagen();
 	InfoTuristas infoturistas = new InfoTuristas();
 	ArrayList<ConstTurista> turistas = infoturistas.getTuristas();
@@ -149,16 +146,14 @@ public class GrupoTuristas extends JPanel {
 			modeloTuristas.add(i, turistas.get(i).getNombreTurista());
 		}
 		lista_grupos = new JList();
-		lista_grupos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		lista_grupos.setBorder(null);
-		lista_grupos.setFont(new Font("Verdana", Font.PLAIN, 11));
 		lista_grupos.addMouseListener(new Lista_gruposMouseListener());
-		lista_grupos.setSelectedIndex(0);
 		GridBagConstraints gbc_lista_grupos = new GridBagConstraints();
 		gbc_lista_grupos.fill = GridBagConstraints.BOTH;
 		gbc_lista_grupos.gridx = 0;
 		gbc_lista_grupos.gridy = 0;
 		lista_grupos.setModel(modeloTuristas);
+		lista_grupos.setCellRenderer(new JListCellRenderer());
+
 		panel_1.add(lista_grupos, gbc_lista_grupos);
 
 		panel_principal = new JPanel();
@@ -174,10 +169,12 @@ public class GrupoTuristas extends JPanel {
 		panel_3.setLayout(new BorderLayout(0, 0));
 
 		scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBackground(Color.WHITE);
 		scrollPane_1.setOpaque(false);
 		panel_3.add(scrollPane_1, BorderLayout.NORTH);
 
 		tableGrupoTuristas = new JTable();
+		tableGrupoTuristas.setBackground(Color.WHITE);
 		scrollPane_1.setViewportView(tableGrupoTuristas);
 
 		panel_5 = new JPanel();
@@ -351,7 +348,7 @@ public class GrupoTuristas extends JPanel {
 	}
 
 	private void construirTabla() {
-		ArrayList<String> titulosList = new ArrayList<>();
+		ArrayList<String> titulosList = new ArrayList<String>();
 		titulosList.add("Nombre");
 		titulosList.add("Apellidos");
 		titulosList.add("Edad");
@@ -366,8 +363,9 @@ public class GrupoTuristas extends JPanel {
 	}
 
 	private Object[][] obtenerMatrizDatos(ArrayList<String> titulosList) {
-		String informacion[][] = new String[turistas.size()][titulosList.size()];
-		int num = (int) (Math.random() * (6) + 4);
+		int num = (int) ((Math.random() * (16)) + 4);
+		String informacion[][] = new String[num][titulosList.size()];
+
 		for (int i = 0; i < num; i++) {
 			int sel = (int) (Math.random() * turistas.size());
 
@@ -382,14 +380,11 @@ public class GrupoTuristas extends JPanel {
 	private void construirTabla(String[] titulos, Object[][] data) {
 		modeloTablaGrupoTuristas = new ModeloTabla(data, titulos);
 		tableGrupoTuristas.setModel(modeloTablaGrupoTuristas);
-		System.out.println(tableGrupoTuristas.getRowCount());
-		filasTabla = tableGrupoTuristas.getRowCount();
-		columnasTabla = tableGrupoTuristas.getColumnCount();
 
 		tableGrupoTuristas.getColumnModel().getColumn(0).setCellRenderer(new GestionCeldas("texto"));
-		tableGrupoTuristas.getColumnModel().getColumn(0).setCellRenderer(new GestionCeldas("texto"));
-		tableGrupoTuristas.getColumnModel().getColumn(0).setCellRenderer(new GestionCeldas("numerico"));
-		tableGrupoTuristas.getColumnModel().getColumn(0).setCellRenderer(new GestionCeldas("texto"));
+		tableGrupoTuristas.getColumnModel().getColumn(1).setCellRenderer(new GestionCeldas("texto"));
+		tableGrupoTuristas.getColumnModel().getColumn(2).setCellRenderer(new GestionCeldas("numerico"));
+		tableGrupoTuristas.getColumnModel().getColumn(3).setCellRenderer(new GestionCeldas("numerico"));
 
 		tableGrupoTuristas.getTableHeader().setReorderingAllowed(false);
 		tableGrupoTuristas.setRowHeight(35);

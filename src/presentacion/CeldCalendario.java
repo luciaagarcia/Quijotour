@@ -2,22 +2,25 @@ package presentacion;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
 
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
-public class GestionCeldas extends DefaultTableCellRenderer {
+public class CeldCalendario extends DefaultTableCellRenderer {
 	private String tipo = "text";
 
 	private Font normal = new Font("Verdana", Font.PLAIN, 15);
+	private Font bold = new Font("Verdana", Font.BOLD, 15);
 
-	public GestionCeldas() {
+
+	public CeldCalendario() {
 
 	}
 
-	public GestionCeldas(String tipo) {
+	public CeldCalendario(String tipo) {
 		this.tipo = tipo;
 	}
 
@@ -30,18 +33,18 @@ public class GestionCeldas extends DefaultTableCellRenderer {
 
 		if (selected) {
 			this.setBackground(colorFondoPorDefecto);
-		} else {
-			this.setBackground(Color.white);
 		}
-
+		if (row % 2 == 0) {
+			this.setBackground(Color.WHITE);
+		} else {
+			this.setBackground(Color.LIGHT_GRAY);
+		}
 		if (tipo.equals("texto")) {
-
-			colorFondo = colorFondoPorDefecto;
 
 			this.setHorizontalAlignment(JLabel.LEFT);
 			this.setText((String) value);
-			this.setBackground((selected) ? colorFondo : Color.WHITE);
 			this.setFont(normal);
+			this.setOpaque(true);
 
 			return this;
 		}
@@ -51,8 +54,7 @@ public class GestionCeldas extends DefaultTableCellRenderer {
 
 			this.setHorizontalAlignment(JLabel.CENTER);
 			this.setText((String) value);
-			this.setBackground((selected) ? colorFondo : Color.WHITE);
-			this.setFont(normal);
+			this.setFont(bold);
 			return this;
 		}
 

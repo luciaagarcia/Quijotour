@@ -11,7 +11,7 @@ import java.awt.Insets;
 import java.util.ArrayList;
 
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -26,9 +26,6 @@ import javax.swing.JTextPane;
 import javax.swing.border.TitledBorder;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.JButton;
-import javax.swing.ImageIcon;
-import java.awt.Font;
 
 public class Historial extends JPanel {
 	private JScrollPane scrollPane;
@@ -42,11 +39,11 @@ public class Historial extends JPanel {
 
 	InfoHistorial infohistorial = new InfoHistorial();
 	ArrayList<ConstHistorial> historial = infohistorial.getHistorial();
+	ModeloTabla modeloTablaHistorial;
 
 	private static final String PRECIO = "Precio";
 	private static final String PERSONAS = "Personas";
-	private static Color COLOR_PRECIO = new Color(251, 227, 185);
-	private static Color COLOR_PERSONAS = new Color(45, 51, 74);
+
 	DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 	JFreeChart chart = ChartFactory.createLineChart("Visitas", "Mes", "Número visitas", dataset,
 			PlotOrientation.VERTICAL, true, true, false);
@@ -70,26 +67,8 @@ public class Historial extends JPanel {
 
 		tableHistorial = new JTable();
 		tableHistorial.addMouseListener(new TableHistorialMouseListener());
-
-		DefaultTableModel modeloTablaHistorial = new DefaultTableModel();
-		modeloTablaHistorial.addColumn("Nombre");
-		modeloTablaHistorial.addColumn("Grupo");
-		modeloTablaHistorial.addColumn("Precio");
-		modeloTablaHistorial.addColumn("Duración");
-		modeloTablaHistorial.addColumn("Fecha");
-
-		for (int i = 0; i < historial.size(); i++) {
-			Object[] fila = new Object[5];
-			fila[0] = historial.get(i).getNombre();
-			fila[1] = historial.get(i).getGrupo();
-			fila[2] = historial.get(i).getPrecio();
-			fila[3] = historial.get(i).getDuracion();
-			fila[4] = historial.get(i).getFecha();
-			modeloTablaHistorial.addRow(fila);
-
-		}
-		tableHistorial.setModel(modeloTablaHistorial);
 		scrollPane.setViewportView(tableHistorial);
+		construirTabla();
 
 		panel_Incidencias = new JPanel();
 		panel_Incidencias.setAutoscrolls(true);
@@ -148,11 +127,11 @@ public class Historial extends JPanel {
 		gbc_panel_Grafico.fill = GridBagConstraints.BOTH;
 		gbc_panel_Grafico.gridx = 3;
 		gbc_panel_Grafico.gridy = 1;
-		
+
 		chart.setBackgroundPaint(Color.WHITE);
 		chart.getCategoryPlot().setBackgroundPaint(new Color(45, 51, 74));
 		chart.getCategoryPlot().getRangeAxis().setAutoRange(false);
-		chart.getCategoryPlot().getRangeAxis().setRange(0,400);
+		chart.getCategoryPlot().getRangeAxis().setRange(0, 400);
 		add(panel_Grafico, gbc_panel_Grafico);
 
 	}
@@ -187,7 +166,6 @@ public class Historial extends JPanel {
 		dataset.setValue((int) (Math.random() * 50), PERSONAS, "Nov");
 		dataset.setValue((int) (Math.random() * 50), PERSONAS, "Dic");
 
-
 	}
 
 	private class TableHistorialMouseListener extends MouseAdapter {
@@ -199,5 +177,58 @@ public class Historial extends JPanel {
 			textOpiniones.setText(historial.get(rutaSeleccionada).getOpiniones());
 			textSugerencias.setText(historial.get(rutaSeleccionada).getSugerencias());
 		}
+	}
+
+	private void construirTabla() {
+		ArrayList<String> titulosList = new ArrayList<String>();
+		titulosList.add("Nombre");
+		titulosList.add("Grupo");
+		titulosList.add("Precio");
+		titulosList.add("Duración");
+		titulosList.add("Fecha");
+
+		String titulos[] = new String[titulosList.size()];
+		for (int i = 0; i < titulos.length; i++) {
+			titulos[i] = titulosList.get(i);
+		}
+		Object[][] data = obtenerMatrizDatos(titulosList);
+		construirTabla(titulos, data);
+	}
+
+	private Object[][] obtenerMatrizDatos(ArrayList<String> titulosList) {
+		String informacion[][] = new String[historial.size()][titulosList.size()];
+		for (int i = 0; i < historial.size(); i++) {
+			informacion[i][0] = historial.get(i).getNombre();
+			informacion[i][1] = historial.get(i).getGrupo();
+			informacion[i][2] = historial.get(i).getPrecio();
+			informacion[i][3] = historial.get(i).getDuracion();
+			informacion[i][4] = historial.get(i).getFecha();
+
+		}
+		return informacion;
+	}
+
+	private void construirTabla(String[] titulos, Object[][] data) {
+
+		modeloTablaHistorial = new ModeloTabla(data, titulos);
+		tableHistorial.setModel(modeloTablaHistorial);
+		
+		
+		tableHistorial.getColumnModel().getColumn(0).setCellRenderer(new GestionCeldas("texto"));
+		tableHistorial.getColumnModel().getColumn(1).setCellRenderer(new GestionCeldas("texto"));
+		tableHistorial.getColumnModel().getColumn(2).setCellRenderer(new GestionCeldas("numerico"));
+		tableHistorial.getColumnModel().getColumn(3).setCellRenderer(new GestionCeldas("numerico"));
+		tableHistorial.getColumnModel().getColumn(4).setCellRenderer(new GestionCeldas("numerico"));
+
+
+		tableHistorial.getTableHeader().setReorderingAllowed(false);
+		tableHistorial.setRowHeight(35);
+		tableHistorial.setGridColor(new Color(0, 0, 0));
+
+		JTableHeader jtableHeader = tableHistorial.getTableHeader();
+		jtableHeader.setDefaultRenderer(new GestionEncabezadoTabla());
+		tableHistorial.setTableHeader(jtableHeader);
+	
+		scrollPane.setViewportView(tableHistorial);
 	}
 }
