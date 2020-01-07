@@ -4,11 +4,11 @@ public class ConstTurista {
 
 	String nombreTurista;
 	String apellidosTurista;
-	int edad;
+	String edad;
 	String contacto;
 	String foto;
 
-	public ConstTurista(String nombreTurista, String apellidosTurista, int edad, String contacto, String foto) {
+	public ConstTurista(String nombreTurista, String apellidosTurista, String edad, String contacto, String foto) {
 		super();
 		this.nombreTurista = nombreTurista;
 		this.apellidosTurista = apellidosTurista;
@@ -33,11 +33,11 @@ public class ConstTurista {
 		this.apellidosTurista = apellidosTurista;
 	}
 
-	public int getEdad() {
+	public String getEdad() {
 		return edad;
 	}
 
-	public void setEdad(int edad) {
+	public void setEdad(String edad) {
 		this.edad = edad;
 	}
 
