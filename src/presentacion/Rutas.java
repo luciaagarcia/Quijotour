@@ -638,15 +638,20 @@ public class Rutas extends JPanel {
 	private class BtnEliminarrutaActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			int rutaSeleccionada = lista_rutas.getSelectedIndex();
-			int resp = JOptionPane.showConfirmDialog(null,
-					"¿Desea eliminar la ruta " + lista_rutas.getSelectedValue().toString() + "?", "Eliminar ruta",
-					JOptionPane.YES_NO_OPTION);
-			if (resp == 0) {
-				rutas.remove(rutaSeleccionada);
-				((DefaultListModel) lista_rutas.getModel()).remove(rutaSeleccionada);
-				pnl_buttonRutas.repaint();
-				pnl_buttonRutas.revalidate();
-				limpiarSeleccion();
+			try {
+				int resp = JOptionPane.showConfirmDialog(null,
+						"¿Desea eliminar la ruta " + lista_rutas.getSelectedValue().toString() + "?", "Eliminar ruta",
+						JOptionPane.YES_NO_OPTION);
+				if (resp == 0) {
+
+					rutas.remove(rutaSeleccionada);
+					((DefaultListModel) lista_rutas.getModel()).remove(rutaSeleccionada);
+					pnl_buttonRutas.repaint();
+					pnl_buttonRutas.revalidate();
+					limpiarSeleccion();
+				}
+			} catch (java.lang.NullPointerException ex) {
+				JOptionPane.showMessageDialog(null, "Por favor, seleccione una ruta a eliminar");
 			}
 
 		}

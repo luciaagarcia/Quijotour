@@ -36,6 +36,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 
 import javax.swing.JList;
+import javax.swing.JOptionPane;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.border.EmptyBorder;
@@ -95,6 +97,7 @@ public class GrupoTuristas extends JPanel {
 		panelBotones.setLayout(gbl_panelBotones);
 
 		btnAadirGrupo = new JButton(" Añadir grupo  ");
+		btnAadirGrupo.addActionListener(new BtnAadirGrupoActionListener());
 		btnAadirGrupo.setHorizontalAlignment(SwingConstants.LEFT);
 		GridBagConstraints gbc_btnAadirGrupo = new GridBagConstraints();
 		gbc_btnAadirGrupo.fill = GridBagConstraints.VERTICAL;
@@ -110,6 +113,7 @@ public class GrupoTuristas extends JPanel {
 		btnAadirGrupo.setFont(new Font("Verdana", Font.BOLD, 17));
 
 		btnEliminarGrupo = new JButton("Eliminar grupo");
+		btnEliminarGrupo.addActionListener(new BtnEliminarGrupoActionListener());
 		btnEliminarGrupo.setHorizontalAlignment(SwingConstants.LEFT);
 		GridBagConstraints gbc_btnEliminarGrupo = new GridBagConstraints();
 		gbc_btnEliminarGrupo.fill = GridBagConstraints.VERTICAL;
@@ -204,10 +208,11 @@ public class GrupoTuristas extends JPanel {
 
 		txtDescripcionTuristas = new JTextPane();
 		txtDescripcionTuristas.setPreferredSize(new Dimension(350, 24));
-		txtDescripcionTuristas.setText("Se refiere al conjunto de individuos que están reunidos gracias a una fuerte relación, ya sea personal, afectuosa o íntima. Por ejemplo, en éstos es posible encontrar los grupos familiares y de amigos.\r\n" + 
-				"\r\n" + 
-				"Ejemplo de grupo familiar: los padres y dos hijos viven en un hogar, donde éstos comparten parte del día cuando están todos reunidos en el hogar y en las salidas familiares. Todos mantienen un vínculo afectuoso y de sangre.\r\n" + 
-				"Los amigos son personas que ganan la confianza con el tiempo y en los que se establece una relación afectuosa.");
+		txtDescripcionTuristas.setText(
+				"Se refiere al conjunto de individuos que están reunidos gracias a una fuerte relación, ya sea personal, afectuosa o íntima. Por ejemplo, en éstos es posible encontrar los grupos familiares y de amigos.\r\n"
+						+ "\r\n"
+						+ "Ejemplo de grupo familiar: los padres y dos hijos viven en un hogar, donde éstos comparten parte del día cuando están todos reunidos en el hogar y en las salidas familiares. Todos mantienen un vínculo afectuoso y de sangre.\r\n"
+						+ "Los amigos son personas que ganan la confianza con el tiempo y en los que se establece una relación afectuosa.");
 		txtDescripcionTuristas.setBackground(Color.WHITE);
 		txtDescripcionTuristas.setEditable(false);
 		panel_5.add(txtDescripcionTuristas, BorderLayout.CENTER);
@@ -338,8 +343,9 @@ public class GrupoTuristas extends JPanel {
 		gbc_btnModificarGrupo.gridx = 1;
 		gbc_btnModificarGrupo.gridy = 5;
 		panel_derecha.add(btnModificarGrupo, gbc_btnModificarGrupo);
-		
+
 		btnConfirmarGrupo = new JButton("Confirmar grupo");
+		btnConfirmarGrupo.setVisible(false);
 		GridBagConstraints gbc_btnConfirmarGrupo = new GridBagConstraints();
 		gbc_btnConfirmarGrupo.fill = GridBagConstraints.BOTH;
 		gbc_btnConfirmarGrupo.insets = new Insets(0, 0, 5, 5);
@@ -348,13 +354,14 @@ public class GrupoTuristas extends JPanel {
 		panel_derecha.add(btnConfirmarGrupo, gbc_btnConfirmarGrupo);
 
 		btnCancelarGrupo = new JButton("Cancelar grupo");
+		btnCancelarGrupo.setVisible(false);
 		GridBagConstraints gbc_btnCancelarGrupo = new GridBagConstraints();
 		gbc_btnCancelarGrupo.fill = GridBagConstraints.BOTH;
 		gbc_btnCancelarGrupo.insets = new Insets(0, 0, 0, 5);
 		gbc_btnCancelarGrupo.gridx = 1;
 		gbc_btnCancelarGrupo.gridy = 9;
 		panel_derecha.add(btnCancelarGrupo, gbc_btnCancelarGrupo);
-		
+
 		btnCambiarFoto.setBackground(new Color(45, 51, 74));
 		btnModificarGrupo.setBackground(new Color(45, 51, 74));
 		btnConfirmarGrupo.setBackground(new Color(45, 51, 74));
@@ -367,8 +374,6 @@ public class GrupoTuristas extends JPanel {
 		btnModificarGrupo.setFont(new Font("Verdana", Font.BOLD, 17));
 		btnCancelarGrupo.setFont(new Font("Verdana", Font.BOLD, 17));
 		btnConfirmarGrupo.setFont(new Font("Verdana", Font.BOLD, 17));
-
-		
 
 	}
 
@@ -396,6 +401,46 @@ public class GrupoTuristas extends JPanel {
 
 			lblFoto.setIcon(image);
 		}
+	}
+
+	private class BtnEliminarGrupoActionListener implements ActionListener {
+		public void actionPerformed(ActionEvent arg0) {
+			int grupoSeleccionado = lista_grupos.getSelectedIndex();
+			try {
+				int resp = JOptionPane.showConfirmDialog(null,
+						"¿Desea eliminar el grupo " + lista_grupos.getSelectedValue().toString() + "?",
+						"Eliminar grupo", JOptionPane.YES_NO_OPTION);
+				if (resp == 0) {
+
+					turistas.remove(grupoSeleccionado);
+					((DefaultListModel) lista_grupos.getModel()).remove(grupoSeleccionado);
+					panelBotones.repaint();
+					panelBotones.revalidate();
+					limpiarSeleccion();
+				}
+			} catch (java.lang.NullPointerException ex) {
+				JOptionPane.showMessageDialog(null, "Por favor, seleccione una grupo a eliminar");
+			}
+		}
+	}
+	private class BtnAadirGrupoActionListener implements ActionListener {
+		public void actionPerformed(ActionEvent arg0) {
+			btnConfirmarGrupo.setVisible(true);
+			btnCancelarGrupo.setVisible(true);
+		}
+	}
+
+	private void limpiarSeleccion() {
+		txtDescripcionTuristas.setText("");
+		chckbxAlergias.setSelected(false);
+		chckbxIdioma.setSelected(false);
+		chckbxMonumentos.setSelected(false);
+		chckbxMovilidad.setSelected(false);
+		chckbxMuseos.setSelected(false);
+		chckbxNaturaleza.setSelected(false);
+		chckbxPlaya.setSelected(false);
+		DefaultTableModel tb = (DefaultTableModel) tableGrupoTuristas.getModel();
+		tb.setRowCount(0);
 	}
 
 	private void construirTabla() {

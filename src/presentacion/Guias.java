@@ -125,6 +125,7 @@ public class Guias extends JPanel {
 		btnAadirGuia.setFont(new Font("Verdana", Font.BOLD, 17));
 
 		btnEliminarGuia = new JButton("Eliminar guia");
+		btnEliminarGuia.addActionListener(new BtnEliminarGuiaActionListener());
 		btnEliminarGuia.setHorizontalAlignment(SwingConstants.LEFT);
 		GridBagConstraints gbc_btnEliminarGuia = new GridBagConstraints();
 		gbc_btnEliminarGuia.fill = GridBagConstraints.BOTH;
@@ -422,6 +423,7 @@ public class Guias extends JPanel {
 		panel_informacion.add(btnAceptarCambios, gbc_btnAceptarCambios);
 		construirTabla();
 		ocultarBotones();
+		limpiarSeleccion();
 
 	}
 
@@ -557,6 +559,36 @@ public class Guias extends JPanel {
 				guias.get(guiaSeleccionado).setCalendario(table.getModel());
 			}
 		}
+	}
+
+	private class BtnEliminarGuiaActionListener implements ActionListener {
+		public void actionPerformed(ActionEvent arg0) {
+			int guiaSeleccionado = lista_guias.getSelectedIndex();
+			try {
+				int resp = JOptionPane.showConfirmDialog(null,
+						"¿Desea eliminar la ruta " + lista_guias.getSelectedValue().toString() + "?", "Eliminar ruta",
+						JOptionPane.YES_NO_OPTION);
+				if (resp == 0) {
+
+					guias.remove(guiaSeleccionado);
+					((DefaultListModel) lista_guias.getModel()).remove(guiaSeleccionado);
+					pnlListaGuias.repaint();
+					pnlListaGuias.revalidate();
+					limpiarSeleccion();
+				}
+			} catch (java.lang.NullPointerException ex) {
+				JOptionPane.showMessageDialog(null, "Por favor, seleccione una ruta a eliminar");
+			}
+
+		}
+
+	}
+
+	private void limpiarSeleccion() {
+		txtCorreo.setText("");
+		txtNombre.setText("");
+		txtSueldo.setText("");
+		lblTelefono.setText("");
 	}
 
 	private void construirTabla(String[] titulos, Object[][] data) {
