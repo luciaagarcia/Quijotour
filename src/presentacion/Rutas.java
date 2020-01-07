@@ -26,6 +26,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -72,7 +73,7 @@ public class Rutas extends JPanel {
 	private JLabel lblIdiomas;
 	private JLabel lblPrecio;
 	private JLabel lblComplejidad;
-	private JTextField lblNombreRuta;
+	public JTextField lblNombreRuta;
 	private JLabel lblLblmapa;
 	private JLabel lblTipo;
 
@@ -97,6 +98,7 @@ public class Rutas extends JPanel {
 	private JTextField txtPrecio;
 	private JTextPane txtComentariosAdicionales;
 
+	private Historial historial;
 	InfoRutas inforutas = new InfoRutas();
 	InfoParadas infoparadas = new InfoParadas();
 	ArrayList<ConstRuta> rutas = inforutas.getRutas();
@@ -106,6 +108,7 @@ public class Rutas extends JPanel {
 	private JPanel pnl_derecha;
 	private JButton btnConfirmarCambios;
 	private JButton btnCancelar;
+	private JLabel lblOferta;
 
 	/**
 	 * Create the panel.
@@ -228,6 +231,7 @@ public class Rutas extends JPanel {
 		pnlGeneral.add(lblNombreRuta, gbc_lblNombreRuta);
 
 		btnReservar = new JButton("Reservar");
+		btnReservar.addActionListener(new BtnReservarActionListener());
 		btnReservar.setFont(new Font("Verdana", Font.BOLD, 24));
 		btnReservar.setIcon(new ImageIcon(Rutas.class.getResource("/res/icons8-comprar-50.png")));
 		GridBagConstraints gbc_btnReservar = new GridBagConstraints();
@@ -427,6 +431,15 @@ public class Rutas extends JPanel {
 		pnlGeneral.add(txtPrecio, gbc_txtPrecio);
 		txtPrecio.setColumns(10);
 
+		lblOferta = new JLabel("");
+		lblOferta.setIcon(new ImageIcon(Rutas.class.getResource("/res/icons8-descuento-50.png")));
+		GridBagConstraints gbc_lblOferta = new GridBagConstraints();
+		gbc_lblOferta.anchor = GridBagConstraints.WEST;
+		gbc_lblOferta.insets = new Insets(0, 0, 5, 5);
+		gbc_lblOferta.gridx = 10;
+		gbc_lblOferta.gridy = 10;
+		pnlGeneral.add(lblOferta, gbc_lblOferta);
+
 		lblComplejidad = new JLabel("Complejidad:");
 		GridBagConstraints gbc_lblComplejidad = new GridBagConstraints();
 		gbc_lblComplejidad.anchor = GridBagConstraints.EAST;
@@ -466,24 +479,25 @@ public class Rutas extends JPanel {
 		gbc_cbTipoRuta.gridx = 7;
 		gbc_cbTipoRuta.gridy = 12;
 		pnlGeneral.add(cbTipoRuta, gbc_cbTipoRuta);
-		
-				btnConfirmarCambios = new JButton("Confirmar cambios");
-				btnConfirmarCambios.addActionListener(new BtnConfirmarCambiosActionListener());
-				btnConfirmarCambios.setVisible(false);
-				
-				btnCancelar = new JButton("Cancelar");
-				GridBagConstraints gbc_btnCancelar = new GridBagConstraints();
-				gbc_btnCancelar.insets = new Insets(0, 0, 5, 5);
-				gbc_btnCancelar.gridx = 7;
-				gbc_btnCancelar.gridy = 13;
-				pnlGeneral.add(btnCancelar, gbc_btnCancelar);
-				GridBagConstraints gbc_btnConfirmarCambios = new GridBagConstraints();
-				gbc_btnConfirmarCambios.insets = new Insets(0, 0, 5, 5);
-				gbc_btnConfirmarCambios.gridx = 9;
-				gbc_btnConfirmarCambios.gridy = 13;
-				pnlGeneral.add(btnConfirmarCambios, gbc_btnConfirmarCambios);
-				btnConfirmarCambios.setBackground(new Color(45, 51, 74));
-				btnConfirmarCambios.setForeground(Color.WHITE);
+
+		btnConfirmarCambios = new JButton("Confirmar cambios");
+		btnConfirmarCambios.addActionListener(new BtnConfirmarCambiosActionListener());
+		btnConfirmarCambios.setVisible(false);
+
+		btnCancelar = new JButton("Cancelar");
+		btnCancelar.addActionListener(new BtnCancelarActionListener());
+		GridBagConstraints gbc_btnCancelar = new GridBagConstraints();
+		gbc_btnCancelar.insets = new Insets(0, 0, 5, 5);
+		gbc_btnCancelar.gridx = 7;
+		gbc_btnCancelar.gridy = 13;
+		pnlGeneral.add(btnCancelar, gbc_btnCancelar);
+		GridBagConstraints gbc_btnConfirmarCambios = new GridBagConstraints();
+		gbc_btnConfirmarCambios.insets = new Insets(0, 0, 5, 5);
+		gbc_btnConfirmarCambios.gridx = 9;
+		gbc_btnConfirmarCambios.gridy = 13;
+		pnlGeneral.add(btnConfirmarCambios, gbc_btnConfirmarCambios);
+		btnConfirmarCambios.setBackground(new Color(45, 51, 74));
+		btnConfirmarCambios.setForeground(Color.WHITE);
 
 		txtComentariosAdicionales = new JTextPane();
 		txtComentariosAdicionales.setBorder(
@@ -523,6 +537,9 @@ public class Rutas extends JPanel {
 
 		limpiarSeleccion();
 		desactivar();
+		btnReservar.setVisible(false);
+		btnModificar.setVisible(false);
+		btnEnviar.setVisible(false);
 	}
 
 	public void desactivar() {
@@ -655,7 +672,7 @@ public class Rutas extends JPanel {
 				sliderComplejidad.setValue(Integer.valueOf(rutas.get(rutaSeleccionada).getComplejidadRuta()));
 				txtComentariosAdicionales.setText(rutas.get(rutaSeleccionada).getComentarioRuta().toString());
 				txtDistancia.setText(rutas.get(rutaSeleccionada).getKmRuta().toString() + " km");
-				txtPrecio.setText(rutas.get(rutaSeleccionada).getPrecioRuta().toString());
+				txtPrecio.setText(rutas.get(rutaSeleccionada).getPrecioRuta().toString() + " € ");
 				cbGuiasDisponibles.setSelectedItem(rutas.get(rutaSeleccionada).getNombreGuia().toString());
 				cbTipoRuta.setSelectedItem(rutas.get(rutaSeleccionada).getTipoRuta().toString());
 				txtDuracin.setText(rutas.get(rutaSeleccionada).getDuracionRuta().toString());
@@ -668,7 +685,9 @@ public class Rutas extends JPanel {
 					modeloParadas.add(i, paradas.get(elemento).getNombreParada());
 				}
 				listParadas.setSelectedIndex(0);
-
+				btnReservar.setVisible(true);
+				btnModificar.setVisible(true);
+				btnEnviar.setVisible(true);
 			}
 		}
 	}
@@ -712,6 +731,24 @@ public class Rutas extends JPanel {
 		}
 	}
 
+	private class BtnReservarActionListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+
+			ReservarRuta reservar = new ReservarRuta();
+			reservar.setHistorial(historial);
+			reservar.lblNombreRuta.setText(lblNombreRuta.getText());
+			reservar.setVisible(true);
+			reservar.setLocationRelativeTo(null);
+
+		}
+	}
+
+	private class BtnCancelarActionListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			desactivar();
+		}
+	}
+
 	private void limpiarSeleccion() {
 		lblNombreRuta.setText("");
 		sliderComplejidad.setValue(5);
@@ -737,5 +774,10 @@ public class Rutas extends JPanel {
 			rdbtnOtro.setSelected(true);
 		}
 
+	}
+
+	public void setHistorial(Historial historial) {
+
+		this.historial = historial;
 	}
 }

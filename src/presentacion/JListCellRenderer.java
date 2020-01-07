@@ -30,5 +30,5 @@ public class JListCellRenderer extends JLabel implements ListCellRenderer {
 		setMaximumSize(new Dimension(200, 50));
 		return this;
 	}
-
+ 
 }

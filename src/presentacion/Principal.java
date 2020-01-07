@@ -240,7 +240,7 @@ public class Principal {
 		pnlPrincipal.setLayout(new CardLayout(0, 0));
 
 		pnlRutas = new Rutas();
-		pnlRutas.setBackground(new Color(255, 255, 255));
+		pnlRutas.setOpaque(false);
 		pnlGuias = new Guias();
 		pnlGuias.setOpaque(false);
 		pnlHistorial = new Historial();
@@ -251,6 +251,8 @@ public class Principal {
 		pnlPrincipal.add(pnlGuias, "Guias");
 		pnlPrincipal.add(pnlGrupoTuristas, "Grupo Turistas");
 		pnlPrincipal.add(pnlHistorial, "Historial");
+		
+		((Rutas) pnlRutas).setHistorial((Historial) pnlHistorial);
 
 	}
 
