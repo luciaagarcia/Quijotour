@@ -18,6 +18,7 @@ import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Toolkit;
+import java.awt.Dimension;
 
 public class Login2 {
 
@@ -62,13 +63,18 @@ public class Login2 {
 	 */
 	private void initialize() {
 		frame = new JFrame();
+		frame.getContentPane().setPreferredSize(new Dimension(1600, 900));
+		frame.getContentPane().setSize(new Dimension(1600, 900));
+		frame.setSize(new Dimension(655, 430));
+		frame.setBackground(Color.LIGHT_GRAY);
+		frame.setResizable(false);
 		frame.setUndecorated(true);
 		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(Login2.class.getResource("/presentacion/recursos/Quijotour.png")));
-		frame.setResizable(false);
-		frame.setBounds(100, 100, 450, 300);
+		frame.setBounds(900, 900, 600, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		panel = new JPanel();
+		panel.setSize(new Dimension(1600, 900));
 		panel.setBackground(new Color(45,51,74));
 		frame.getContentPane().add(panel, BorderLayout.WEST);
 		GridBagLayout gbl_panel = new GridBagLayout();
@@ -148,25 +154,28 @@ public class Login2 {
 		panel.add(lblSergioGarcaMoraleda, gbc_lblSergioGarcaMoraleda);
 		
 		panel_1 = new JPanel();
+		panel_1.setSize(new Dimension(1600, 900));
+		panel_1.setBackground(Color.DARK_GRAY);
 		frame.getContentPane().add(panel_1, BorderLayout.EAST);
 		GridBagLayout gbl_panel_1 = new GridBagLayout();
 		gbl_panel_1.columnWidths = new int[]{0, 0};
-		gbl_panel_1.rowHeights = new int[]{0, 0};
+		gbl_panel_1.rowHeights = new int[]{0, 0, 0};
 		gbl_panel_1.columnWeights = new double[]{0.0, Double.MIN_VALUE};
-		gbl_panel_1.rowWeights = new double[]{0.0, Double.MIN_VALUE};
+		gbl_panel_1.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
 		panel_1.setLayout(gbl_panel_1);
+		ImageIcon imageIcon = new ImageIcon(new ImageIcon(Guias.class.getResource("/presentacion/recursos/molinos-al-lado-de-la-carretera_1962102852.jpeg")).getImage().getScaledInstance(480, 480
+				, Image.SCALE_DEFAULT));
 		
 		
 		lblNewLabel = new JLabel();
-		ImageIcon imageIcon = new ImageIcon(new ImageIcon(Guias.class.getResource("/presentacion/recursos/molinos-al-lado-de-la-carretera_1962102852.jpeg")).getImage().getScaledInstance(280, 280
-				, Image.SCALE_DEFAULT));
 		lblNewLabel.setIcon(imageIcon);
-
-		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
-		gbc_lblNewLabel.anchor = GridBagConstraints.EAST;
-		gbc_lblNewLabel.gridx = 0;
-		gbc_lblNewLabel.gridy = 0;
-		panel_1.add(lblNewLabel, gbc_lblNewLabel);
+		
+				GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
+				gbc_lblNewLabel.gridheight = 2;
+				gbc_lblNewLabel.anchor = GridBagConstraints.EAST;
+				gbc_lblNewLabel.gridx = 0;
+				gbc_lblNewLabel.gridy = 0;
+				panel_1.add(lblNewLabel, gbc_lblNewLabel);
 	}
 
 	private class BtnEntrarActionListener implements ActionListener {
