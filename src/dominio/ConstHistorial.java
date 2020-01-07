@@ -3,19 +3,19 @@ package dominio;
 public class ConstHistorial {
 	String nombre;
 	String grupo;
-	String precio;
+	String guia;
 	String duracion;
 	String fecha;
 	String incidencias;
 	String opiniones;
 	String sugerencias;
 
-	public ConstHistorial(String nombre, String grupo, String precio, String duracion, String fecha, String incidencias,
+	public ConstHistorial(String nombre, String grupo, String guia, String duracion, String fecha, String incidencias,
 			String opiniones, String sugerencias) {
 		super();
 		this.nombre = nombre;
 		this.grupo = grupo;
-		this.precio = precio;
+		this.guia = guia;
 		this.duracion = duracion;
 		this.fecha = fecha;
 		this.incidencias = incidencias;
@@ -39,12 +39,12 @@ public class ConstHistorial {
 		this.grupo = grupo;
 	}
 
-	public String getPrecio() {
-		return precio;
+	public String getGuia() {
+		return guia;
 	}
 
-	public void setPrecio(String precio) {
-		this.precio = precio;
+	public void setGuia(String precio) {
+		this.guia = precio;
 	}
 
 	public String getDuracion() {

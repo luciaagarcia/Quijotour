@@ -74,6 +74,8 @@ public class GrupoTuristas extends JPanel {
 	InfoTuristas infoturistas = new InfoTuristas();
 	ArrayList<ConstTurista> turistas = infoturistas.getTuristas();
 	ModeloTabla modeloTablaGrupoTuristas;// modelo definido en la clase ModeloTabla
+	private JButton btnConfirmarGrupo;
+	private JButton btnCancelarGrupo;
 
 	/**
 	 * Create the panel.
@@ -163,15 +165,25 @@ public class GrupoTuristas extends JPanel {
 
 		panel_3 = new JPanel();
 		panel_3.setOpaque(false);
-		panel_3.setBorder(new TitledBorder(null, "Miembros del grupo", TitledBorder.LEADING, TitledBorder.TOP, null,
-				Color.BLACK));
 		panel_principal.add(panel_3, BorderLayout.CENTER);
-		panel_3.setLayout(new BorderLayout(0, 0));
+		GridBagLayout gbl_panel_3 = new GridBagLayout();
+		gbl_panel_3.columnWidths = new int[] { 0, 215, 975, 0, 0, 0 };
+		gbl_panel_3.rowHeights = new int[] { 10, 400, 50, 400, 10, 0 };
+		gbl_panel_3.columnWeights = new double[] { 0.0, 0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE };
+		gbl_panel_3.rowWeights = new double[] { 0.0, 1.0, 0.0, 1.0, 0.0, Double.MIN_VALUE };
+		panel_3.setLayout(gbl_panel_3);
 
 		scrollPane_1 = new JScrollPane();
 		scrollPane_1.setBackground(Color.WHITE);
 		scrollPane_1.setOpaque(false);
-		panel_3.add(scrollPane_1, BorderLayout.NORTH);
+		GridBagConstraints gbc_scrollPane_1 = new GridBagConstraints();
+		gbc_scrollPane_1.gridwidth = 3;
+		gbc_scrollPane_1.anchor = GridBagConstraints.NORTH;
+		gbc_scrollPane_1.fill = GridBagConstraints.HORIZONTAL;
+		gbc_scrollPane_1.insets = new Insets(0, 0, 5, 5);
+		gbc_scrollPane_1.gridx = 1;
+		gbc_scrollPane_1.gridy = 1;
+		panel_3.add(scrollPane_1, gbc_scrollPane_1);
 
 		tableGrupoTuristas = new JTable();
 		tableGrupoTuristas.setBackground(Color.WHITE);
@@ -181,10 +193,23 @@ public class GrupoTuristas extends JPanel {
 		panel_5.setOpaque(false);
 		panel_5.setBorder(
 				new TitledBorder(null, "Descripci\u00F3n", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_3.add(panel_5, BorderLayout.SOUTH);
+		GridBagConstraints gbc_panel_5 = new GridBagConstraints();
+		gbc_panel_5.gridwidth = 3;
+		gbc_panel_5.insets = new Insets(0, 0, 5, 5);
+		gbc_panel_5.fill = GridBagConstraints.BOTH;
+		gbc_panel_5.gridx = 1;
+		gbc_panel_5.gridy = 3;
+		panel_3.add(panel_5, gbc_panel_5);
 		panel_5.setLayout(new BorderLayout(0, 0));
 
 		txtDescripcionTuristas = new JTextPane();
+		txtDescripcionTuristas.setPreferredSize(new Dimension(350, 24));
+		txtDescripcionTuristas.setText("Se refiere al conjunto de individuos que están reunidos gracias a una fuerte relación, ya sea personal, afectuosa o íntima. Por ejemplo, en éstos es posible encontrar los grupos familiares y de amigos.\r\n" + 
+				"\r\n" + 
+				"Ejemplo de grupo familiar: los padres y dos hijos viven en un hogar, donde éstos comparten parte del día cuando están todos reunidos en el hogar y en las salidas familiares. Todos mantienen un vínculo afectuoso y de sangre.\r\n" + 
+				"Los amigos son personas que ganan la confianza con el tiempo y en los que se establece una relación afectuosa.");
+		txtDescripcionTuristas.setBackground(Color.WHITE);
+		txtDescripcionTuristas.setEditable(false);
 		panel_5.add(txtDescripcionTuristas, BorderLayout.CENTER);
 
 		panel_sur = new JPanel();
@@ -280,9 +305,10 @@ public class GrupoTuristas extends JPanel {
 						.getScaledInstance(200, 200, Image.SCALE_DEFAULT));
 		GridBagLayout gbl_panel_derecha = new GridBagLayout();
 		gbl_panel_derecha.columnWidths = new int[] { 14, 200, 9, 0 };
-		gbl_panel_derecha.rowHeights = new int[] { 36, 200, 10, 33, 20, 33, 0 };
+		gbl_panel_derecha.rowHeights = new int[] { 36, 200, 10, 33, 20, 33, 300, 0, 0, 0, 0 };
 		gbl_panel_derecha.columnWeights = new double[] { 0.0, 0.0, 0.0, Double.MIN_VALUE };
-		gbl_panel_derecha.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		gbl_panel_derecha.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+				Double.MIN_VALUE };
 		panel_derecha.setLayout(gbl_panel_derecha);
 
 		lblFoto = new JLabel("");
@@ -308,16 +334,41 @@ public class GrupoTuristas extends JPanel {
 		btnModificarGrupo.setIcon(new ImageIcon(GrupoTuristas.class.getResource("/res/icons8-editar-24.png")));
 		GridBagConstraints gbc_btnModificarGrupo = new GridBagConstraints();
 		gbc_btnModificarGrupo.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnModificarGrupo.insets = new Insets(0, 0, 0, 5);
+		gbc_btnModificarGrupo.insets = new Insets(0, 0, 5, 5);
 		gbc_btnModificarGrupo.gridx = 1;
 		gbc_btnModificarGrupo.gridy = 5;
 		panel_derecha.add(btnModificarGrupo, gbc_btnModificarGrupo);
+		
+		btnConfirmarGrupo = new JButton("Confirmar grupo");
+		GridBagConstraints gbc_btnConfirmarGrupo = new GridBagConstraints();
+		gbc_btnConfirmarGrupo.fill = GridBagConstraints.BOTH;
+		gbc_btnConfirmarGrupo.insets = new Insets(0, 0, 5, 5);
+		gbc_btnConfirmarGrupo.gridx = 1;
+		gbc_btnConfirmarGrupo.gridy = 7;
+		panel_derecha.add(btnConfirmarGrupo, gbc_btnConfirmarGrupo);
+
+		btnCancelarGrupo = new JButton("Cancelar grupo");
+		GridBagConstraints gbc_btnCancelarGrupo = new GridBagConstraints();
+		gbc_btnCancelarGrupo.fill = GridBagConstraints.BOTH;
+		gbc_btnCancelarGrupo.insets = new Insets(0, 0, 0, 5);
+		gbc_btnCancelarGrupo.gridx = 1;
+		gbc_btnCancelarGrupo.gridy = 9;
+		panel_derecha.add(btnCancelarGrupo, gbc_btnCancelarGrupo);
+		
 		btnCambiarFoto.setBackground(new Color(45, 51, 74));
 		btnModificarGrupo.setBackground(new Color(45, 51, 74));
+		btnConfirmarGrupo.setBackground(new Color(45, 51, 74));
+		btnCancelarGrupo.setBackground(new Color(45, 51, 74));
 		btnCambiarFoto.setForeground(Color.WHITE);
 		btnModificarGrupo.setForeground(Color.WHITE);
+		btnConfirmarGrupo.setForeground(Color.WHITE);
+		btnCancelarGrupo.setForeground(Color.WHITE);
 		btnCambiarFoto.setFont(new Font("Verdana", Font.BOLD, 17));
 		btnModificarGrupo.setFont(new Font("Verdana", Font.BOLD, 17));
+		btnCancelarGrupo.setFont(new Font("Verdana", Font.BOLD, 17));
+		btnConfirmarGrupo.setFont(new Font("Verdana", Font.BOLD, 17));
+
+		
 
 	}
 

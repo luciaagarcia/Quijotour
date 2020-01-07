@@ -11,6 +11,7 @@ import java.awt.Insets;
 import java.util.ArrayList;
 
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
 import org.jfree.chart.ChartFactory;
@@ -26,10 +27,13 @@ import javax.swing.JTextPane;
 import javax.swing.border.TitledBorder;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Historial extends JPanel {
 	private JScrollPane scrollPane;
-	private JTable tableHistorial;
+	public JTable tableHistorial;
 	private JPanel panel_Incidencias;
 	private JTextPane textIncidencia;
 	private JPanel panel_Opiniones;
@@ -39,7 +43,7 @@ public class Historial extends JPanel {
 
 	InfoHistorial infohistorial = new InfoHistorial();
 	ArrayList<ConstHistorial> historial = infohistorial.getHistorial();
-	ModeloTabla modeloTablaHistorial;
+	public ModeloTabla modeloTablaHistorial;
 
 	private static final String PRECIO = "Precio";
 	private static final String PERSONAS = "Personas";
@@ -179,12 +183,11 @@ public class Historial extends JPanel {
 		}
 	}
 
-	private void construirTabla() {
+	protected void construirTabla() {
 		ArrayList<String> titulosList = new ArrayList<String>();
-		titulosList.add("Nombre");
+		titulosList.add("Ruta");
 		titulosList.add("Grupo");
-		titulosList.add("Precio");
-		titulosList.add("Duración");
+		titulosList.add("Guia");
 		titulosList.add("Fecha");
 
 		String titulos[] = new String[titulosList.size()];
@@ -200,9 +203,8 @@ public class Historial extends JPanel {
 		for (int i = 0; i < historial.size(); i++) {
 			informacion[i][0] = historial.get(i).getNombre();
 			informacion[i][1] = historial.get(i).getGrupo();
-			informacion[i][2] = historial.get(i).getPrecio();
-			informacion[i][3] = historial.get(i).getDuracion();
-			informacion[i][4] = historial.get(i).getFecha();
+			informacion[i][2] = historial.get(i).getGuia();
+			informacion[i][3] = historial.get(i).getFecha();
 
 		}
 		return informacion;
@@ -212,14 +214,11 @@ public class Historial extends JPanel {
 
 		modeloTablaHistorial = new ModeloTabla(data, titulos);
 		tableHistorial.setModel(modeloTablaHistorial);
-		
-		
+
 		tableHistorial.getColumnModel().getColumn(0).setCellRenderer(new GestionCeldas("texto"));
 		tableHistorial.getColumnModel().getColumn(1).setCellRenderer(new GestionCeldas("texto"));
-		tableHistorial.getColumnModel().getColumn(2).setCellRenderer(new GestionCeldas("numerico"));
+		tableHistorial.getColumnModel().getColumn(2).setCellRenderer(new GestionCeldas("texto"));
 		tableHistorial.getColumnModel().getColumn(3).setCellRenderer(new GestionCeldas("numerico"));
-		tableHistorial.getColumnModel().getColumn(4).setCellRenderer(new GestionCeldas("numerico"));
-
 
 		tableHistorial.getTableHeader().setReorderingAllowed(false);
 		tableHistorial.setRowHeight(35);
@@ -228,7 +227,14 @@ public class Historial extends JPanel {
 		JTableHeader jtableHeader = tableHistorial.getTableHeader();
 		jtableHeader.setDefaultRenderer(new GestionEncabezadoTabla());
 		tableHistorial.setTableHeader(jtableHeader);
-	
+
 		scrollPane.setViewportView(tableHistorial);
 	}
+
+	public void addTabla(Object[] objeto) {
+		((DefaultTableModel) tableHistorial.getModel()).addRow(objeto);
+		modeloTablaHistorial.fireTableDataChanged();
+		repaint();
+	}
+
 }

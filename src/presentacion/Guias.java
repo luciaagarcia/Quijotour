@@ -13,6 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.ParseException;
 import java.util.ArrayList;
 
 import javax.swing.DefaultListModel;
@@ -21,6 +22,7 @@ import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -31,6 +33,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
+import javax.swing.text.MaskFormatter;
 
 import dominio.ConstGuia;
 import dominio.ConstHistorial;
@@ -48,10 +51,10 @@ public class Guias extends JPanel {
 	private JButton btnEliminarGuia;
 	private JPanel panel_informacion;
 	private JLabel lblFoto;
-	private JTextField lblNombre;
-	private JTextField lblCorreo;
+	private JTextField txtNombre;
+	private JTextField txtCorreo;
 	private JFormattedTextField lblTelefono;
-	private JTextField lblPrecio;
+	private JTextField txtSueldo;
 	private JButton btnCambiarFoto;
 	private JPanel panel_horario;
 	private JScrollPane scrollPane_1;
@@ -69,9 +72,16 @@ public class Guias extends JPanel {
 
 	private JPanel panel;
 	private JPanel panel_1;
+	private JLabel lblCorreo_1;
+	private JLabel lblSueldo;
+	private JLabel lblTelfono;
+	private JButton btnAceptarCambios;
+	private JButton btnCancelar;
 
 	/**
 	 * Create the panel.
+	 * 
+	 * @throws ParseException
 	 */
 	public Guias() {
 		setOpaque(false);
@@ -170,7 +180,7 @@ public class Guias extends JPanel {
 		panel_informacion.setOpaque(false);
 		panel_principal.add(panel_informacion, BorderLayout.NORTH);
 		GridBagLayout gbl_panel_informacion = new GridBagLayout();
-		gbl_panel_informacion.columnWidths = new int[] { 0, 0, 0, 0, 107, 36, 139, 91, 100, 526, 10, 0 };
+		gbl_panel_informacion.columnWidths = new int[] { 0, 0, 0, 0, 80, 36, 139, 91, 100, 526, 10, 0 };
 		gbl_panel_informacion.rowHeights = new int[] { 52, 36, 0, 43, 0, 0, 20, 20, 10, 0, 0 };
 		gbl_panel_informacion.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0,
 				Double.MIN_VALUE };
@@ -191,17 +201,16 @@ public class Guias extends JPanel {
 		gbc_lblFoto.gridy = 1;
 		panel_informacion.add(lblFoto, gbc_lblFoto);
 
-		lblNombre = new JTextField("Don quijote de la Mancha y los Caballeros");
-		lblNombre.setToolTipText("Nombre");
-		lblNombre.setEditable(false);
-		lblNombre.setFont(new Font("Tahoma", Font.BOLD, 16));
-		GridBagConstraints gbc_lblNombre = new GridBagConstraints();
-		gbc_lblNombre.fill = GridBagConstraints.HORIZONTAL;
-		gbc_lblNombre.gridwidth = 4;
-		gbc_lblNombre.insets = new Insets(0, 0, 5, 5);
-		gbc_lblNombre.gridx = 4;
-		gbc_lblNombre.gridy = 2;
-		panel_informacion.add(lblNombre, gbc_lblNombre);
+		txtNombre = new JTextField("");
+		txtNombre.setToolTipText("Nombre");
+		txtNombre.setFont(new Font("Tahoma", Font.BOLD, 16));
+		GridBagConstraints gbc_txtNombre = new GridBagConstraints();
+		gbc_txtNombre.fill = GridBagConstraints.HORIZONTAL;
+		gbc_txtNombre.gridwidth = 4;
+		gbc_txtNombre.insets = new Insets(0, 0, 5, 5);
+		gbc_txtNombre.gridx = 4;
+		gbc_txtNombre.gridy = 2;
+		panel_informacion.add(txtNombre, gbc_txtNombre);
 
 		panel_1 = new JPanel();
 		panel_1.setMaximumSize(new Dimension(100, 50));
@@ -223,34 +232,47 @@ public class Guias extends JPanel {
 
 		scrollPane_2.setViewportView(table_historial);
 
-		lblCorreo = new JTextField("DonQuijote@alu.uclm.es");
-		lblCorreo.setToolTipText("Correo");
-		GridBagConstraints gbc_lblCorreo = new GridBagConstraints();
-		gbc_lblCorreo.fill = GridBagConstraints.HORIZONTAL;
-		gbc_lblCorreo.gridwidth = 2;
-		gbc_lblCorreo.insets = new Insets(0, 0, 5, 5);
-		gbc_lblCorreo.gridx = 4;
-		gbc_lblCorreo.gridy = 4;
-		panel_informacion.add(lblCorreo, gbc_lblCorreo);
+		lblTelfono = new JLabel("Teléfono:");
+		GridBagConstraints gbc_lblTelfono = new GridBagConstraints();
+		gbc_lblTelfono.anchor = GridBagConstraints.EAST;
+		gbc_lblTelfono.insets = new Insets(0, 0, 5, 5);
+		gbc_lblTelfono.gridx = 4;
+		gbc_lblTelfono.gridy = 3;
+		panel_informacion.add(lblTelfono, gbc_lblTelfono);
 
-		lblTelefono = new JFormattedTextField();
+		try {
+			JFormattedTextField txtTelefono = new JFormattedTextField(new MaskFormatter("(+34) ###  ###  ###"));
+			txtTelefono.setEditable(false);
+			lblTelefono = txtTelefono;
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 		lblTelefono.setToolTipText("Telefono");
-		lblTelefono.setText("622116645");
-		GridBagConstraints gbc_lblTelefono = new GridBagConstraints();
-		gbc_lblTelefono.anchor = GridBagConstraints.WEST;
-		gbc_lblTelefono.insets = new Insets(0, 0, 5, 5);
-		gbc_lblTelefono.gridx = 6;
-		gbc_lblTelefono.gridy = 4;
-		panel_informacion.add(lblTelefono, gbc_lblTelefono);
+		GridBagConstraints gbc_txtTelefono = new GridBagConstraints();
+		gbc_txtTelefono.fill = GridBagConstraints.HORIZONTAL;
+		gbc_txtTelefono.insets = new Insets(0, 0, 5, 5);
+		gbc_txtTelefono.gridx = 6;
+		gbc_txtTelefono.gridy = 3;
+		panel_informacion.add(lblTelefono, gbc_txtTelefono);
 
-		lblPrecio = new JTextField("Precio: 8.5€/hora");
-		lblPrecio.setToolTipText("Sueldo");
-		GridBagConstraints gbc_lblPrecio = new GridBagConstraints();
-		gbc_lblPrecio.fill = GridBagConstraints.HORIZONTAL;
-		gbc_lblPrecio.insets = new Insets(0, 0, 5, 5);
-		gbc_lblPrecio.gridx = 4;
-		gbc_lblPrecio.gridy = 5;
-		panel_informacion.add(lblPrecio, gbc_lblPrecio);
+		lblCorreo_1 = new JLabel("Correo:");
+		GridBagConstraints gbc_lblCorreo_1 = new GridBagConstraints();
+		gbc_lblCorreo_1.anchor = GridBagConstraints.EAST;
+		gbc_lblCorreo_1.insets = new Insets(0, 0, 5, 5);
+		gbc_lblCorreo_1.gridx = 4;
+		gbc_lblCorreo_1.gridy = 4;
+		panel_informacion.add(lblCorreo_1, gbc_lblCorreo_1);
+
+		txtCorreo = new JTextField("");
+		txtCorreo.setEditable(false);
+		txtCorreo.setToolTipText("Correo");
+		GridBagConstraints gbc_txtCorreo = new GridBagConstraints();
+		gbc_txtCorreo.fill = GridBagConstraints.HORIZONTAL;
+		gbc_txtCorreo.gridwidth = 2;
+		gbc_txtCorreo.insets = new Insets(0, 0, 5, 5);
+		gbc_txtCorreo.gridx = 6;
+		gbc_txtCorreo.gridy = 4;
+		panel_informacion.add(txtCorreo, gbc_txtCorreo);
 
 		panel_horario = new JPanel();
 		panel_horario.setOpaque(false);
@@ -278,18 +300,16 @@ public class Guias extends JPanel {
 		JTableHeader jtableHeader = table.getTableHeader();
 		jtableHeader.setDefaultRenderer(new GestionEncabezadoTabla());
 		table.setTableHeader(jtableHeader);
-		table.setModel(new DefaultTableModel(new Object[][] {
-				{ "6:00", null, null, "<htmL>Alc\u00E1zar de San Juan<br> Grupo: Luc\u00EDa A.", null, null, null,
-						null },
-				{ "8:00", null, null, null, null, null, null, null },
-				{ "10:00", null, null, null, null, null, null, null },
-				{ "12:00", null, null, null, null, null, null, null },
-				{ "16:30", "<htmL>Lagunas de Ruidera <br> Grupo:Sergio G.", null, null, null, null, null, null },
-				{ "18:30", "<htmL>Lagunas de Ruidera <br> Grupo:Sergio G.", null, null, null, null, null, null },
-				{ "20:30", null, null, null, null, null, null, null },
-				{ "22:30", null, null, null, null, null, null, null }, },
-				new String[] { "Horas", "Lunes", "Martes", "Mi\u00E9rcoles", "Jueves", "Viernes", "S\u00E1bado",
-						"Domingo" }));
+		table.setModel(new DefaultTableModel(
+				new Object[][] { { "6:00", null, null, null, null, null, null, null },
+						{ "8:00", null, null, null, null, null, null, null },
+						{ "10:00", null, null, null, null, null, null, null },
+						{ "12:00", null, null, null, null, null, null, null },
+						{ "16:30", null, null, null, null, null, null, null },
+						{ "18:30", null, null, null, null, null, null, null },
+						{ "20:30", null, null, null, null, null, null, null },
+						{ "22:30", null, null, null, null, null, null, null }, },
+				new String[] { "Horas", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo" }));
 
 		TableColumnModel columnModel = table.getColumnModel();
 
@@ -319,7 +339,26 @@ public class Guias extends JPanel {
 		table.setRowHeight(80);
 
 		btnCambiarFoto = new JButton("Cambiar foto");
+		btnCambiarFoto.setVisible(false);
 		btnCambiarFoto.addActionListener(new BtnCambiarFotoActionListener());
+
+		lblSueldo = new JLabel("Sueldo:");
+		GridBagConstraints gbc_lblSueldo = new GridBagConstraints();
+		gbc_lblSueldo.anchor = GridBagConstraints.EAST;
+		gbc_lblSueldo.insets = new Insets(0, 0, 5, 5);
+		gbc_lblSueldo.gridx = 4;
+		gbc_lblSueldo.gridy = 5;
+		panel_informacion.add(lblSueldo, gbc_lblSueldo);
+
+		txtSueldo = new JTextField("");
+		txtSueldo.setEditable(false);
+		txtSueldo.setToolTipText("Sueldo");
+		GridBagConstraints gbc_txtSueldo = new GridBagConstraints();
+		gbc_txtSueldo.fill = GridBagConstraints.HORIZONTAL;
+		gbc_txtSueldo.insets = new Insets(0, 0, 5, 5);
+		gbc_txtSueldo.gridx = 6;
+		gbc_txtSueldo.gridy = 5;
+		panel_informacion.add(txtSueldo, gbc_txtSueldo);
 		btnCambiarFoto.setFont(new Font("Verdana", Font.PLAIN, 15));
 		btnCambiarFoto.setIcon(new ImageIcon(Guias.class.getResource("/res/icons8-foto-24.png")));
 		GridBagConstraints gbc_btnCambiarFoto = new GridBagConstraints();
@@ -335,6 +374,8 @@ public class Guias extends JPanel {
 		btnCambiarFoto.setFont(new Font("Verdana", Font.BOLD, 17));
 
 		btnModificarDatos = new JButton("Modificar datos");
+		btnModificarDatos.setVisible(false);
+		btnModificarDatos.addActionListener(new BtnModificarDatosActionListener());
 		btnModificarDatos.setIcon(new ImageIcon(Guias.class.getResource("/res/icons8-editar-24.png")));
 		GridBagConstraints gbc_btnModificarDatos = new GridBagConstraints();
 		gbc_btnModificarDatos.anchor = GridBagConstraints.NORTH;
@@ -347,7 +388,9 @@ public class Guias extends JPanel {
 		btnModificarDatos.setForeground(Color.WHITE);
 		btnModificarDatos.setFont(new Font("Verdana", Font.BOLD, 17));
 
-		btnModificarCalendario = new JButton("Modificar calendario");
+		btnModificarCalendario = new JButton("Guardar calendario");
+		btnModificarCalendario.addActionListener(new BtnModificarCalendarioActionListener());
+		btnModificarCalendario.setVisible(false);
 		btnModificarCalendario.setIcon(new ImageIcon(Guias.class.getResource("/res/icons8-calendario-24.png")));
 		GridBagConstraints gbc_btnModificarCalendario = new GridBagConstraints();
 		gbc_btnModificarCalendario.anchor = GridBagConstraints.NORTH;
@@ -358,8 +401,27 @@ public class Guias extends JPanel {
 		btnModificarCalendario.setBackground(new Color(45, 51, 74));
 		btnModificarCalendario.setForeground(Color.WHITE);
 		btnModificarCalendario.setFont(new Font("Verdana", Font.BOLD, 17));
-		construirTabla();
 
+		btnCancelar = new JButton("Cancelar");
+		btnCancelar.setVisible(false);
+		GridBagConstraints gbc_btnCancelar = new GridBagConstraints();
+		gbc_btnCancelar.fill = GridBagConstraints.BOTH;
+		gbc_btnCancelar.insets = new Insets(0, 0, 5, 5);
+		gbc_btnCancelar.gridx = 4;
+		gbc_btnCancelar.gridy = 8;
+		panel_informacion.add(btnCancelar, gbc_btnCancelar);
+
+		btnAceptarCambios = new JButton("Aceptar cambios");
+		btnAceptarCambios.addActionListener(new BtnAceptarCambiosActionListener());
+		btnAceptarCambios.setVisible(false);
+		GridBagConstraints gbc_btnAceptarCambios = new GridBagConstraints();
+		gbc_btnAceptarCambios.fill = GridBagConstraints.BOTH;
+		gbc_btnAceptarCambios.insets = new Insets(0, 0, 5, 5);
+		gbc_btnAceptarCambios.gridx = 6;
+		gbc_btnAceptarCambios.gridy = 8;
+		panel_informacion.add(btnAceptarCambios, gbc_btnAceptarCambios);
+		construirTabla();
+		ocultarBotones();
 
 	}
 
@@ -367,8 +429,7 @@ public class Guias extends JPanel {
 		ArrayList<String> titulosList = new ArrayList<String>();
 		titulosList.add("Nombre");
 		titulosList.add("Grupo");
-		titulosList.add("Precio");
-		titulosList.add("Duración");
+		titulosList.add("Guia");
 		titulosList.add("Fecha");
 
 		String titulos[] = new String[titulosList.size()];
@@ -387,9 +448,8 @@ public class Guias extends JPanel {
 		for (int i = 0; i < historial.size(); i++) {
 			informacion[i][0] = historial.get(i).getNombre();
 			informacion[i][1] = historial.get(i).getGrupo();
-			informacion[i][2] = historial.get(i).getPrecio();
-			informacion[i][3] = historial.get(i).getDuracion();
-			informacion[i][4] = historial.get(i).getFecha();
+			informacion[i][2] = historial.get(i).getGuia();
+			informacion[i][3] = historial.get(i).getFecha();
 
 		}
 		return informacion;
@@ -411,15 +471,90 @@ public class Guias extends JPanel {
 		@Override
 		public void mousePressed(MouseEvent e) {
 			int guiaSeleccionado = lista_guias.getSelectedIndex();
-			lblNombre.setText(guias.get(guiaSeleccionado).getNombre());
-			lblCorreo.setText(guias.get(guiaSeleccionado).getCorreo());
-			lblPrecio.setText(guias.get(guiaSeleccionado).getSueldo());
+			txtNombre.setText(guias.get(guiaSeleccionado).getNombre());
+			txtCorreo.setText(guias.get(guiaSeleccionado).getCorreo());
+			lblTelefono.setText(guias.get(guiaSeleccionado).getTelefono());
+			txtSueldo.setText(guias.get(guiaSeleccionado).getSueldo() + "€");
+			table.setModel(guias.get(guiaSeleccionado).getCalendario());
+
+			TableColumnModel columnModel = table.getColumnModel();
+
+			columnModel.getColumn(0).setPreferredWidth(95);
+			columnModel.getColumn(1).setPreferredWidth(200);
+			columnModel.getColumn(2).setPreferredWidth(200);
+			columnModel.getColumn(3).setPreferredWidth(200);
+			columnModel.getColumn(4).setPreferredWidth(200);
+			columnModel.getColumn(5).setPreferredWidth(200);
+			columnModel.getColumn(6).setPreferredWidth(200);
+			columnModel.getColumn(7).setPreferredWidth(200);
 			if (guias.get(guiaSeleccionado).getFoto() != "") {
 				ImageIcon guia = new ImageIcon(
-						new ImageIcon(Guias.class.getResource(guias.get(guiaSeleccionado).getSueldo())).getImage()
+						new ImageIcon(Guias.class.getResource(guias.get(guiaSeleccionado).getFoto())).getImage()
 								.getScaledInstance(lblFoto.getWidth(), lblFoto.getHeight(), Image.SCALE_DEFAULT));
 
 				lblFoto.setIcon(guia);
+			}
+			btnModificarCalendario.setVisible(true);
+			btnCambiarFoto.setVisible(true);
+			btnModificarDatos.setVisible(true);
+		}
+	}
+
+	private void ocultarBotones() {
+		btnAceptarCambios.setVisible(false);
+		btnCancelar.setVisible(false);
+
+		txtCorreo.setEditable(false);
+		txtNombre.setEditable(false);
+		txtSueldo.setEditable(false);
+		lblTelefono.setEditable(false);
+	}
+
+	private void activarBotones() {
+		btnAceptarCambios.setVisible(true);
+		btnCancelar.setVisible(true);
+		btnModificarCalendario.setVisible(false);
+		btnCambiarFoto.setVisible(false);
+		btnModificarDatos.setVisible(false);
+
+		txtCorreo.setEditable(true);
+		txtNombre.setEditable(true);
+		txtSueldo.setEditable(true);
+		lblTelefono.setEditable(true);
+	}
+
+	private class BtnModificarDatosActionListener implements ActionListener {
+		public void actionPerformed(ActionEvent arg0) {
+
+			activarBotones();
+		}
+	}
+
+	private class BtnAceptarCambiosActionListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			int guiaSeleccionado = lista_guias.getSelectedIndex();
+			int resp = JOptionPane.showConfirmDialog(null,
+					"¿Seguro que desea modificar al guia " + lista_guias.getSelectedValue().toString() + "?",
+					"Modificar guia", JOptionPane.YES_NO_OPTION);
+			if (resp == 0) {
+				guias.get(guiaSeleccionado).setNombre(txtNombre.toString());
+				guias.get(guiaSeleccionado).setCorreo(txtCorreo.toString());
+				guias.get(guiaSeleccionado).setTelefono(lblTelefono.toString());
+				guias.get(guiaSeleccionado).setSueldo(txtSueldo.toString());
+				ocultarBotones();
+			}
+		}
+	}
+
+	private class BtnModificarCalendarioActionListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			int guiaSeleccionado = lista_guias.getSelectedIndex();
+			int resp = JOptionPane.showConfirmDialog(
+					null, "¿Seguro que desea modificar el calendario al guia "
+							+ lista_guias.getSelectedValue().toString() + "?",
+					"Modificar calendario", JOptionPane.YES_NO_OPTION);
+			if (resp == 0) {
+				guias.get(guiaSeleccionado).setCalendario(table.getModel());
 			}
 		}
 	}
@@ -430,9 +565,8 @@ public class Guias extends JPanel {
 
 		table_historial.getColumnModel().getColumn(0).setCellRenderer(new GestionCeldas("texto"));
 		table_historial.getColumnModel().getColumn(1).setCellRenderer(new GestionCeldas("texto"));
-		table_historial.getColumnModel().getColumn(2).setCellRenderer(new GestionCeldas("numerico"));
+		table_historial.getColumnModel().getColumn(2).setCellRenderer(new GestionCeldas("texto"));
 		table_historial.getColumnModel().getColumn(3).setCellRenderer(new GestionCeldas("numerico"));
-		table_historial.getColumnModel().getColumn(4).setCellRenderer(new GestionCeldas("numerico"));
 
 		table_historial.getTableHeader().setReorderingAllowed(false);
 		table_historial.setRowHeight(30);
