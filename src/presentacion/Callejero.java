@@ -18,6 +18,7 @@ import javax.swing.JComboBox;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JSeparator;
 
 public class Callejero {
 
@@ -35,6 +36,7 @@ public class Callejero {
 	private JLabel lblNombreRuta;
 	private JTextField textField_1;
 	private JButton btnCrearRuta;
+	private JSeparator separator;
 
 	/**
 	 * Launch the application.
@@ -65,7 +67,7 @@ public class Callejero {
 	private void initialize() {
 		frame = new JFrame();
 		frame.setResizable(false);
-		frame.setBounds(100, 100, 450, 300);
+		frame.setBounds(100, 100, 559, 382);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		panel = new JPanel();
@@ -99,6 +101,14 @@ public class Callejero {
 		gbc_btnSituarGps.gridx = 1;
 		gbc_btnSituarGps.gridy = 2;
 		panel.add(btnSituarGps, gbc_btnSituarGps);
+		
+		separator = new JSeparator();
+		GridBagConstraints gbc_separator = new GridBagConstraints();
+		gbc_separator.gridwidth = 3;
+		gbc_separator.insets = new Insets(0, 0, 5, 5);
+		gbc_separator.gridx = 0;
+		gbc_separator.gridy = 3;
+		panel.add(separator, gbc_separator);
 		
 		lblHoraInicio = new JLabel("Hora Inicio:");
 		GridBagConstraints gbc_lblHoraInicio = new GridBagConstraints();
