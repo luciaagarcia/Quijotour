@@ -2,55 +2,41 @@ package presentacion;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Random;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextPane;
+import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
 import dominio.ConstTurista;
 import persistencia.InfoTuristas;
-
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Random;
-import java.awt.event.ActionEvent;
-import javax.swing.JSeparator;
-import java.awt.Dimension;
-import java.awt.Font;
-
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import javax.swing.border.EmptyBorder;
-import javax.swing.ListSelectionModel;
-import javax.swing.SwingConstants;
-import java.awt.event.ContainerAdapter;
-import java.awt.event.ContainerEvent;
-import java.awt.event.InputMethodListener;
-import java.awt.event.InputMethodEvent;
 
 public class GrupoTuristas extends JPanel {
 	private JPanel panelBotones;
@@ -83,10 +69,13 @@ public class GrupoTuristas extends JPanel {
 	SeleccionarImagen selim = new SeleccionarImagen();
 	InfoTuristas infoturistas = new InfoTuristas();
 	ArrayList<ConstTurista> turistas = infoturistas.getTuristas();
+	DefaultListModel<String> modeloTuristas = new DefaultListModel();
 	ModeloTabla modeloTablaGrupoTuristas;// modelo definido en la clase ModeloTabla
 	private JButton btnConfirmarGrupo;
 	private JButton btnCancelarGrupo;
 	private JLabel lblGrupoDeTuristas;
+	private boolean añadir;
+	int grupoSeleccionado = -1;
 
 	/**
 	 * Create the panel.
@@ -165,7 +154,6 @@ public class GrupoTuristas extends JPanel {
 		gbl_panel_1.rowWeights = new double[] { 1.0, Double.MIN_VALUE };
 		panel_1.setLayout(gbl_panel_1);
 
-		DefaultListModel<String> modeloTuristas = new DefaultListModel();
 		for (int i = 0; i < turistas.size(); i++) {
 			modeloTuristas.add(i, turistas.get(i).getNombreTurista());
 		}
@@ -353,6 +341,7 @@ public class GrupoTuristas extends JPanel {
 		btnCambiarFoto.setIcon(new ImageIcon(GrupoTuristas.class.getResource("/res/icons8-foto-24.png")));
 
 		btnModificarGrupo = new JButton("Modificar grupo");
+		btnModificarGrupo.addActionListener(new BtnModificarGrupoActionListener());
 		btnModificarGrupo.setIcon(new ImageIcon(GrupoTuristas.class.getResource("/res/icons8-editar-24.png")));
 		GridBagConstraints gbc_btnModificarGrupo = new GridBagConstraints();
 		gbc_btnModificarGrupo.fill = GridBagConstraints.HORIZONTAL;
@@ -362,6 +351,7 @@ public class GrupoTuristas extends JPanel {
 		panel_derecha.add(btnModificarGrupo, gbc_btnModificarGrupo);
 
 		btnConfirmarGrupo = new JButton("Confirmar grupo");
+		btnConfirmarGrupo.addActionListener(new BtnConfirmarGrupoActionListener());
 		btnConfirmarGrupo.setVisible(false);
 		GridBagConstraints gbc_btnConfirmarGrupo = new GridBagConstraints();
 		gbc_btnConfirmarGrupo.fill = GridBagConstraints.BOTH;
@@ -379,7 +369,6 @@ public class GrupoTuristas extends JPanel {
 		gbc_btnCancelarGrupo.gridy = 9;
 		panel_derecha.add(btnCancelarGrupo, gbc_btnCancelarGrupo);
 
-		tableGrupoTuristas.getModel().addTableModelListener(new CeldaListener());
 		btnCambiarFoto.setBackground(new Color(45, 51, 74));
 		btnModificarGrupo.setBackground(new Color(45, 51, 74));
 		btnConfirmarGrupo.setBackground(new Color(45, 51, 74));
@@ -392,12 +381,30 @@ public class GrupoTuristas extends JPanel {
 		btnModificarGrupo.setFont(new Font("Verdana", Font.BOLD, 17));
 		btnCancelarGrupo.setFont(new Font("Verdana", Font.BOLD, 17));
 		btnConfirmarGrupo.setFont(new Font("Verdana", Font.BOLD, 17));
+		Action action = new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				boolean completo = true;
+				Object[] turista = modeloTablaGrupoTuristas.getFila(tableGrupoTuristas.getRowCount() - 1);
+				for (int i = 0; i < turista.length; i++) {
+					if (turista[i] == "") {
+						completo = false;
+					}
+				}
+				if (completo) {
+					completo = true;
+					modeloTablaGrupoTuristas.addRow(new Object[] { "", "", "", "" });
 
+				}
+
+			}
+		};
+		TableCellListener tcl = new TableCellListener(tableGrupoTuristas, action);
 	}
 
 	private class Lista_gruposMouseListener extends MouseAdapter {
 		@Override
 		public void mousePressed(MouseEvent arg0) {
+
 			Random random = new Random();
 			chckbxAlergias.setSelected(random.nextBoolean());
 			chckbxIdioma.setSelected(random.nextBoolean());
@@ -423,7 +430,7 @@ public class GrupoTuristas extends JPanel {
 
 	private class BtnEliminarGrupoActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
-			int grupoSeleccionado = lista_grupos.getSelectedIndex();
+			grupoSeleccionado = lista_grupos.getSelectedIndex();
 			try {
 				int resp = JOptionPane.showConfirmDialog(null,
 						"¿Desea eliminar el grupo " + lista_grupos.getSelectedValue().toString() + "?",
@@ -453,33 +460,58 @@ public class GrupoTuristas extends JPanel {
 			}
 			modeloTablaGrupoTuristas.CambiarTabla(modeloTablaGrupoTuristas.getRowCount(),
 					modeloTablaGrupoTuristas.getColumnCount(), true);
+			añadir = true;
 
 		}
 	}
 
-	private class CeldaListener implements TableModelListener {
+	private class BtnModificarGrupoActionListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			modeloTablaGrupoTuristas.CambiarTabla(modeloTablaGrupoTuristas.getRowCount(),
+					modeloTablaGrupoTuristas.getColumnCount(), true);
+			btnConfirmarGrupo.setVisible(true);
+			btnCancelarGrupo.setVisible(true);
+			btnAadirGrupo.setEnabled(false);
+			btnEliminarGrupo.setEnabled(false);
+			añadir = false;
+		}
+	}
 
-		@Override
-		public void tableChanged(TableModelEvent arg0) {
-			// TODO Auto-generated method stub
-			int fila = modeloTablaGrupoTuristas.getRowCount();
-			boolean filallena = true;
-			Object[] penultima;
+	private class BtnConfirmarGrupoActionListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			try {
+				int resp;
+				if (añadir) {
+					resp = JOptionPane.showConfirmDialog(null, "¿Desea añadir este grupo de turistas al sistema?",
+							"Añadir grupo", JOptionPane.YES_NO_OPTION);
+					if (resp == 0) {
+						tableGrupoTuristas.setRowSelectionInterval(0, modeloTablaGrupoTuristas.getColumnCount());
+						ConstTurista turista = (ConstTurista) modeloTablaGrupoTuristas.getDataVector()
+								.elementAt(tableGrupoTuristas.getSelectedRow());
+						turistas.add(turista);
+						modeloTuristas.add(turistas.size(), turistas.get(turistas.size()).getNombreTurista());
+					}
+				} else {
+					resp = JOptionPane.showConfirmDialog(null,
+							"¿Desea modificar el grupo " + lista_grupos.getSelectedValue().toString() + "?",
+							"Modificar grupo", JOptionPane.YES_NO_OPTION);
+					if (resp == 0) {
 
-			for (int i = 0; i < modeloTablaGrupoTuristas.getColumnCount(); i++) {
-				if (modeloTablaGrupoTuristas.getValueAt(fila, i) == "") {
-					filallena = false;
-					break;
+					}
 				}
-			}
-			if (filallena = true) {
-				modeloTablaGrupoTuristas.addRow(new Object[] { "", "", "", "" });
+				modeloTablaGrupoTuristas.CambiarTabla(modeloTablaGrupoTuristas.getRowCount(),
+						modeloTablaGrupoTuristas.getColumnCount(), false);
+				btnConfirmarGrupo.setVisible(false);
+				btnCancelarGrupo.setVisible(false);
+				btnAadirGrupo.setEnabled(true);
+				btnEliminarGrupo.setEnabled(true);
+
+			} catch (Exception except) {
+
 			}
 
 		}
-
 	}
-
 
 	private void limpiarSeleccion() {
 		txtDescripcionTuristas.setText("");
@@ -490,8 +522,9 @@ public class GrupoTuristas extends JPanel {
 		chckbxMuseos.setSelected(false);
 		chckbxNaturaleza.setSelected(false);
 		chckbxPlaya.setSelected(false);
-		DefaultTableModel tb = (DefaultTableModel) tableGrupoTuristas.getModel();
-		tb.setRowCount(0);
+		while (tableGrupoTuristas.getModel().getRowCount() > 0) {
+			((DefaultTableModel) tableGrupoTuristas.getModel()).removeRow(0);
+		}
 	}
 
 	private void construirTabla() {

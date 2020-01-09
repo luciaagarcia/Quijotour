@@ -120,6 +120,7 @@ public class Guias extends JPanel {
 		pnlListaGuias.add(lblGuias, gbc_lblGuias);
 
 		btnAadirGuia = new JButton(" Añadir guia ");
+		btnAadirGuia.addActionListener(new BtnAadirGuiaActionListener());
 		btnAadirGuia.setHorizontalAlignment(SwingConstants.LEFT);
 		GridBagConstraints gbc_btnAadirGuia = new GridBagConstraints();
 		gbc_btnAadirGuia.fill = GridBagConstraints.BOTH;
@@ -592,6 +593,10 @@ public class Guias extends JPanel {
 
 		}
 
+	}
+	private class BtnAadirGuiaActionListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+		}
 	}
 
 	private void limpiarSeleccion() {

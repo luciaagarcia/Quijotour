@@ -254,6 +254,14 @@ public class Principal {
 		pnlPrincipal.add(pnlHistorial, "Historial");
 
 		((Rutas) pnlRutas).setHistorial((Historial) pnlHistorial);
+		btnRutas.setEnabled(false);
+		btnRutas.setOpaque(true);
+		btnGuias.setEnabled(true);
+		btnGuias.setOpaque(false);
+		btnHistorial.setEnabled(true);
+		btnHistorial.setOpaque(false);
+		btnTuristas.setEnabled(true);
+		btnTuristas.setOpaque(false);
 
 	}
 

@@ -482,6 +482,8 @@ public class Rutas extends JPanel {
 		pnlGeneral.add(lblTipo, gbc_lblTipo);
 
 		cbTipoRuta = new JComboBox();
+		cbTipoRuta.setModel(new DefaultComboBoxModel(new String[] {"Montaña", "Playa", "Monumentos", "Parques"}));
+		cbTipoRuta.setSelectedIndex(0);
 		GridBagConstraints gbc_cbTipoRuta = new GridBagConstraints();
 		gbc_cbTipoRuta.gridwidth = 3;
 		gbc_cbTipoRuta.insets = new Insets(0, 0, 5, 5);

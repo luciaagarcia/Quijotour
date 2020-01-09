@@ -15,7 +15,7 @@ public class ModeloTabla extends DefaultTableModel {
 		super();
 		this.titulos = titulos;
 		this.datos = datos;
-		this.editable_cells=new boolean[datos.length][datos[0].length];
+		this.editable_cells = new boolean[datos.length][datos[0].length];
 		setDataVector(datos, titulos);
 		CambiarTabla(datos.length, datos[0].length, false);
 	}
@@ -32,6 +32,14 @@ public class ModeloTabla extends DefaultTableModel {
 	public void setCellEditable(int row, int column, boolean activo) {
 		this.editable_cells[row][column] = activo;
 		this.fireTableCellUpdated(row, column);
+	}
+
+	public Object[] getFila(int fila) {
+		Object[] simplefila = new Object[4];
+		for (int i = 0; i < this.datos[fila].length; i++) {
+			simplefila[i] = this.datos[fila][i];
+		}
+		return simplefila;
 	}
 
 	public void CambiarTabla(int rows, int columns, boolean activo) {
