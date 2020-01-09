@@ -113,6 +113,7 @@ public class Rutas extends JPanel {
 	private JButton btnConfirmarCambios;
 	private JButton btnCancelar;
 	private JLabel lblOferta;
+	private JLabel lblRutas;
 
 	/**
 	 * Create the panel.
@@ -139,6 +140,15 @@ public class Rutas extends JPanel {
 		gbl_pnlBotones.columnWeights = new double[] { 0.0, Double.MIN_VALUE };
 		gbl_pnlBotones.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE };
 		pnlBotones.setLayout(gbl_pnlBotones);
+		
+		lblRutas = new JLabel("Rutas");
+		lblRutas.setFont(new Font("SansSerif", Font.BOLD | Font.ITALIC, 20));
+		GridBagConstraints gbc_lblRutas = new GridBagConstraints();
+		gbc_lblRutas.fill = GridBagConstraints.BOTH;
+		gbc_lblRutas.insets = new Insets(0, 0, 5, 0);
+		gbc_lblRutas.gridx = 0;
+		gbc_lblRutas.gridy = 0;
+		pnlBotones.add(lblRutas, gbc_lblRutas);
 
 		btnAadirruta = new JButton(" Añadir ruta  ");
 		btnAadirruta.setHorizontalAlignment(SwingConstants.LEFT);
@@ -213,9 +223,9 @@ public class Rutas extends JPanel {
 		pnlGeneral.setOpaque(false);
 		add(pnlGeneral, BorderLayout.CENTER);
 		GridBagLayout gbl_pnlGeneral = new GridBagLayout();
-		gbl_pnlGeneral.columnWidths = new int[] { 80, 150, 100, 40, 10, 0, 20, 100, 100, 100, 128, 0, 0, 10 };
+		gbl_pnlGeneral.columnWidths = new int[] { 80, 150, 100, 40, 10, 50, 20, 100, 50, 100, 128, 0, 0, 20};
 		gbl_pnlGeneral.rowHeights = new int[] { 40, 20, 50, 0, 24, 50, 50, 50, 50, 50, 50, 50, 0, 0, 50, 400, 0, 20 };
-		gbl_pnlGeneral.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0,
+		gbl_pnlGeneral.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0,
 				Double.MIN_VALUE };
 		gbl_pnlGeneral.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
 				0.0, 1.0, 20.0, Double.MIN_VALUE };
@@ -264,7 +274,7 @@ public class Rutas extends JPanel {
 		btnModificar.setFont(new Font("Verdana", Font.BOLD, 17));
 		btnModificar.setIcon(new ImageIcon(Rutas.class.getResource("/res/icons8-editar-24.png")));
 		GridBagConstraints gbc_btnModificar = new GridBagConstraints();
-		gbc_btnModificar.gridwidth = 2;
+		gbc_btnModificar.gridwidth = 3;
 		gbc_btnModificar.gridheight = 2;
 		gbc_btnModificar.fill = GridBagConstraints.BOTH;
 		gbc_btnModificar.insets = new Insets(0, 0, 5, 5);
