@@ -77,6 +77,7 @@ public class Guias extends JPanel {
 	private JLabel lblTelfono;
 	private JButton btnAceptarCambios;
 	private JButton btnCancelar;
+	private JLabel lblGuias;
 
 	/**
 	 * Create the panel.
@@ -108,6 +109,15 @@ public class Guias extends JPanel {
 		scrollPaneBotones.setViewportBorder(null);
 		scrollPaneBotones.setOpaque(false);
 		scrollPaneBotones.getVerticalScrollBar().setUnitIncrement(16);
+		
+		lblGuias = new JLabel("Guias");
+		lblGuias.setFont(new Font("SansSerif", Font.BOLD | Font.ITALIC, 20));
+		GridBagConstraints gbc_lblGuias = new GridBagConstraints();
+		gbc_lblGuias.fill = GridBagConstraints.BOTH;
+		gbc_lblGuias.insets = new Insets(0, 0, 5, 0);
+		gbc_lblGuias.gridx = 0;
+		gbc_lblGuias.gridy = 0;
+		pnlListaGuias.add(lblGuias, gbc_lblGuias);
 
 		btnAadirGuia = new JButton(" Añadir guia ");
 		btnAadirGuia.setHorizontalAlignment(SwingConstants.LEFT);
@@ -125,6 +135,7 @@ public class Guias extends JPanel {
 		btnAadirGuia.setFont(new Font("Verdana", Font.BOLD, 17));
 
 		btnEliminarGuia = new JButton("Eliminar guia");
+		btnEliminarGuia.addActionListener(new BtnEliminarGuiaActionListener());
 		btnEliminarGuia.setHorizontalAlignment(SwingConstants.LEFT);
 		GridBagConstraints gbc_btnEliminarGuia = new GridBagConstraints();
 		gbc_btnEliminarGuia.fill = GridBagConstraints.BOTH;
@@ -422,6 +433,7 @@ public class Guias extends JPanel {
 		panel_informacion.add(btnAceptarCambios, gbc_btnAceptarCambios);
 		construirTabla();
 		ocultarBotones();
+		limpiarSeleccion();
 
 	}
 
@@ -557,6 +569,36 @@ public class Guias extends JPanel {
 				guias.get(guiaSeleccionado).setCalendario(table.getModel());
 			}
 		}
+	}
+
+	private class BtnEliminarGuiaActionListener implements ActionListener {
+		public void actionPerformed(ActionEvent arg0) {
+			int guiaSeleccionado = lista_guias.getSelectedIndex();
+			try {
+				int resp = JOptionPane.showConfirmDialog(null,
+						"¿Desea eliminar la ruta " + lista_guias.getSelectedValue().toString() + "?", "Eliminar ruta",
+						JOptionPane.YES_NO_OPTION);
+				if (resp == 0) {
+
+					guias.remove(guiaSeleccionado);
+					((DefaultListModel) lista_guias.getModel()).remove(guiaSeleccionado);
+					pnlListaGuias.repaint();
+					pnlListaGuias.revalidate();
+					limpiarSeleccion();
+				}
+			} catch (java.lang.NullPointerException ex) {
+				JOptionPane.showMessageDialog(null, "Por favor, seleccione una ruta a eliminar");
+			}
+
+		}
+
+	}
+
+	private void limpiarSeleccion() {
+		txtCorreo.setText("");
+		txtNombre.setText("");
+		txtSueldo.setText("");
+		lblTelefono.setText("");
 	}
 
 	private void construirTabla(String[] titulos, Object[][] data) {
