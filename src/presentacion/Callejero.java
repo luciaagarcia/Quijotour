@@ -19,6 +19,14 @@ import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JSeparator;
+import javax.swing.JList;
+import javax.swing.JTextPane;
+import java.awt.Font;
+import java.awt.Color;
+import javax.swing.border.LineBorder;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.JSlider;
 
 public class Callejero {
 
@@ -27,16 +35,19 @@ public class Callejero {
 	private JPanel panel_1;
 	private JLabel lblCallejero;
 	private JLabel lblCrearRuta;
-	private JButton btnSituarGps;
-	private JTextField textField;
-	private JLabel lblHoraInicio;
-	private JLabel lblHoraFinal;
-	private JComboBox comboBox;
-	private JComboBox comboBox_1;
 	private JLabel lblNombreRuta;
 	private JTextField textField_1;
 	private JButton btnCrearRuta;
 	private JSeparator separator;
+	private JList list;
+	private JButton btnAadirParada;
+	private JLabel lblParada;
+	private JTextField textField_2;
+	private JComboBox comboBox_2;
+	private JLabel lblSeleccionaCiudad;
+	private JLabel lblDuracionDeRuta;
+	private JLabel quijote;
+	private JSlider slider;
 
 	/**
 	 * Launch the application.
@@ -67,40 +78,44 @@ public class Callejero {
 	private void initialize() {
 		frame = new JFrame();
 		frame.setResizable(false);
-		frame.setBounds(100, 100, 559, 382);
+		frame.setBounds(100, 100, 1107, 712);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		panel = new JPanel();
+		panel.setBackground(Color.WHITE);
 		frame.getContentPane().add(panel, BorderLayout.WEST);
 		GridBagLayout gbl_panel = new GridBagLayout();
-		gbl_panel.columnWidths = new int[]{71, 0, 0, 0};
-		gbl_panel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-		gbl_panel.columnWeights = new double[]{1.0, 1.0, 0.0, Double.MIN_VALUE};
-		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel.columnWidths = new int[]{245, 0, 0, 0, 0};
+		gbl_panel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 113, 0, 0, 52, 0};
+		gbl_panel.columnWeights = new double[]{1.0, 1.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		panel.setLayout(gbl_panel);
 		
-		lblCrearRuta = new JLabel("Crear Ruta");
+		lblCrearRuta = new JLabel("Crea tu propia ruta");
+		lblCrearRuta.setFont(new Font("Tahoma", Font.ITALIC, 13));
 		GridBagConstraints gbc_lblCrearRuta = new GridBagConstraints();
 		gbc_lblCrearRuta.insets = new Insets(0, 0, 5, 5);
 		gbc_lblCrearRuta.gridx = 0;
 		gbc_lblCrearRuta.gridy = 0;
 		panel.add(lblCrearRuta, gbc_lblCrearRuta);
 		
-		textField = new JTextField();
-		GridBagConstraints gbc_textField = new GridBagConstraints();
-		gbc_textField.insets = new Insets(0, 0, 5, 5);
-		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField.gridx = 0;
-		gbc_textField.gridy = 2;
-		panel.add(textField, gbc_textField);
-		textField.setColumns(10);
+		lblSeleccionaCiudad = new JLabel("Selecciona ciudad:");
+		lblSeleccionaCiudad.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		GridBagConstraints gbc_lblSeleccionaCiudad = new GridBagConstraints();
+		gbc_lblSeleccionaCiudad.insets = new Insets(0, 0, 5, 5);
+		gbc_lblSeleccionaCiudad.gridx = 0;
+		gbc_lblSeleccionaCiudad.gridy = 2;
+		panel.add(lblSeleccionaCiudad, gbc_lblSeleccionaCiudad);
 		
-		btnSituarGps = new JButton("Situar GPS");
-		GridBagConstraints gbc_btnSituarGps = new GridBagConstraints();
-		gbc_btnSituarGps.insets = new Insets(0, 0, 5, 5);
-		gbc_btnSituarGps.gridx = 1;
-		gbc_btnSituarGps.gridy = 2;
-		panel.add(btnSituarGps, gbc_btnSituarGps);
+		comboBox_2 = new JComboBox();
+		comboBox_2.setModel(new DefaultComboBoxModel(new String[] {"Ciudad Real", "Toledo", "Tomelloso", "Almad\u00E9n", "El Toboso"}));
+		comboBox_2.setToolTipText("");
+		GridBagConstraints gbc_comboBox_2 = new GridBagConstraints();
+		gbc_comboBox_2.insets = new Insets(0, 0, 5, 5);
+		gbc_comboBox_2.fill = GridBagConstraints.HORIZONTAL;
+		gbc_comboBox_2.gridx = 1;
+		gbc_comboBox_2.gridy = 2;
+		panel.add(comboBox_2, gbc_comboBox_2);
 		
 		separator = new JSeparator();
 		GridBagConstraints gbc_separator = new GridBagConstraints();
@@ -110,63 +125,97 @@ public class Callejero {
 		gbc_separator.gridy = 3;
 		panel.add(separator, gbc_separator);
 		
-		lblHoraInicio = new JLabel("Hora Inicio:");
-		GridBagConstraints gbc_lblHoraInicio = new GridBagConstraints();
-		gbc_lblHoraInicio.anchor = GridBagConstraints.EAST;
-		gbc_lblHoraInicio.insets = new Insets(0, 0, 5, 5);
-		gbc_lblHoraInicio.gridx = 0;
-		gbc_lblHoraInicio.gridy = 5;
-		panel.add(lblHoraInicio, gbc_lblHoraInicio);
-		
-		comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"11 00", "12 00", "13 00", "14 00", "15 00", "16 00", "17 00 ", "18 00"}));
-		comboBox.addItemListener(new ComboBoxItemListener());
-		GridBagConstraints gbc_comboBox = new GridBagConstraints();
-		gbc_comboBox.insets = new Insets(0, 0, 5, 5);
-		gbc_comboBox.fill = GridBagConstraints.HORIZONTAL;
-		gbc_comboBox.gridx = 1;
-		gbc_comboBox.gridy = 5;
-		panel.add(comboBox, gbc_comboBox);
-		
-		lblHoraFinal = new JLabel("Hora Final:");
-		GridBagConstraints gbc_lblHoraFinal = new GridBagConstraints();
-		gbc_lblHoraFinal.anchor = GridBagConstraints.EAST;
-		gbc_lblHoraFinal.insets = new Insets(0, 0, 5, 5);
-		gbc_lblHoraFinal.gridx = 0;
-		gbc_lblHoraFinal.gridy = 6;
-		panel.add(lblHoraFinal, gbc_lblHoraFinal);
-		
-		comboBox_1 = new JComboBox();
-		comboBox_1.setModel(new DefaultComboBoxModel(new String[] {"11 00", "12 00", "13 00", "14 00", "15 00", "16 00", "17 00 ", "18 00"}));
-		GridBagConstraints gbc_comboBox_1 = new GridBagConstraints();
-		gbc_comboBox_1.insets = new Insets(0, 0, 5, 5);
-		gbc_comboBox_1.fill = GridBagConstraints.HORIZONTAL;
-		gbc_comboBox_1.gridx = 1;
-		gbc_comboBox_1.gridy = 6;
-		panel.add(comboBox_1, gbc_comboBox_1);
-		
 		lblNombreRuta = new JLabel("Nombre Ruta");
+		lblNombreRuta.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		GridBagConstraints gbc_lblNombreRuta = new GridBagConstraints();
-		gbc_lblNombreRuta.anchor = GridBagConstraints.EAST;
 		gbc_lblNombreRuta.insets = new Insets(0, 0, 5, 5);
 		gbc_lblNombreRuta.gridx = 0;
-		gbc_lblNombreRuta.gridy = 8;
+		gbc_lblNombreRuta.gridy = 4;
 		panel.add(lblNombreRuta, gbc_lblNombreRuta);
 		
 		textField_1 = new JTextField();
+		textField_1.setBorder(new LineBorder(Color.BLACK));
 		GridBagConstraints gbc_textField_1 = new GridBagConstraints();
 		gbc_textField_1.insets = new Insets(0, 0, 5, 5);
 		gbc_textField_1.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textField_1.gridx = 1;
-		gbc_textField_1.gridy = 8;
+		gbc_textField_1.gridy = 4;
 		panel.add(textField_1, gbc_textField_1);
 		textField_1.setColumns(10);
 		
+		lblDuracionDeRuta = new JLabel("Duraci\u00F3n en horas de ruta:");
+		lblDuracionDeRuta.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		GridBagConstraints gbc_lblDuracionDeRuta = new GridBagConstraints();
+		gbc_lblDuracionDeRuta.insets = new Insets(0, 0, 5, 5);
+		gbc_lblDuracionDeRuta.gridx = 0;
+		gbc_lblDuracionDeRuta.gridy = 5;
+		panel.add(lblDuracionDeRuta, gbc_lblDuracionDeRuta);
+		
+		slider = new JSlider();
+		slider.setMaximum(4);
+		slider.setMinimum(1);
+		GridBagConstraints gbc_slider = new GridBagConstraints();
+		gbc_slider.insets = new Insets(0, 0, 5, 5);
+		gbc_slider.gridx = 1;
+		gbc_slider.gridy = 5;
+		panel.add(slider, gbc_slider);
+		
+		quijote = new JLabel("");
+		quijote.setIcon(new ImageIcon(Callejero.class.getResource("/presentacion/recursos/quijobocata.jpeg")));
+		GridBagConstraints gbc_quijote = new GridBagConstraints();
+		gbc_quijote.insets = new Insets(0, 0, 5, 5);
+		gbc_quijote.gridx = 1;
+		gbc_quijote.gridy = 8;
+		panel.add(quijote, gbc_quijote);
+		
+		lblParada = new JLabel("Parada");
+		lblParada.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		GridBagConstraints gbc_lblParada = new GridBagConstraints();
+		gbc_lblParada.insets = new Insets(0, 0, 5, 5);
+		gbc_lblParada.gridx = 0;
+		gbc_lblParada.gridy = 10;
+		panel.add(lblParada, gbc_lblParada);
+		
+		textField_2 = new JTextField();
+		textField_2.setBorder(new LineBorder(Color.BLACK));
+		GridBagConstraints gbc_textField_2 = new GridBagConstraints();
+		gbc_textField_2.insets = new Insets(0, 0, 5, 5);
+		gbc_textField_2.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField_2.gridx = 1;
+		gbc_textField_2.gridy = 10;
+		panel.add(textField_2, gbc_textField_2);
+		textField_2.setColumns(10);
+		
+		btnAadirParada = new JButton("A\u00F1adir Parada");
+		btnAadirParada.setForeground(Color.WHITE);
+		btnAadirParada.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnAadirParada.setBackground(new Color(45, 51, 74));
+		GridBagConstraints gbc_btnAadirParada = new GridBagConstraints();
+		gbc_btnAadirParada.insets = new Insets(0, 0, 5, 5);
+		gbc_btnAadirParada.gridx = 1;
+		gbc_btnAadirParada.gridy = 11;
+		panel.add(btnAadirParada, gbc_btnAadirParada);
+		
+		list = new JList();
+		list.setBorder(new LineBorder(new Color(0, 0, 0)));
+		GridBagConstraints gbc_list = new GridBagConstraints();
+		gbc_list.insets = new Insets(0, 0, 5, 5);
+		gbc_list.fill = GridBagConstraints.BOTH;
+		gbc_list.gridx = 1;
+		gbc_list.gridy = 12;
+		panel.add(list, gbc_list);
+		
 		btnCrearRuta = new JButton("Crear Ruta");
+		btnCrearRuta.setForeground(Color.WHITE);
+		btnCrearRuta.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		btnCrearRuta.setBackground(new Color(45, 51, 74));
 		GridBagConstraints gbc_btnCrearRuta = new GridBagConstraints();
+		gbc_btnCrearRuta.gridheight = 2;
+		gbc_btnCrearRuta.fill = GridBagConstraints.VERTICAL;
+		gbc_btnCrearRuta.gridwidth = 3;
 		gbc_btnCrearRuta.insets = new Insets(0, 0, 5, 5);
-		gbc_btnCrearRuta.gridx = 1;
-		gbc_btnCrearRuta.gridy = 9;
+		gbc_btnCrearRuta.gridx = 0;
+		gbc_btnCrearRuta.gridy = 13;
 		panel.add(btnCrearRuta, gbc_btnCrearRuta);
 		
 		panel_1 = new JPanel();
@@ -179,16 +228,11 @@ public class Callejero {
 		panel_1.setLayout(gbl_panel_1);
 		
 		lblCallejero = new JLabel();
-		ImageIcon imageIcon2 = new ImageIcon(new ImageIcon(Callejero.class.getResource("/presentacion/recursos/Callejero-de-Madrid.jpeg")).getImage().getScaledInstance(280, 280, Image.SCALE_DEFAULT));
+		ImageIcon imageIcon2 = new ImageIcon(new ImageIcon(Callejero.class.getResource("/presentacion/recursos/Callejero-de-Madrid.jpeg")).getImage().getScaledInstance(900, 600, Image.SCALE_DEFAULT));
 		lblCallejero.setIcon(imageIcon2);
 		GridBagConstraints gbc_lblCallejero = new GridBagConstraints();
 		gbc_lblCallejero.gridx = 0;
 		gbc_lblCallejero.gridy = 0;
 		panel_1.add(lblCallejero, gbc_lblCallejero);
-	}
-
-	private class ComboBoxItemListener implements ItemListener {
-		public void itemStateChanged(ItemEvent arg0) {
-		}
 	}
 }
