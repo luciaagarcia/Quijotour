@@ -249,7 +249,7 @@ public class Callejero {
 		
 		lblCallejero.addMouseListener(new AreaDibujMouseListener());
 		
-		//
+		
 		
 		
 		
