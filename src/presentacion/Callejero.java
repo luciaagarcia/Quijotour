@@ -12,16 +12,23 @@ import java.awt.Image;
 import javax.swing.JLabel;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.awt.Toolkit;
+
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.awt.event.ItemEvent;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JSeparator;
 import javax.swing.JList;
 import javax.swing.JTextPane;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.Color;
 import javax.swing.border.LineBorder;
 import javax.swing.JSpinner;
@@ -33,7 +40,7 @@ public class Callejero {
 	private JFrame frame;
 	private JPanel panel;
 	private JPanel panel_1;
-	private JLabel lblCallejero;
+	private JLabel lblCallejero = new MiAreaDibujo();
 	private JLabel lblCrearRuta;
 	private JLabel lblNombreRuta;
 	private JTextField textField_1;
@@ -48,7 +55,12 @@ public class Callejero {
 	private JLabel lblDuracionDeRuta;
 	private JLabel quijote;
 	private JSlider slider;
-
+	private int x,y;
+	private MiAreaDibujo Areadibuj;
+	
+	Toolkit toolkit = Toolkit.getDefaultToolkit();
+	Image imagCursor = toolkit
+			.getImage(getClass().getClassLoader().getResource("presentacion/recursos/marcador.png")).getScaledInstance(30, 30, Image.SCALE_DEFAULT);
 	/**
 	 * Launch the application.
 	 */
@@ -98,7 +110,7 @@ public class Callejero {
 		gbc_lblCrearRuta.gridx = 0;
 		gbc_lblCrearRuta.gridy = 0;
 		panel.add(lblCrearRuta, gbc_lblCrearRuta);
-		
+		//
 		lblSeleccionaCiudad = new JLabel("Selecciona ciudad:");
 		lblSeleccionaCiudad.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		GridBagConstraints gbc_lblSeleccionaCiudad = new GridBagConstraints();
@@ -106,7 +118,7 @@ public class Callejero {
 		gbc_lblSeleccionaCiudad.gridx = 0;
 		gbc_lblSeleccionaCiudad.gridy = 2;
 		panel.add(lblSeleccionaCiudad, gbc_lblSeleccionaCiudad);
-		
+		//
 		comboBox_2 = new JComboBox();
 		comboBox_2.setModel(new DefaultComboBoxModel(new String[] {"Ciudad Real", "Toledo", "Tomelloso", "Almad\u00E9n", "El Toboso"}));
 		comboBox_2.setToolTipText("");
@@ -227,12 +239,95 @@ public class Callejero {
 		gbl_panel_1.rowWeights = new double[]{0.0, Double.MIN_VALUE};
 		panel_1.setLayout(gbl_panel_1);
 		
-		lblCallejero = new JLabel();
-		ImageIcon imageIcon2 = new ImageIcon(new ImageIcon(Callejero.class.getResource("/presentacion/recursos/Callejero-de-Madrid.jpeg")).getImage().getScaledInstance(900, 600, Image.SCALE_DEFAULT));
+		lblCallejero = new MiAreaDibujo();
+		lblCallejero.addMouseListener(new AreaDibujMouseListener());
+		ImageIcon imageIcon2 = new ImageIcon(new ImageIcon(Callejero.class.getResource("/presentacion/recursos/Callejero-de-Madrid.jpeg")).getImage().getScaledInstance(650, 600, Image.SCALE_DEFAULT));
 		lblCallejero.setIcon(imageIcon2);
 		GridBagConstraints gbc_lblCallejero = new GridBagConstraints();
 		gbc_lblCallejero.gridx = 0;
 		gbc_lblCallejero.gridy = 0;
 		panel_1.add(lblCallejero, gbc_lblCallejero);
 	}
+	
+	 private class AreaDibujMouseListener extends MouseAdapter {
+			@Override
+			public void mousePressed(MouseEvent e) {
+			    x = e.getX();
+			    y = e.getY();
+			    toolkit = Toolkit.getDefaultToolkit();
+			   
+				((MiAreaDibujo) lblCallejero).addObjetoGrafico(new Imagen(x, y, imagCursor));
+				lblCallejero.repaint();
+
+
+			}
+		    }
+	public class Imagen extends ObjetoGraf implements Serializable {
+		private Image imagen;
+//
+		public Imagen(int x, int y, Image imagen) {
+		    super(x, y);
+		    this.imagen = imagen;
+		}
+
+		public void setImagen(Image imagen) {
+		    this.imagen = imagen;
+		}
+
+		public Image getImagen() {
+		    return imagen;
+		}
+		
+	   }
+	public class MiAreaDibujo extends JLabel {
+
+			private ArrayList<ObjetoGraf> objetosGraficos = new ArrayList<ObjetoGraf>();
+
+			public MiAreaDibujo() {
+			}
+
+			void addObjetoGrafico(ObjetoGraf objg) {
+			    objetosGraficos.add(objg);
+			}
+
+			public ObjetoGraf getUltimoObjetoGrafico() {
+			    return objetosGraficos.get(objetosGraficos.size() - 1);
+			}
+
+			public void paint(Graphics g) {
+			    super.paint(g);
+			    System.out.println(objetosGraficos.size());
+			    for (int i = 0; i < objetosGraficos.size(); i++) {
+				ObjetoGraf objg = objetosGraficos.get(i);
+				if (objg instanceof Imagen) {
+				    g.drawImage(((Imagen) objg).getImagen(), objg.getX(), objg.getY(), null);
+				}
+
+			    }
+			}
+		   }
+	public class ObjetoGraf implements Serializable {
+		private int x, y;
+
+		public ObjetoGraf(int x, int y) {
+		    this.x = x;
+		    this.y = y;
+		}
+
+		public void setX(int x) {
+		    this.x = x;
+		}
+
+		public void setY(int y) {
+		    this.y = y;
+		}
+
+		public int getX() {
+		    return x;
+		}
+
+		public int getY() {
+		    return y;
+		}
+	    }
 }
