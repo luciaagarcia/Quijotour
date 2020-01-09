@@ -34,6 +34,8 @@ import javax.swing.border.LineBorder;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.JSlider;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Callejero {
 
@@ -43,13 +45,13 @@ public class Callejero {
 	private JLabel lblCallejero = new MiAreaDibujo();
 	private JLabel lblCrearRuta;
 	private JLabel lblNombreRuta;
-	private JTextField textField_1;
+	private JTextField txtNombreRuta;
 	private JButton btnCrearRuta;
 	private JSeparator separator;
 	private JList list;
 	private JButton btnAadirParada;
 	private JLabel lblParada;
-	private JTextField textField_2;
+	private JTextField txtParada;
 	private JComboBox comboBox_2;
 	private JLabel lblSeleccionaCiudad;
 	private JLabel lblDuracionDeRuta;
@@ -57,6 +59,7 @@ public class Callejero {
 	private JSlider slider;
 	private int x,y;
 	private MiAreaDibujo Areadibuj;
+	private Rutas rutas;
 	
 	Toolkit toolkit = Toolkit.getDefaultToolkit();
 	Image imagCursor = toolkit
@@ -145,15 +148,15 @@ public class Callejero {
 		gbc_lblNombreRuta.gridy = 4;
 		panel.add(lblNombreRuta, gbc_lblNombreRuta);
 		
-		textField_1 = new JTextField();
-		textField_1.setBorder(new LineBorder(Color.BLACK));
-		GridBagConstraints gbc_textField_1 = new GridBagConstraints();
-		gbc_textField_1.insets = new Insets(0, 0, 5, 5);
-		gbc_textField_1.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField_1.gridx = 1;
-		gbc_textField_1.gridy = 4;
-		panel.add(textField_1, gbc_textField_1);
-		textField_1.setColumns(10);
+		txtNombreRuta = new JTextField();
+		txtNombreRuta.setBorder(new LineBorder(Color.BLACK));
+		GridBagConstraints gbc_txtNombreRuta = new GridBagConstraints();
+		gbc_txtNombreRuta.insets = new Insets(0, 0, 5, 5);
+		gbc_txtNombreRuta.fill = GridBagConstraints.HORIZONTAL;
+		gbc_txtNombreRuta.gridx = 1;
+		gbc_txtNombreRuta.gridy = 4;
+		panel.add(txtNombreRuta, gbc_txtNombreRuta);
+		txtNombreRuta.setColumns(10);
 		
 		lblDuracionDeRuta = new JLabel("Duraci\u00F3n en horas de ruta:");
 		lblDuracionDeRuta.setFont(new Font("Tahoma", Font.PLAIN, 18));
@@ -188,15 +191,15 @@ public class Callejero {
 		gbc_lblParada.gridy = 10;
 		panel.add(lblParada, gbc_lblParada);
 		
-		textField_2 = new JTextField();
-		textField_2.setBorder(new LineBorder(Color.BLACK));
-		GridBagConstraints gbc_textField_2 = new GridBagConstraints();
-		gbc_textField_2.insets = new Insets(0, 0, 5, 5);
-		gbc_textField_2.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField_2.gridx = 1;
-		gbc_textField_2.gridy = 10;
-		panel.add(textField_2, gbc_textField_2);
-		textField_2.setColumns(10);
+		txtParada = new JTextField();
+		txtParada.setBorder(new LineBorder(Color.BLACK));
+		GridBagConstraints gbc_txtParada = new GridBagConstraints();
+		gbc_txtParada.insets = new Insets(0, 0, 5, 5);
+		gbc_txtParada.fill = GridBagConstraints.HORIZONTAL;
+		gbc_txtParada.gridx = 1;
+		gbc_txtParada.gridy = 10;
+		panel.add(txtParada, gbc_txtParada);
+		txtParada.setColumns(10);
 		
 		btnAadirParada = new JButton("A\u00F1adir Parada");
 		btnAadirParada.setForeground(Color.WHITE);
@@ -218,6 +221,7 @@ public class Callejero {
 		panel.add(list, gbc_list);
 		
 		btnCrearRuta = new JButton("Crear Ruta");
+		btnCrearRuta.addActionListener(new BtnCrearRutaActionListener());
 		btnCrearRuta.setForeground(Color.WHITE);
 		btnCrearRuta.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		btnCrearRuta.setBackground(new Color(45, 51, 74));
@@ -262,6 +266,16 @@ public class Callejero {
 
 			}
 		    }
+	 private class BtnCrearRutaActionListener implements ActionListener {
+	 	public void actionPerformed(ActionEvent arg0) {
+	 		Object[] ruta = new Object[] { lblNombreRuta.getText(),
+					list.getSelectedValue().toString(), txtNombreRuta.getSelectedText().toString(),
+					slider.getValue() + comboBox_2.getSelectedItem().toString() };
+			rutas.ConstRuta(ruta);
+			
+			dispose();
+	 	}
+	 }
 	public class Imagen extends ObjetoGraf implements Serializable {
 		private Image imagen;
 //
@@ -330,4 +344,5 @@ public class Callejero {
 		    return y;
 		}
 	    }
+	
 }
