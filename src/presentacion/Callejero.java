@@ -240,7 +240,7 @@ public class Callejero {
 	}
 	public class Imagen extends ObjetoGraf implements Serializable {
 		private Image imagen;
-
+//
 		public Imagen(int x, int y, Image imagen) {
 		    super(x, y);
 		    this.imagen = imagen;
