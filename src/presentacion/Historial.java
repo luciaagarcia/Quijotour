@@ -30,6 +30,8 @@ import java.awt.event.MouseEvent;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JLabel;
+import java.awt.Font;
 
 public class Historial extends JPanel {
 	private JScrollPane scrollPane;
@@ -51,14 +53,24 @@ public class Historial extends JPanel {
 	DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 	JFreeChart chart = ChartFactory.createLineChart("Visitas", "Mes", "Número visitas", dataset,
 			PlotOrientation.VERTICAL, true, true, false);
+	private JLabel lblHistorial;
 
 	public Historial() {
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[] { 33, 500, 500, 41, 0, 700, 10, 0 };
-		gridBagLayout.rowHeights = new int[] { 10, 430, 202, 77, 74, 0, 200, 10, 0 };
+		gridBagLayout.rowHeights = new int[] { 0, 10, 430, 202, 77, 74, 0, 200, 10, 0 };
 		gridBagLayout.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
-		gridBagLayout.rowWeights = new double[] { 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		setLayout(gridBagLayout);
+		
+		lblHistorial = new JLabel("Historial");
+		lblHistorial.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 20));
+		GridBagConstraints gbc_lblHistorial = new GridBagConstraints();
+		gbc_lblHistorial.fill = GridBagConstraints.BOTH;
+		gbc_lblHistorial.insets = new Insets(0, 0, 5, 5);
+		gbc_lblHistorial.gridx = 1;
+		gbc_lblHistorial.gridy = 1;
+		add(lblHistorial, gbc_lblHistorial);
 
 		scrollPane = new JScrollPane();
 		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
@@ -66,7 +78,7 @@ public class Historial extends JPanel {
 		gbc_scrollPane.insets = new Insets(0, 0, 5, 5);
 		gbc_scrollPane.fill = GridBagConstraints.BOTH;
 		gbc_scrollPane.gridx = 1;
-		gbc_scrollPane.gridy = 1;
+		gbc_scrollPane.gridy = 2;
 		add(scrollPane, gbc_scrollPane);
 
 		tableHistorial = new JTable();
@@ -83,7 +95,7 @@ public class Historial extends JPanel {
 		gbc_panel_Incidencias.insets = new Insets(0, 0, 5, 5);
 		gbc_panel_Incidencias.fill = GridBagConstraints.BOTH;
 		gbc_panel_Incidencias.gridx = 1;
-		gbc_panel_Incidencias.gridy = 2;
+		gbc_panel_Incidencias.gridy = 3;
 		add(panel_Incidencias, gbc_panel_Incidencias);
 		panel_Incidencias.setLayout(new BorderLayout(0, 0));
 
@@ -98,7 +110,7 @@ public class Historial extends JPanel {
 		gbc_panel_Opiniones.insets = new Insets(0, 0, 5, 5);
 		gbc_panel_Opiniones.fill = GridBagConstraints.BOTH;
 		gbc_panel_Opiniones.gridx = 2;
-		gbc_panel_Opiniones.gridy = 2;
+		gbc_panel_Opiniones.gridy = 3;
 		add(panel_Opiniones, gbc_panel_Opiniones);
 		panel_Opiniones.setLayout(new BorderLayout(0, 0));
 
@@ -113,7 +125,7 @@ public class Historial extends JPanel {
 		gbc_panel_Sugerencias.insets = new Insets(0, 0, 5, 5);
 		gbc_panel_Sugerencias.fill = GridBagConstraints.BOTH;
 		gbc_panel_Sugerencias.gridx = 1;
-		gbc_panel_Sugerencias.gridy = 6;
+		gbc_panel_Sugerencias.gridy = 7;
 		add(panel_Sugerencias, gbc_panel_Sugerencias);
 		panel_Sugerencias.setLayout(new BorderLayout(0, 0));
 
@@ -130,7 +142,7 @@ public class Historial extends JPanel {
 		gbc_panel_Grafico.insets = new Insets(0, 0, 5, 5);
 		gbc_panel_Grafico.fill = GridBagConstraints.BOTH;
 		gbc_panel_Grafico.gridx = 3;
-		gbc_panel_Grafico.gridy = 1;
+		gbc_panel_Grafico.gridy = 2;
 
 		chart.setBackgroundPaint(Color.WHITE);
 		chart.getCategoryPlot().setBackgroundPaint(new Color(45, 51, 74));
