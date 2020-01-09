@@ -97,14 +97,15 @@ public class Rutas extends JPanel {
 	private JTextField txtDistancia;
 	private JTextField txtPrecio;
 	private JTextPane txtComentariosAdicionales;
+	Callejero callejero;
 
 	private Historial historial;
 	InfoRutas inforutas = new InfoRutas();
 	InfoParadas infoparadas = new InfoParadas();
-	ArrayList<ConstRuta> rutas = inforutas.getRutas();
+	public ArrayList<ConstRuta> rutas = inforutas.getRutas();
 	ArrayList<ConstParada> paradas = infoparadas.getParadas();
-	DefaultListModel<String> modeloRutas = new DefaultListModel();
-	DefaultListModel<String> modeloParadas = new DefaultListModel();
+	DefaultListModel<String> modeloRutas = new DefaultListModel<String>();
+	DefaultListModel<String> modeloParadas = new DefaultListModel<String>();
 	private JPanel pnl_derecha;
 	private JButton btnConfirmarCambios;
 	private JButton btnCancelar;
@@ -136,7 +137,7 @@ public class Rutas extends JPanel {
 		gbl_pnlBotones.columnWeights = new double[] { 0.0, Double.MIN_VALUE };
 		gbl_pnlBotones.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE };
 		pnlBotones.setLayout(gbl_pnlBotones);
-		
+
 		lblRutas = new JLabel("Rutas");
 		lblRutas.setFont(new Font("SansSerif", Font.BOLD | Font.ITALIC, 20));
 		GridBagConstraints gbc_lblRutas = new GridBagConstraints();
@@ -154,7 +155,6 @@ public class Rutas extends JPanel {
 		gbc_btnAadirruta.gridx = 0;
 		gbc_btnAadirruta.gridy = 1;
 		pnlBotones.add(btnAadirruta, gbc_btnAadirruta);
-		btnAadirruta.addActionListener(new BtnAadirrutaActionListener());
 		btnAadirruta.setIcon(new ImageIcon(Rutas.class.getResource("/res/icons8-añadir-24.png")));
 		btnAadirruta.setFont(new Font("Verdana", Font.BOLD, 17));
 
@@ -219,7 +219,7 @@ public class Rutas extends JPanel {
 		pnlGeneral.setOpaque(false);
 		add(pnlGeneral, BorderLayout.CENTER);
 		GridBagLayout gbl_pnlGeneral = new GridBagLayout();
-		gbl_pnlGeneral.columnWidths = new int[] { 80, 150, 100, 40, 10, 50, 20, 100, 50, 100, 128, 0, 0, 20};
+		gbl_pnlGeneral.columnWidths = new int[] { 80, 150, 100, 40, 10, 50, 20, 100, 50, 100, 128, 0, 0, 20 };
 		gbl_pnlGeneral.rowHeights = new int[] { 40, 20, 50, 0, 24, 50, 50, 50, 50, 50, 50, 50, 0, 0, 50, 400, 0, 20 };
 		gbl_pnlGeneral.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0,
 				Double.MIN_VALUE };
@@ -482,7 +482,7 @@ public class Rutas extends JPanel {
 		pnlGeneral.add(lblTipo, gbc_lblTipo);
 
 		cbTipoRuta = new JComboBox();
-		cbTipoRuta.setModel(new DefaultComboBoxModel(new String[] {"Montaña", "Playa", "Monumentos", "Parques"}));
+		cbTipoRuta.setModel(new DefaultComboBoxModel(new String[] { "Montaña", "Playa", "Monumentos", "Parques" }));
 		cbTipoRuta.setSelectedIndex(0);
 		GridBagConstraints gbc_cbTipoRuta = new GridBagConstraints();
 		gbc_cbTipoRuta.gridwidth = 3;
@@ -552,6 +552,8 @@ public class Rutas extends JPanel {
 		btnReservar.setVisible(false);
 		btnModificar.setVisible(false);
 		btnEnviar.setVisible(false);
+		btnAadirruta.addActionListener(new BtnAadirrutaActionListener());
+
 	}
 
 	public void desactivar() {
@@ -643,6 +645,11 @@ public class Rutas extends JPanel {
 			cbGuiasDisponibles.setSelectedItem("");
 			cbTipoRuta.setSelectedItem("");
 			txtDuracin.setText("");
+
+			callejero = new Callejero();
+			callejero.constRutas(rutas, lista_rutas);
+
+			callejero.frame.setVisible(true);
 
 		}
 	}
