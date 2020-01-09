@@ -2,6 +2,7 @@ package presentacion;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -381,24 +382,32 @@ public class GrupoTuristas extends JPanel {
 		btnModificarGrupo.setFont(new Font("Verdana", Font.BOLD, 17));
 		btnCancelarGrupo.setFont(new Font("Verdana", Font.BOLD, 17));
 		btnConfirmarGrupo.setFont(new Font("Verdana", Font.BOLD, 17));
-		Action action = new AbstractAction() {
-			public void actionPerformed(ActionEvent e) {
-				boolean completo = true;
-				Object[] turista = modeloTablaGrupoTuristas.getFila(tableGrupoTuristas.getRowCount() - 1);
-				for (int i = 0; i < turista.length; i++) {
-					if (turista[i] == "") {
-						completo = false;
-					}
-				}
-				if (completo) {
-					completo = true;
-					modeloTablaGrupoTuristas.addRow(new Object[] { "", "", "", "" });
+		TableCellListener tcl = new TableCellListener(tableGrupoTuristas, new Cell_Listener());
+	}
 
-				}
+	private class Cell_Listener extends AbstractAction {
 
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			TableCellListener tcl = (TableCellListener) arg0.getSource();
+			modeloTablaGrupoTuristas.setDatos(tcl.getColumn(), tcl.getRow(), tcl.getNewValue());
+			boolean completo = true;
+			Object[] turista = modeloTablaGrupoTuristas.getFila(tableGrupoTuristas.getRowCount() - 1);
+			for (int i = 0; i < turista.length; i++) {
+				if (turista[i] == null || turista[i] == "") {
+					completo = false;
+				}
 			}
-		};
-		TableCellListener tcl = new TableCellListener(tableGrupoTuristas, action);
+			if (completo && modeloTablaGrupoTuristas.getRowCount() <= 20) {
+				completo = true;
+				modeloTablaGrupoTuristas.addRow(new Object[] { "", "", "", "" });
+				modeloTablaGrupoTuristas.setDatosMatriz();
+				for (int i = 0; i < modeloTablaGrupoTuristas.getColumnCount(); i++) {
+					modeloTablaGrupoTuristas.setCellEditable(modeloTablaGrupoTuristas.getRowCount() - 1, i, true);
+				}
+			}
+
+		}
 	}
 
 	private class Lista_gruposMouseListener extends MouseAdapter {
@@ -485,11 +494,9 @@ public class GrupoTuristas extends JPanel {
 					resp = JOptionPane.showConfirmDialog(null, "¿Desea añadir este grupo de turistas al sistema?",
 							"Añadir grupo", JOptionPane.YES_NO_OPTION);
 					if (resp == 0) {
-						tableGrupoTuristas.setRowSelectionInterval(0, modeloTablaGrupoTuristas.getColumnCount());
-						ConstTurista turista = (ConstTurista) modeloTablaGrupoTuristas.getDataVector()
-								.elementAt(tableGrupoTuristas.getSelectedRow());
-						turistas.add(turista);
-						modeloTuristas.add(turistas.size(), turistas.get(turistas.size()).getNombreTurista());
+						DefaultListModel mod =	(DefaultListModel) lista_grupos.getModel(); 
+						mod.addElement((String) modeloTablaGrupoTuristas.getValueAt(0, 0));
+						lista_grupos.setModel(mod);
 					}
 				} else {
 					resp = JOptionPane.showConfirmDialog(null,
@@ -511,6 +518,7 @@ public class GrupoTuristas extends JPanel {
 			}
 
 		}
+
 	}
 
 	private void limpiarSeleccion() {
@@ -525,6 +533,9 @@ public class GrupoTuristas extends JPanel {
 		while (tableGrupoTuristas.getModel().getRowCount() > 0) {
 			((DefaultTableModel) tableGrupoTuristas.getModel()).removeRow(0);
 		}
+		modeloTablaGrupoTuristas.setRowCount(0);
+		modeloTablaGrupoTuristas.vaciarDatos();
+
 	}
 
 	private void construirTabla() {

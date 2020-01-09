@@ -1,6 +1,7 @@
 package presentacion;
 
 import java.awt.Font;
+import java.util.ArrayList;
 
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -9,7 +10,7 @@ public class ModeloTabla extends DefaultTableModel {
 
 	String[] titulos;
 	Object[][] datos;
-	private boolean[][] editable_cells;
+	boolean[][] editable_cells;
 
 	public ModeloTabla(Object[][] datos, String[] titulos) {
 		super();
@@ -40,6 +41,43 @@ public class ModeloTabla extends DefaultTableModel {
 			simplefila[i] = this.datos[fila][i];
 		}
 		return simplefila;
+	}
+
+	public void setDatos(int columna, int fila, Object valor) {
+		this.datos[fila][columna] = valor;
+	}
+
+	public void vaciarDatos() {
+		for (int i = 0; i < this.datos.length; i++) {
+			for (int j = 0; j < this.datos[i].length; j++) {
+				this.datos[i][j] = "";
+			}
+
+		}
+	}
+
+	public void setDatosMatriz() {
+		ArrayList<Object[]> temp = new ArrayList<Object[]>();
+		for (int i = 0; i < this.datos.length; i++) {
+			temp.add(datos[i]);
+		}
+		temp.add(new Object[] { "", "", "", "" });
+		this.datos = new Object[temp.size()][4];
+		for (int i = 0; i < this.datos.length; i++) {
+			this.datos[i] = temp.get(i);
+		}
+
+		ArrayList<boolean[]> edit = new ArrayList<boolean[]>();
+		for (int i = 0; i < this.editable_cells.length; i++) {
+			edit.add(editable_cells[i]);
+		}
+
+		edit.add(new boolean[] { true, true, true, true });
+		this.editable_cells = new boolean[edit.size()][4];
+		for (int i = 0; i < this.editable_cells.length; i++) {
+			this.editable_cells[i] = edit.get(i);
+		}
+
 	}
 
 	public void CambiarTabla(int rows, int columns, boolean activo) {
