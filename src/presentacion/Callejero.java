@@ -16,12 +16,15 @@ import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import java.awt.event.ItemListener;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.awt.event.ItemEvent;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JSeparator;
 import javax.swing.JList;
 import javax.swing.JTextPane;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.Color;
 import javax.swing.border.LineBorder;
 import javax.swing.JSpinner;
@@ -235,4 +238,72 @@ public class Callejero {
 		gbc_lblCallejero.gridy = 0;
 		panel_1.add(lblCallejero, gbc_lblCallejero);
 	}
+	public class Imagen extends ObjetoGraf implements Serializable {
+		private Image imagen;
+
+		public Imagen(int x, int y, Image imagen) {
+		    super(x, y);
+		    this.imagen = imagen;
+		}
+
+		public void setImagen(Image imagen) {
+		    this.imagen = imagen;
+		}
+
+		public Image getImagen() {
+		    return imagen;
+		}
+		
+	   }
+	public class MiAreaDibujo extends JLabel {
+
+			private ArrayList<ObjetoGraf> objetosGraficos = new ArrayList<ObjetoGraf>();
+
+			public MiAreaDibujo() {
+			}
+
+			void addObjetoGrafico(ObjetoGraf objg) {
+			    objetosGraficos.add(objg);
+			}
+
+			public ObjetoGraf getUltimoObjetoGrafico() {
+			    return objetosGraficos.get(objetosGraficos.size() - 1);
+			}
+
+			public void paint(Graphics g) {
+			    super.paint(g);
+			    System.out.println(objetosGraficos.size());
+			    for (int i = 0; i < objetosGraficos.size(); i++) {
+				ObjetoGraf objg = objetosGraficos.get(i);
+				if (objg instanceof Imagen) {
+				    g.drawImage(((Imagen) objg).getImagen(), objg.getX(), objg.getY(), null);
+				}
+
+			    }
+			}
+		   }
+	public class ObjetoGraf implements Serializable {
+		private int x, y;
+
+		public ObjetoGraf(int x, int y) {
+		    this.x = x;
+		    this.y = y;
+		}
+
+		public void setX(int x) {
+		    this.x = x;
+		}
+
+		public void setY(int y) {
+		    this.y = y;
+		}
+
+		public int getX() {
+		    return x;
+		}
+
+		public int getY() {
+		    return y;
+		}
+	    }
 }
