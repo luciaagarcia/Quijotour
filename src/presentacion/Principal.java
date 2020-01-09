@@ -60,8 +60,7 @@ public class Principal {
 					Principal window = new Principal();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
-					Principal window = new Principal();
-					window.frame.setVisible(true);
+					e.printStackTrace();
 				}
 			}
 		});
@@ -252,7 +251,7 @@ public class Principal {
 		pnlPrincipal.add(pnlGuias, "Guias");
 		pnlPrincipal.add(pnlGrupoTuristas, "Grupo Turistas");
 		pnlPrincipal.add(pnlHistorial, "Historial");
-
+		
 		((Rutas) pnlRutas).setHistorial((Historial) pnlHistorial);
 
 	}

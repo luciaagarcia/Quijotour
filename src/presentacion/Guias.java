@@ -77,7 +77,6 @@ public class Guias extends JPanel {
 	private JLabel lblTelfono;
 	private JButton btnAceptarCambios;
 	private JButton btnCancelar;
-	private JLabel lblGuias;
 
 	/**
 	 * Create the panel.
@@ -109,15 +108,6 @@ public class Guias extends JPanel {
 		scrollPaneBotones.setViewportBorder(null);
 		scrollPaneBotones.setOpaque(false);
 		scrollPaneBotones.getVerticalScrollBar().setUnitIncrement(16);
-		
-		lblGuias = new JLabel("Guias");
-		lblGuias.setFont(new Font("SansSerif", Font.BOLD | Font.ITALIC, 20));
-		GridBagConstraints gbc_lblGuias = new GridBagConstraints();
-		gbc_lblGuias.fill = GridBagConstraints.BOTH;
-		gbc_lblGuias.insets = new Insets(0, 0, 5, 0);
-		gbc_lblGuias.gridx = 0;
-		gbc_lblGuias.gridy = 0;
-		pnlListaGuias.add(lblGuias, gbc_lblGuias);
 
 		btnAadirGuia = new JButton(" Añadir guia ");
 		btnAadirGuia.setHorizontalAlignment(SwingConstants.LEFT);
