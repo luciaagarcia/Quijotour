@@ -106,7 +106,7 @@ public class Callejero {
 		gbc_lblSeleccionaCiudad.gridx = 0;
 		gbc_lblSeleccionaCiudad.gridy = 2;
 		panel.add(lblSeleccionaCiudad, gbc_lblSeleccionaCiudad);
-		
+		//
 		comboBox_2 = new JComboBox();
 		comboBox_2.setModel(new DefaultComboBoxModel(new String[] {"Ciudad Real", "Toledo", "Tomelloso", "Almad\u00E9n", "El Toboso"}));
 		comboBox_2.setToolTipText("");
