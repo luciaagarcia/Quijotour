@@ -12,10 +12,14 @@ import java.awt.Image;
 import javax.swing.JLabel;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.awt.Toolkit;
+
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.awt.event.ItemEvent;
@@ -36,7 +40,7 @@ public class Callejero {
 	private JFrame frame;
 	private JPanel panel;
 	private JPanel panel_1;
-	private JLabel lblCallejero;
+	private JLabel lblCallejero = new MiAreaDibujo();
 	private JLabel lblCrearRuta;
 	private JLabel lblNombreRuta;
 	private JTextField textField_1;
@@ -51,7 +55,12 @@ public class Callejero {
 	private JLabel lblDuracionDeRuta;
 	private JLabel quijote;
 	private JSlider slider;
-
+	private int x,y;
+	private MiAreaDibujo Areadibuj;
+	
+	Toolkit toolkit = Toolkit.getDefaultToolkit();
+	Image imagCursor = toolkit
+			.getImage(getClass().getClassLoader().getResource("presentacion/recursos/marcador.png")).getScaledInstance(30, 30, Image.SCALE_DEFAULT);
 	/**
 	 * Launch the application.
 	 */
@@ -230,14 +239,29 @@ public class Callejero {
 		gbl_panel_1.rowWeights = new double[]{0.0, Double.MIN_VALUE};
 		panel_1.setLayout(gbl_panel_1);
 		
-		lblCallejero = new JLabel();
-		ImageIcon imageIcon2 = new ImageIcon(new ImageIcon(Callejero.class.getResource("/presentacion/recursos/Callejero-de-Madrid.jpeg")).getImage().getScaledInstance(900, 600, Image.SCALE_DEFAULT));
+		lblCallejero = new MiAreaDibujo();
+		lblCallejero.addMouseListener(new AreaDibujMouseListener());
+		ImageIcon imageIcon2 = new ImageIcon(new ImageIcon(Callejero.class.getResource("/presentacion/recursos/Callejero-de-Madrid.jpeg")).getImage().getScaledInstance(650, 600, Image.SCALE_DEFAULT));
 		lblCallejero.setIcon(imageIcon2);
 		GridBagConstraints gbc_lblCallejero = new GridBagConstraints();
 		gbc_lblCallejero.gridx = 0;
 		gbc_lblCallejero.gridy = 0;
 		panel_1.add(lblCallejero, gbc_lblCallejero);
 	}
+	
+	 private class AreaDibujMouseListener extends MouseAdapter {
+			@Override
+			public void mousePressed(MouseEvent e) {
+			    x = e.getX();
+			    y = e.getY();
+			    toolkit = Toolkit.getDefaultToolkit();
+			   
+				((MiAreaDibujo) lblCallejero).addObjetoGrafico(new Imagen(x, y, imagCursor));
+				lblCallejero.repaint();
+
+
+			}
+		    }
 	public class Imagen extends ObjetoGraf implements Serializable {
 		private Image imagen;
 //
