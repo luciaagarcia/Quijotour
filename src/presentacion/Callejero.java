@@ -98,7 +98,7 @@ public class Callejero {
 		gbc_lblCrearRuta.gridx = 0;
 		gbc_lblCrearRuta.gridy = 0;
 		panel.add(lblCrearRuta, gbc_lblCrearRuta);
-		
+		//
 		lblSeleccionaCiudad = new JLabel("Selecciona ciudad:");
 		lblSeleccionaCiudad.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		GridBagConstraints gbc_lblSeleccionaCiudad = new GridBagConstraints();
