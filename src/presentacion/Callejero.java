@@ -12,10 +12,14 @@ import java.awt.Image;
 import javax.swing.JLabel;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.awt.Toolkit;
+
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.ItemEvent;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JSeparator;
@@ -33,7 +37,7 @@ public class Callejero {
 	private JFrame frame;
 	private JPanel panel;
 	private JPanel panel_1;
-	private JLabel lblCallejero;
+	private MiAreaDibujo lblCallejero;
 	private JLabel lblCrearRuta;
 	private JLabel lblNombreRuta;
 	private JTextField textField_1;
@@ -48,7 +52,12 @@ public class Callejero {
 	private JLabel lblDuracionDeRuta;
 	private JLabel quijote;
 	private JSlider slider;
-
+	private int x,y;
+	MiAreaDibujo Areadibuj = new MiAreaDibujo();
+	Toolkit toolkit = Toolkit.getDefaultToolkit();
+	Image imagCursor = toolkit
+			.getImage(getClass().getClassLoader().getResource("presentacion/recursos/rounded-point-of-interest.png")).getScaledInstance(30, 30, Image.SCALE_DEFAULT);
+	
 	/**
 	 * Launch the application.
 	 */
@@ -80,6 +89,8 @@ public class Callejero {
 		frame.setResizable(false);
 		frame.setBounds(100, 100, 1107, 712);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		
 		
 		panel = new JPanel();
 		panel.setBackground(Color.WHITE);
@@ -168,6 +179,7 @@ public class Callejero {
 		gbc_quijote.gridy = 8;
 		panel.add(quijote, gbc_quijote);
 		
+		
 		lblParada = new JLabel("Parada");
 		lblParada.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		GridBagConstraints gbc_lblParada = new GridBagConstraints();
@@ -227,12 +239,32 @@ public class Callejero {
 		gbl_panel_1.rowWeights = new double[]{0.0, Double.MIN_VALUE};
 		panel_1.setLayout(gbl_panel_1);
 		
-		lblCallejero = new JLabel();
+		lblCallejero = new MiAreaDibujo();
 		ImageIcon imageIcon2 = new ImageIcon(new ImageIcon(Callejero.class.getResource("/presentacion/recursos/Callejero-de-Madrid.jpeg")).getImage().getScaledInstance(900, 600, Image.SCALE_DEFAULT));
 		lblCallejero.setIcon(imageIcon2);
 		GridBagConstraints gbc_lblCallejero = new GridBagConstraints();
 		gbc_lblCallejero.gridx = 0;
 		gbc_lblCallejero.gridy = 0;
 		panel_1.add(lblCallejero, gbc_lblCallejero);
+		
+		lblCallejero.addMouseListener(new AreaDibujMouseListener());
+		
+		
+		
+		
+		
+		
 	}
+	class AreaDibujMouseListener extends MouseAdapter {
+		@Override
+		public void mousePressed(MouseEvent e) {
+		    x = e.getX();
+		    y = e.getY();
+		    toolkit = Toolkit.getDefaultToolkit();
+		    
+			lblCallejero.addObjetoGrafico(new Imagen(x, y, imagCursor));
+			lblCallejero.repaint();
+			
+		}
+	    }
 }

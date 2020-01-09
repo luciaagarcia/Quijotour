@@ -57,6 +57,10 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 
 public class Rutas extends JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JButton btnAadirruta;
 	private JButton btnEliminarruta;
 	private JButton btnReservar;
@@ -631,6 +635,9 @@ public class Rutas extends JPanel {
 			cbGuiasDisponibles.setSelectedItem("");
 			cbTipoRuta.setSelectedItem("");
 			txtDuracin.setText("");
+
+		
+			Callejero callejero = new Callejero();
 
 		}
 	}

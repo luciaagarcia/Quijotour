@@ -163,23 +163,25 @@ public class loginDef extends JFrame {
 		gbc_panel.gridx = 1;
 		gbc_panel.gridy = 0;
 		contentPane.add(panel, gbc_panel);
-		
-		ImageIcon im = new ImageIcon(
-				new ImageIcon(loginDef.class.getResource("/presentacion/recursos/molinos-al-lado-de-la-carretera_1962102852.jpeg")).getImage().getScaledInstance(1200,900,Image.SCALE_SMOOTH));
-			GridBagLayout gbl_panel = new GridBagLayout();
-			gbl_panel.columnWidths = new int[]{400, 0};
-			gbl_panel.rowHeights = new int[]{600, 0};
-			gbl_panel.columnWeights = new double[]{1.0, Double.MIN_VALUE};
-			gbl_panel.rowWeights = new double[]{0.0, Double.MIN_VALUE};
-			panel.setLayout(gbl_panel);
 
-imag = new JLabel("");
-imag.setIcon(im);
-GridBagConstraints gbc_imag = new GridBagConstraints();
-gbc_imag.anchor = GridBagConstraints.NORTHEAST;
-gbc_imag.gridx = 0;
-gbc_imag.gridy = 0;
-panel.add(imag, gbc_imag);}
+		ImageIcon im = new ImageIcon(new ImageIcon(
+				loginDef.class.getResource("/presentacion/recursos/molinos-al-lado-de-la-carretera_1962102852.jpeg"))
+						.getImage().getScaledInstance(1200, 900, Image.SCALE_SMOOTH));
+		GridBagLayout gbl_panel = new GridBagLayout();
+		gbl_panel.columnWidths = new int[] { 400, 0 };
+		gbl_panel.rowHeights = new int[] { 600, 0 };
+		gbl_panel.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
+		gbl_panel.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
+		panel.setLayout(gbl_panel);
+
+		imag = new JLabel("");
+		imag.setIcon(im);
+		GridBagConstraints gbc_imag = new GridBagConstraints();
+		gbc_imag.anchor = GridBagConstraints.NORTHEAST;
+		gbc_imag.gridx = 0;
+		gbc_imag.gridy = 0;
+		panel.add(imag, gbc_imag);
+	}
 
 	private class BtnEntrarActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
