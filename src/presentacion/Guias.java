@@ -537,8 +537,6 @@ public class Guias extends JPanel {
 
 	private class BtnModificarDatosActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
-			btnAadirGuia.setEnabled(false);
-			btnEliminarGuia.setEnabled(false);
 			activarBotones();
 			modificar = true;
 
