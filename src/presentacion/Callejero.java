@@ -12,11 +12,14 @@ import java.awt.Image;
 import javax.swing.JLabel;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.awt.Point;
 import java.awt.Toolkit;
 
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
+
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -27,11 +30,17 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JSeparator;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JTextPane;
+import javax.swing.JViewport;
+
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Color;
+import java.awt.Cursor;
+
 import javax.swing.border.LineBorder;
+import javax.swing.event.MouseInputAdapter;
 import javax.swing.table.DefaultTableModel;
 
 import dominio.ConstParada;
@@ -44,6 +53,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.ScrollPaneConstants;
 
 public class Callejero {
 
@@ -74,14 +84,15 @@ public class Callejero {
 	private JSlider slider_Complejidad;
 	private JLabel lblComplejidad;
 	private JLabel lblDistancia;
-	private JTextField txtrDistancia;
-	private JTextField txtPrecio;
+	private JSpinner spinnerPrecio;
 	private JLabel lblPrecio;
 	private JLabel lblTipoRuta;
 	private JComboBox cmbTipoRuta;
 	private JTextField txtNombreruta;
 	private JTextField txtParadas;
 	JList<String> lista_rutas;
+	private JScrollPane scrollPane_1;
+	private JSpinner spinnerDistancia;
 
 	/**
 	 * Create the application.
@@ -97,11 +108,13 @@ public class Callejero {
 	 */
 	private void initialize() {
 		frame = new JFrame();
+		frame.setIconImage(Toolkit.getDefaultToolkit()
+				.getImage(Callejero.class.getResource("/presentacion/recursos/pngocean.com(2).png")));
 		frame.getContentPane().setBackground(Color.WHITE);
 		frame.setBackground(Color.WHITE);
 		frame.setResizable(false);
 		frame.setBounds(100, 100, 1107, 712);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[] { 514, 0, 0 };
 		gridBagLayout.rowHeights = new int[] { 683, 0 };
@@ -119,16 +132,17 @@ public class Callejero {
 		gbc_panel.gridy = 0;
 		frame.getContentPane().add(panel, gbc_panel);
 		GridBagLayout gbl_panel = new GridBagLayout();
-		gbl_panel.columnWidths = new int[] { 10, 245, 0, 0, 0, 0 };
+		gbl_panel.columnWidths = new int[] { 10, 245, 250, 0, 0, 0 };
 		gbl_panel.rowHeights = new int[] { 0, 0, 50, 50, 50, 50, 50, 50, 50, 0, 0, 113, 10, 0, 0, 52, 0 };
-		gbl_panel.columnWeights = new double[] { 0.0, 0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE };
+		gbl_panel.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		gbl_panel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
 				1.0, Double.MIN_VALUE };
 		panel.setLayout(gbl_panel);
 
-		lblCrearRuta = new JLabel("Crea tu propia ruta");
-		lblCrearRuta.setFont(new Font("Tahoma", Font.ITALIC, 13));
+		lblCrearRuta = new JLabel("Crear ruta");
+		lblCrearRuta.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 18));
 		GridBagConstraints gbc_lblCrearRuta = new GridBagConstraints();
+		gbc_lblCrearRuta.fill = GridBagConstraints.HORIZONTAL;
 		gbc_lblCrearRuta.insets = new Insets(0, 0, 5, 5);
 		gbc_lblCrearRuta.gridx = 1;
 		gbc_lblCrearRuta.gridy = 0;
@@ -162,6 +176,8 @@ public class Callejero {
 		panel.add(lblComplejidad, gbc_lblComplejidad);
 
 		slider_Complejidad = new JSlider();
+		slider_Complejidad.setMinimum(1);
+		slider_Complejidad.setMajorTickSpacing(1);
 		slider_Complejidad.setPaintTicks(true);
 		slider_Complejidad.setPaintLabels(true);
 		slider_Complejidad.setMinorTickSpacing(1);
@@ -208,13 +224,14 @@ public class Callejero {
 		gbc_lblDistancia.gridy = 5;
 		panel.add(lblDistancia, gbc_lblDistancia);
 
-		txtrDistancia = new JTextField();
-		GridBagConstraints gbc_txtrDistancia = new GridBagConstraints();
-		gbc_txtrDistancia.insets = new Insets(0, 0, 5, 5);
-		gbc_txtrDistancia.fill = GridBagConstraints.HORIZONTAL;
-		gbc_txtrDistancia.gridx = 2;
-		gbc_txtrDistancia.gridy = 5;
-		panel.add(txtrDistancia, gbc_txtrDistancia);
+		spinnerDistancia = new JSpinner();
+		spinnerDistancia.setModel(new SpinnerNumberModel(new Double(0), null, null, new Double(5)));
+		GridBagConstraints gbc_spinnerDistancia = new GridBagConstraints();
+		gbc_spinnerDistancia.fill = GridBagConstraints.HORIZONTAL;
+		gbc_spinnerDistancia.insets = new Insets(0, 0, 5, 5);
+		gbc_spinnerDistancia.gridx = 2;
+		gbc_spinnerDistancia.gridy = 5;
+		panel.add(spinnerDistancia, gbc_spinnerDistancia);
 
 		lblPrecio = new JLabel("Precio:");
 		lblPrecio.setFont(new Font("Tahoma", Font.PLAIN, 18));
@@ -225,14 +242,14 @@ public class Callejero {
 		gbc_lblPrecio.gridy = 6;
 		panel.add(lblPrecio, gbc_lblPrecio);
 
-		txtPrecio = new JTextField();
-		GridBagConstraints gbc_txtPrecio = new GridBagConstraints();
-		gbc_txtPrecio.insets = new Insets(0, 0, 5, 5);
-		gbc_txtPrecio.fill = GridBagConstraints.HORIZONTAL;
-		gbc_txtPrecio.gridx = 2;
-		gbc_txtPrecio.gridy = 6;
-		panel.add(txtPrecio, gbc_txtPrecio);
-		txtPrecio.setColumns(10);
+		spinnerPrecio = new JSpinner();
+		spinnerPrecio.setModel(new SpinnerNumberModel(new Double(0), null, null, new Double(1)));
+		GridBagConstraints gbc_spinnerPrecio = new GridBagConstraints();
+		gbc_spinnerPrecio.insets = new Insets(0, 0, 5, 5);
+		gbc_spinnerPrecio.fill = GridBagConstraints.HORIZONTAL;
+		gbc_spinnerPrecio.gridx = 2;
+		gbc_spinnerPrecio.gridy = 6;
+		panel.add(spinnerPrecio, gbc_spinnerPrecio);
 
 		lblTipoRuta = new JLabel("Tipo ruta:");
 		lblTipoRuta.setFont(new Font("Tahoma", Font.PLAIN, 18));
@@ -288,18 +305,22 @@ public class Callejero {
 		gbc_quijote.gridy = 10;
 		panel.add(quijote, gbc_quijote);
 
-		list = new JList();
-		list.setBorder(new LineBorder(new Color(0, 0, 0)));
-		GridBagConstraints gbc_list = new GridBagConstraints();
-		gbc_list.gridheight = 2;
-		gbc_list.insets = new Insets(0, 0, 5, 5);
-		gbc_list.fill = GridBagConstraints.BOTH;
-		gbc_list.gridx = 2;
-		gbc_list.gridy = 10;
-		panel.add(list, gbc_list);
-
 		btnCrearRuta = new JButton("Crear Ruta");
 		btnCrearRuta.addActionListener(new BtnCrearRutaActionListener());
+
+		scrollPane_1 = new JScrollPane();
+		GridBagConstraints gbc_scrollPane_1 = new GridBagConstraints();
+		gbc_scrollPane_1.gridheight = 2;
+		gbc_scrollPane_1.insets = new Insets(0, 0, 5, 5);
+		gbc_scrollPane_1.fill = GridBagConstraints.BOTH;
+		gbc_scrollPane_1.gridx = 2;
+		gbc_scrollPane_1.gridy = 10;
+		panel.add(scrollPane_1, gbc_scrollPane_1);
+
+		list = new JList();
+		scrollPane_1.setViewportView(list);
+		list.setBorder(new LineBorder(new Color(0, 0, 0)));
+		list.setCellRenderer(new JListCellRenderer());
 		btnCrearRuta.setForeground(Color.WHITE);
 		btnCrearRuta.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		btnCrearRuta.setBackground(new Color(45, 51, 74));
@@ -362,41 +383,60 @@ public class Callejero {
 		}
 	}
 
+	public boolean isCompleto() {
+		if (txtNombreruta.getText().equals("") || spinnerDistancia.getValue().equals(0) || slider.getValue() == 0
+				|| spinnerPrecio.getValue().equals(0)) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
 	private class BtnCrearRutaActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
+			try {
+				if (isCompleto()) {
+					ConstRuta ruta = new ConstRuta(txtNombreruta.getText(), Integer.toString(slider.getValue()),
+							spinnerDistancia.getValue().toString(), "", "", spinnerPrecio.getValue().toString(),
+							Integer.toString(slider_Complejidad.getValue()), cmbTipoRuta.getSelectedItem().toString(),
+							cmbTipoRuta.getSelectedItem().toString(), false);
 
-			ConstRuta ruta = new ConstRuta(txtNombreruta.getText(), Integer.toString(slider.getValue()),
-					txtrDistancia.getText(), "Holiwi", "Adiowi", txtPrecio.getText(), "261616", "34123",
-					cmbTipoRuta.getSelectedItem().toString());
+					rut.add(ruta);
 
-			rut.add(ruta);
+					DefaultListModel<String> mod = (DefaultListModel<String>) lista_rutas.getModel();
+					mod.addElement(txtNombreruta.getText());
+					lista_rutas = new JList<String>(mod);
 
-			DefaultListModel<String> mod = (DefaultListModel<String>) lista_rutas.getModel();
-			mod.addElement(txtNombreruta.getText());
-			lista_rutas = new JList<String>(mod);
+					frame.dispose();
+				} else {
+					JOptionPane.showMessageDialog(null,
+							"Por favor, asegúrese de que ha introducido todos los valores de forma correcta.");
 
-			frame.dispose();
-
+				}
+			} catch (Exception ex) {
+				JOptionPane.showMessageDialog(null,
+						"Por favor, asegúrese de que ha introducido todos los valores de forma correcta.");
+			}
 		}
 	}
 
 	private class BtnAadirParadaActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
 			paradas.add(new ConstParada(txtParadas.getText(), ""));
-			llenarModelo();
 
+			llenarModelo();
 		}
 	}
 
 	private void llenarModelo() {
-		for (int i = 0; i < modeloParadas.size(); i++) {
-			modeloParadas.remove(i);
-		}
+		DefaultListModel<String> modelo = new DefaultListModel<String>();
 		for (int i = 0; i < paradas.size(); i++) {
+			modelo.addElement(paradas.get(i).getNombreParada());
 			modeloParadas.add(i, paradas.get(i).getNombreParada());
 		}
-		list.setModel(modeloParadas);
-		txtNombreruta.setText("");
+		list.setModel(modelo);
+		list.revalidate();
+		txtParadas.setText("");
 	}
 
 	public class Imagen extends ObjetoGraf implements Serializable {
@@ -435,7 +475,6 @@ public class Callejero {
 
 		public void paint(Graphics g) {
 			super.paint(g);
-			System.out.println(objetosGraficos.size());
 			for (int i = 0; i < objetosGraficos.size(); i++) {
 				ObjetoGraf objg = objetosGraficos.get(i);
 				if (objg instanceof Imagen) {

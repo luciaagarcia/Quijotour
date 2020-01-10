@@ -9,7 +9,9 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Formatter;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -36,8 +38,12 @@ import com.toedter.calendar.JCalendar;
 import javax.swing.JTextField;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
+import java.awt.Toolkit;
 
 public class ReservarRuta extends JFrame {
 
@@ -63,31 +69,17 @@ public class ReservarRuta extends JFrame {
 	private JLabel lblHora;
 	private JComboBox comboBox;
 	private Date date = new Date();
-	private String dateFormatString = "dd/MM/yy";
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ReservarRuta frame = new ReservarRuta();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	private DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
+
 
 	/**
 	 * Create the frame.
 	 */
 	public ReservarRuta() {
-		setUndecorated(true);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setIconImage(Toolkit.getDefaultToolkit()
+				.getImage(ReservarRuta.class.getResource("/presentacion/recursos/pngocean.com(2).png")));
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBackground(new Color(45, 51, 74));
-		setResizable(false);
 		setBounds(100, 100, 547, 759);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(45, 51, 74));
@@ -185,8 +177,9 @@ public class ReservarRuta extends JFrame {
 		gbc_lblFecha.gridy = 1;
 		panel.add(lblFecha, gbc_lblFecha);
 
-
-		dateChooser = new JDateChooser(date, dateFormatString);
+		dateChooser = new JDateChooser();
+		dateChooser.setDateFormatString("dd/MM/yy");
+		dateChooser.getJCalendar().setMinSelectableDate(new Date());
 		GridBagConstraints gbc_dateChooser = new GridBagConstraints();
 		gbc_dateChooser.insets = new Insets(0, 0, 5, 5);
 		gbc_dateChooser.fill = GridBagConstraints.BOTH;
@@ -204,7 +197,7 @@ public class ReservarRuta extends JFrame {
 
 		comboBox = new JComboBox();
 		comboBox.setModel(new DefaultComboBoxModel(
-				new String[] { "", "6:00", "8:00", "10:00", "12:00", "16:30", "18:30", "20:30", "22:30" }));
+				new String[] { "6:00", "8:00", "10:00", "12:00", "16:30", "18:30", "20:30", "22:30" }));
 		GridBagConstraints gbc_comboBox = new GridBagConstraints();
 		gbc_comboBox.insets = new Insets(0, 0, 5, 5);
 		gbc_comboBox.fill = GridBagConstraints.HORIZONTAL;
@@ -239,11 +232,15 @@ public class ReservarRuta extends JFrame {
 
 	private class BtnConfirmarReservaActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
+			
+			try {
+				Date fecha = dateChooser.getDate();
+				String factual = dateFormat.format(fecha);
 			int resp = JOptionPane.showConfirmDialog(null,
 					"Está a punto de realizar la reserva: \n Ruta:" + lblNombreRuta.getText() + "\n Grupo turista: "
 							+ list_GrupoTurista.getSelectedValue().toString() + "\n Guia: "
-							+ list_Guia.getSelectedValue().toString() + "\n Fecha: " + dateChooser.getDate().toString()
-							+ "\n Hora: " + comboBox.getSelectedItem().toString(),
+							+ list_Guia.getSelectedValue().toString() + "\n Fecha: " + factual + "\n Hora: "
+							+ comboBox.getSelectedItem().toString(),
 					"Reservar", JOptionPane.YES_NO_OPTION);
 			if (resp == 0) {
 				Object[] reserva = new Object[] { lblNombreRuta.getText(),
@@ -253,7 +250,12 @@ public class ReservarRuta extends JFrame {
 				setVisible(false);
 				dispose();
 			}
+			}catch(Exception en){
+				JOptionPane.showMessageDialog(null, "Por favor, seleccione todos los campos");
+			}
+
 		}
+
 	}
 
 	public void setHistorial(Historial historial) {

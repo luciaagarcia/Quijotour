@@ -10,9 +10,10 @@ public class ConstRuta {
 	String complejidadRuta;
 	String comentarioRuta;
 	String tipoRuta;
+	boolean oferta;
 
 	public ConstRuta(String nombreRuta, String duracionRuta, String kmRuta, String nombreGuia, String idiomaRuta,
-			String precioRuta, String complejidadRuta, String comentarioRuta, String tipoRuta) {
+			String precioRuta, String complejidadRuta, String comentarioRuta, String tipoRuta, boolean oferta) {
 		super();
 		this.nombreRuta = nombreRuta;
 		this.duracionRuta = duracionRuta;
@@ -23,6 +24,15 @@ public class ConstRuta {
 		this.complejidadRuta = complejidadRuta;
 		this.comentarioRuta = comentarioRuta;
 		this.tipoRuta = tipoRuta;
+		this.oferta = oferta;
+	}
+
+	public boolean isOferta() {
+		return oferta;
+	}
+
+	public void setOferta(boolean oferta) {
+		this.oferta = oferta;
 	}
 
 	public String getNombreRuta() {

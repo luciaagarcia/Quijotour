@@ -191,6 +191,7 @@ public class Principal {
 		pnlMenu.add(btnGuias, gbc_btnGuias);
 
 		btnAjustes = new JButton("");
+		btnAjustes.addActionListener(new BtnAjustesActionListener());
 		btnAjustes.setContentAreaFilled(false);
 		btnAjustes.setBorderPainted(false);
 		btnAjustes.setOpaque(false);
@@ -204,6 +205,7 @@ public class Principal {
 		pnlMenu.add(btnAjustes, gbc_btnAjustes);
 
 		btnCerrarSesion = new JButton("");
+		btnCerrarSesion.addActionListener(new BtnCerrarSesionActionListener());
 		btnCerrarSesion.setOpaque(false);
 		btnCerrarSesion.setContentAreaFilled(false);
 		btnCerrarSesion.setBorderPainted(false);
@@ -330,6 +332,28 @@ public class Principal {
 			btnTuristas.setOpaque(false);
 			((CardLayout) pnlPrincipal.getLayout()).show(pnlPrincipal, "Historial");
 
+		}
+	}
+
+	private class BtnCerrarSesionActionListener implements ActionListener {
+		public void actionPerformed(ActionEvent arg0) {
+			btnRutas.setEnabled(true);
+			btnRutas.setOpaque(false);
+			btnGuias.setEnabled(true);
+			btnGuias.setOpaque(false);
+			btnHistorial.setEnabled(true);
+			btnHistorial.setOpaque(false);
+			btnTuristas.setEnabled(true);
+			btnTuristas.setOpaque(false);
+			JFrame login = new loginDef();
+			login.setVisible(true);
+			frame.dispose();
+		}
+	}
+
+	private class BtnAjustesActionListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			JOptionPane.showMessageDialog(null, "Este panel no está implementado.");
 		}
 	}
 }

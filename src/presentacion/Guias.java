@@ -40,6 +40,8 @@ import dominio.ConstHistorial;
 import persistencia.InfoCalendario;
 import persistencia.InfoGuias;
 import persistencia.InfoHistorial;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 
 public class Guias extends JPanel {
 	private JPanel pnlListaGuias;
@@ -54,7 +56,7 @@ public class Guias extends JPanel {
 	private JTextField txtNombre;
 	private JTextField txtCorreo;
 	private JFormattedTextField lblTelefono;
-	private JTextField txtSueldo;
+	private JSpinner txtSueldo;
 	private JButton btnCambiarFoto;
 	private JPanel panel_horario;
 	private JScrollPane scrollPane_1;
@@ -68,8 +70,8 @@ public class Guias extends JPanel {
 	SeleccionarImagen selim = new SeleccionarImagen();
 	ArrayList<ConstGuia> guias = infoguias.getGuias();
 	ArrayList<Object[][]> calen = InfoCalendario.getCalendario();
-	DefaultTableModel modeloCalendario = new DefaultTableModel();
-
+	DefaultListModel<String> modeloCalendarios = new DefaultListModel();
+	ArrayList<String> titulosList;
 	private JPanel panel;
 	private JPanel panel_1;
 	private JLabel lblCorreo_1;
@@ -78,6 +80,8 @@ public class Guias extends JPanel {
 	private JButton btnAceptarCambios;
 	private JButton btnCancelar;
 	private JLabel lblGuias;
+	private boolean modificar;
+	ImageIcon image;
 
 	/**
 	 * Create the panel.
@@ -109,7 +113,7 @@ public class Guias extends JPanel {
 		scrollPaneBotones.setViewportBorder(null);
 		scrollPaneBotones.setOpaque(false);
 		scrollPaneBotones.getVerticalScrollBar().setUnitIncrement(16);
-		
+
 		lblGuias = new JLabel("Guias");
 		lblGuias.setFont(new Font("SansSerif", Font.BOLD | Font.ITALIC, 20));
 		GridBagConstraints gbc_lblGuias = new GridBagConstraints();
@@ -362,8 +366,8 @@ public class Guias extends JPanel {
 		gbc_lblSueldo.gridy = 5;
 		panel_informacion.add(lblSueldo, gbc_lblSueldo);
 
-		txtSueldo = new JTextField("");
-		txtSueldo.setEditable(false);
+		txtSueldo = new JSpinner();
+		txtSueldo.setModel(new SpinnerNumberModel(new Double(0), null, null, new Double(1)));
 		txtSueldo.setToolTipText("Sueldo");
 		GridBagConstraints gbc_txtSueldo = new GridBagConstraints();
 		gbc_txtSueldo.fill = GridBagConstraints.HORIZONTAL;
@@ -415,6 +419,9 @@ public class Guias extends JPanel {
 		btnModificarCalendario.setFont(new Font("Verdana", Font.BOLD, 17));
 
 		btnCancelar = new JButton("Cancelar");
+		btnCancelar.setFont(new Font("Verdana", Font.BOLD, 17));
+		btnCancelar.setForeground(Color.WHITE);
+		btnCancelar.setBackground(new Color(45, 51, 74));
 		btnCancelar.setVisible(false);
 		GridBagConstraints gbc_btnCancelar = new GridBagConstraints();
 		gbc_btnCancelar.fill = GridBagConstraints.BOTH;
@@ -424,6 +431,9 @@ public class Guias extends JPanel {
 		panel_informacion.add(btnCancelar, gbc_btnCancelar);
 
 		btnAceptarCambios = new JButton("Aceptar cambios");
+		btnAceptarCambios.setFont(new Font("Verdana", Font.BOLD, 17));
+		btnAceptarCambios.setForeground(Color.WHITE);
+		btnAceptarCambios.setBackground(new Color(45, 51, 74));
 		btnAceptarCambios.addActionListener(new BtnAceptarCambiosActionListener());
 		btnAceptarCambios.setVisible(false);
 		GridBagConstraints gbc_btnAceptarCambios = new GridBagConstraints();
@@ -439,7 +449,7 @@ public class Guias extends JPanel {
 	}
 
 	private void construirTabla() {
-		ArrayList<String> titulosList = new ArrayList<String>();
+		titulosList = new ArrayList<String>();
 		titulosList.add("Nombre");
 		titulosList.add("Grupo");
 		titulosList.add("Guia");
@@ -473,7 +483,7 @@ public class Guias extends JPanel {
 		public void actionPerformed(ActionEvent e) {
 			Image img = selim.SelectImage();
 			Image newImg = img.getScaledInstance(lblFoto.getWidth(), lblFoto.getHeight(), Image.SCALE_SMOOTH);
-			ImageIcon image = new ImageIcon(newImg);
+			image = new ImageIcon(newImg);
 
 			lblFoto.setIcon(image);
 
@@ -484,32 +494,23 @@ public class Guias extends JPanel {
 		@Override
 		public void mousePressed(MouseEvent e) {
 			int guiaSeleccionado = lista_guias.getSelectedIndex();
+
 			txtNombre.setText(guias.get(guiaSeleccionado).getNombre());
 			txtCorreo.setText(guias.get(guiaSeleccionado).getCorreo());
 			lblTelefono.setText(guias.get(guiaSeleccionado).getTelefono());
-			txtSueldo.setText(guias.get(guiaSeleccionado).getSueldo() + "€");
-			table.setModel(guias.get(guiaSeleccionado).getCalendario());
-
-			TableColumnModel columnModel = table.getColumnModel();
-
-			columnModel.getColumn(0).setPreferredWidth(95);
-			columnModel.getColumn(1).setPreferredWidth(200);
-			columnModel.getColumn(2).setPreferredWidth(200);
-			columnModel.getColumn(3).setPreferredWidth(200);
-			columnModel.getColumn(4).setPreferredWidth(200);
-			columnModel.getColumn(5).setPreferredWidth(200);
-			columnModel.getColumn(6).setPreferredWidth(200);
-			columnModel.getColumn(7).setPreferredWidth(200);
+			txtSueldo.setValue(Double.parseDouble(guias.get(guiaSeleccionado).getSueldo()));
 			if (guias.get(guiaSeleccionado).getFoto() != "") {
-				ImageIcon guia = new ImageIcon(
-						new ImageIcon(Guias.class.getResource(guias.get(guiaSeleccionado).getFoto())).getImage()
-								.getScaledInstance(lblFoto.getWidth(), lblFoto.getHeight(), Image.SCALE_DEFAULT));
+				ImageIcon grande = new ImageIcon(Guias.class.getResource(guias.get(guiaSeleccionado).getFoto()));
+				ImageIcon guia = new ImageIcon(grande.getImage().getScaledInstance(200, 200, Image.SCALE_DEFAULT));
 
 				lblFoto.setIcon(guia);
+			} else {
+				ImageIcon imageIcon = new ImageIcon(
+						new ImageIcon(Guias.class.getResource("/presentacion/recursos/pngocean.com(2).png")).getImage()
+								.getScaledInstance(200, 200, Image.SCALE_DEFAULT));
+				lblFoto.setIcon(imageIcon);
 			}
-			btnModificarCalendario.setVisible(true);
-			btnCambiarFoto.setVisible(true);
-			btnModificarDatos.setVisible(true);
+			colunmModel(guiaSeleccionado);
 		}
 	}
 
@@ -519,7 +520,6 @@ public class Guias extends JPanel {
 
 		txtCorreo.setEditable(false);
 		txtNombre.setEditable(false);
-		txtSueldo.setEditable(false);
 		lblTelefono.setEditable(false);
 	}
 
@@ -527,40 +527,81 @@ public class Guias extends JPanel {
 		btnAceptarCambios.setVisible(true);
 		btnCancelar.setVisible(true);
 		btnModificarCalendario.setVisible(false);
-		btnCambiarFoto.setVisible(false);
 		btnModificarDatos.setVisible(false);
 
 		txtCorreo.setEditable(true);
 		txtNombre.setEditable(true);
-		txtSueldo.setEditable(true);
+		txtSueldo.setEnabled(true);
 		lblTelefono.setEditable(true);
 	}
 
 	private class BtnModificarDatosActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
-
+			btnAadirGuia.setEnabled(false);
+			btnEliminarGuia.setEnabled(false);
 			activarBotones();
+			modificar = true;
+
+		}
+	}
+
+	private boolean isCompleto() {
+		if (txtNombre.getText().equals("") || txtCorreo.getText().equals("") || txtSueldo.getValue().equals("")) {
+			return false;
+		} else {
+			return true;
 		}
 	}
 
 	private class BtnAceptarCambiosActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			int guiaSeleccionado = lista_guias.getSelectedIndex();
-			int resp = JOptionPane.showConfirmDialog(null,
-					"¿Seguro que desea modificar al guia " + lista_guias.getSelectedValue().toString() + "?",
-					"Modificar guia", JOptionPane.YES_NO_OPTION);
-			if (resp == 0) {
-				guias.get(guiaSeleccionado).setNombre(txtNombre.toString());
-				guias.get(guiaSeleccionado).setCorreo(txtCorreo.toString());
-				guias.get(guiaSeleccionado).setTelefono(lblTelefono.toString());
-				guias.get(guiaSeleccionado).setSueldo(txtSueldo.toString());
+			if (isCompleto()) {
+				if (modificar) {
+					int guiaSeleccionado = lista_guias.getSelectedIndex();
+					int resp = JOptionPane.showConfirmDialog(null,
+							"¿Seguro que desea modificar al guia " + lista_guias.getSelectedValue().toString() + "?",
+							"Modificar guia", JOptionPane.YES_NO_OPTION);
+					if (resp == 0) {
+						guias.get(guiaSeleccionado).setNombre(txtNombre.getText());
+						guias.get(guiaSeleccionado).setCorreo(txtCorreo.getText());
+						guias.get(guiaSeleccionado).setTelefono(lblTelefono.getText());
+						guias.get(guiaSeleccionado).setSueldo(txtSueldo.getValue().toString());
+						guias.get(guiaSeleccionado).setFoto(lblFoto.getIcon().toString());
+
+					}
+				} else {
+					try {
+						guias.add(new ConstGuia(txtNombre.getText(), txtCorreo.getText(), lblTelefono.getText(),
+								txtSueldo.getValue().toString(), image.getImage().toString()));
+						llenarModelo();
+					} catch (Exception ex) {
+						guias.add(new ConstGuia(txtNombre.getText(), txtCorreo.getText(), lblTelefono.getText(),
+								txtSueldo.getValue().toString(), ""));
+						llenarModelo();
+					}
+				}
 				ocultarBotones();
+
+			} else {
+				JOptionPane.showMessageDialog(null, "Por favor, rellene todos los datos");
 			}
 		}
 	}
 
+	private void llenarModelo() {
+		DefaultListModel<String> mod = new DefaultListModel<String>();
+		for (int i = 0; i < guias.size(); i++) {
+			mod.addElement(guias.get(i).getNombre());
+			modeloCalendarios.add(i, guias.get(i).getNombre());
+		}
+		lista_guias.setModel(mod);
+		lista_guias.revalidate();
+
+	}
+
 	private class BtnModificarCalendarioActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
+
 			int guiaSeleccionado = lista_guias.getSelectedIndex();
 			int resp = JOptionPane.showConfirmDialog(
 					null, "¿Seguro que desea modificar el calendario al guia "
@@ -569,6 +610,7 @@ public class Guias extends JPanel {
 			if (resp == 0) {
 				guias.get(guiaSeleccionado).setCalendario(table.getModel());
 			}
+
 		}
 	}
 
@@ -582,28 +624,45 @@ public class Guias extends JPanel {
 				if (resp == 0) {
 
 					guias.remove(guiaSeleccionado);
-					((DefaultListModel) lista_guias.getModel()).remove(guiaSeleccionado);
+					((DefaultListModel<String>) lista_guias.getModel()).remove(guiaSeleccionado);
 					pnlListaGuias.repaint();
 					pnlListaGuias.revalidate();
 					limpiarSeleccion();
+
 				}
-			} catch (java.lang.NullPointerException ex) {
+			} catch (
+
+			java.lang.NullPointerException ex) {
 				JOptionPane.showMessageDialog(null, "Por favor, seleccione una ruta a eliminar");
+
 			}
-
 		}
-
 	}
+
 	private class BtnAadirGuiaActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
+			limpiarSeleccion();
+			lblTelefono.setText("");
+			modificar = false;
+			activarBotones();
+			btnModificarCalendario.setVisible(false);
+			btnModificarDatos.setVisible(false);
 		}
 	}
 
 	private void limpiarSeleccion() {
 		txtCorreo.setText("");
 		txtNombre.setText("");
-		txtSueldo.setText("");
 		lblTelefono.setText("");
+		DefaultTableModel tb = (DefaultTableModel) table.getModel();
+		DefaultTableModel th = (DefaultTableModel) table_historial.getModel();
+		int a = table.getRowCount() - 1;
+		for (int i = a; i >= 0; i--) {
+			tb.removeRow(tb.getRowCount() - 1);
+		}
+		for (int i = table_historial.getRowCount() - 1; i >= 0; i--) {
+			th.removeRow(th.getRowCount() - 1);
+		}
 	}
 
 	private void construirTabla(String[] titulos, Object[][] data) {
@@ -622,6 +681,57 @@ public class Guias extends JPanel {
 		JTableHeader jtableHeader = table_historial.getTableHeader();
 		jtableHeader.setDefaultRenderer(new EncabezadoCalendario());
 		table_historial.setTableHeader(jtableHeader);
+
+	}
+
+	private void colunmModel(int guiaSeleccionado) {
+		table.setModel(guias.get(guiaSeleccionado).getCalendario());
+
+		TableColumnModel columnModel = table.getColumnModel();
+
+		columnModel.getColumn(0).setPreferredWidth(95);
+		columnModel.getColumn(1).setPreferredWidth(200);
+		columnModel.getColumn(2).setPreferredWidth(200);
+		columnModel.getColumn(3).setPreferredWidth(200);
+		columnModel.getColumn(4).setPreferredWidth(200);
+		columnModel.getColumn(5).setPreferredWidth(200);
+		columnModel.getColumn(6).setPreferredWidth(200);
+		columnModel.getColumn(7).setPreferredWidth(200);
+
+		btnModificarCalendario.setVisible(true);
+		btnCambiarFoto.setVisible(true);
+		btnModificarDatos.setVisible(true);
+		DefaultTableModel th = (DefaultTableModel) table_historial.getModel();
+		InfoHistorial infohistorial = new InfoHistorial();
+		ArrayList<ConstHistorial> historial = infohistorial.getHistorial();
+
+		String informacion[][] = new String[historial.size()][titulosList.size()];
+		int index = 1;
+		for (int i = 0; i < historial.size(); i++) {
+			if (historial.get(i).getGuia().equals(guias.get(guiaSeleccionado).getNombre())) {
+				informacion[index - 1][0] = historial.get(i).getNombre();
+				informacion[index - 1][1] = historial.get(i).getGrupo();
+				informacion[index - 1][2] = historial.get(i).getGuia();
+				informacion[index - 1][3] = historial.get(i).getFecha();
+				index++;
+			}
+
+		}
+		if (index > 1) {
+			index--;
+		}
+		String bueno[][] = new String[index][titulosList.size()];
+		bueno[0] = new String[] { "", "", "", "" };
+		for (int i = 0; i < bueno.length; i++) {
+			bueno[i] = informacion[i];
+
+		}
+		String titulos[] = new String[titulosList.size()];
+		for (int i = 0; i < titulos.length; i++) {
+			titulos[i] = titulosList.get(i);
+		}
+		ModeloTabla modeloTablaHistorial = new ModeloTabla(bueno, titulos);
+		table_historial.setModel(modeloTablaHistorial);
 
 	}
 }

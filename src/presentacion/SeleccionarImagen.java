@@ -22,7 +22,8 @@ public class SeleccionarImagen {
 			String path = selectedFile.getAbsolutePath();
 			ImageIcon MyImage = new ImageIcon(path);
 			img = MyImage.getImage();
-			
+			MyImage.setDescription(path);
+
 		} else if (result == JFileChooser.CANCEL_OPTION) {
 			System.out.println("No File Select");
 		}

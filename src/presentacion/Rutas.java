@@ -13,12 +13,9 @@ import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.Random;
 
-import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
@@ -26,7 +23,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -37,24 +33,25 @@ import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.JViewport;
+import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
-import javax.swing.border.AbstractBorder;
-import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.event.MouseInputAdapter;
 
 import dominio.ConstParada;
 import dominio.ConstRuta;
 import persistencia.InfoParadas;
 import persistencia.InfoRutas;
-import java.awt.event.HierarchyListener;
-import java.awt.event.HierarchyEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.ListSelectionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import javax.swing.JScrollBar;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.JCheckBox;
 
 public class Rutas extends JPanel {
 	private JButton btnAadirruta;
@@ -77,7 +74,7 @@ public class Rutas extends JPanel {
 	private JLabel lblLblmapa;
 	private JLabel lblTipo;
 
-	private JList lista_rutas;
+	private JList<String> lista_rutas;
 	private JList listParadas;
 
 	private JPanel pnlBotones;
@@ -92,10 +89,6 @@ public class Rutas extends JPanel {
 	private JScrollPane scrollPaneBtns;
 	private JScrollPane scrollPaneComentarios;
 	private JSlider sliderComplejidad;
-
-	private JTextField txtDuracin;
-	private JTextField txtDistancia;
-	private JTextField txtPrecio;
 	private JTextPane txtComentariosAdicionales;
 	Callejero callejero;
 
@@ -109,8 +102,12 @@ public class Rutas extends JPanel {
 	private JPanel pnl_derecha;
 	private JButton btnConfirmarCambios;
 	private JButton btnCancelar;
-	private JLabel lblOferta;
 	private JLabel lblRutas;
+	private JLabel lblFallos;
+	private JSlider sliderDuracion;
+	private JSpinner spinnerDistancia;
+	private JSpinner spinnerPrecio;
+	private JCheckBox chckbxOferta;
 
 	/**
 	 * Create the panel.
@@ -201,9 +198,8 @@ public class Rutas extends JPanel {
 		gbl_pnl_buttonRutas.columnWeights = new double[] { 0.0, Double.MIN_VALUE };
 		gbl_pnl_buttonRutas.rowWeights = new double[] { 1.0, Double.MIN_VALUE };
 		pnl_buttonRutas.setLayout(gbl_pnl_buttonRutas);
-		lista_rutas = new JList();
+		lista_rutas = new JList(modeloRutas);
 		lista_rutas.addListSelectionListener(new Lista_rutasListSelectionListener());
-		lista_rutas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		GridBagConstraints gbc_lista_rutas = new GridBagConstraints();
 		gbc_lista_rutas.anchor = GridBagConstraints.WEST;
@@ -211,8 +207,9 @@ public class Rutas extends JPanel {
 		gbc_lista_rutas.gridx = 0;
 		gbc_lista_rutas.gridy = 0;
 		pnl_buttonRutas.add(lista_rutas, gbc_lista_rutas);
-		lista_rutas.setModel(modeloRutas);
-		lista_rutas.setCellRenderer(new JListCellRenderer());
+		JListCellRenderer cellrender = new JListCellRenderer();
+		cellrender.setRuta(rutas);
+		lista_rutas.setCellRenderer(cellrender);
 
 		pnlGeneral = new JPanel();
 
@@ -223,7 +220,7 @@ public class Rutas extends JPanel {
 		gbl_pnlGeneral.rowHeights = new int[] { 40, 20, 50, 0, 24, 50, 50, 50, 50, 50, 50, 50, 0, 0, 50, 400, 0, 20 };
 		gbl_pnlGeneral.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.0, 0.0,
 				Double.MIN_VALUE };
-		gbl_pnlGeneral.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+		gbl_pnlGeneral.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
 				0.0, 1.0, 20.0, Double.MIN_VALUE };
 		pnlGeneral.setLayout(gbl_pnlGeneral);
 
@@ -254,6 +251,7 @@ public class Rutas extends JPanel {
 		pnlGeneral.add(btnReservar, gbc_btnReservar);
 
 		btnEnviar = new JButton("Enviar");
+		btnEnviar.addActionListener(new BtnEnviarActionListener());
 		btnEnviar.setFont(new Font("Verdana", Font.BOLD, 17));
 		btnEnviar.setIcon(new ImageIcon(Rutas.class.getResource("/res/icons8-mensaje-de-promoción-24.png")));
 		GridBagConstraints gbc_btnEnviar = new GridBagConstraints();
@@ -297,44 +295,39 @@ public class Rutas extends JPanel {
 		gbc_listParadas.gridy = 6;
 		pnlGeneral.add(listParadas, gbc_listParadas);
 
-		lblDuracinTotal = new JLabel("Duración total:");
+		lblDuracinTotal = new JLabel("Duración total (horas):");
 		GridBagConstraints gbc_lblDuracinTotal = new GridBagConstraints();
 		gbc_lblDuracinTotal.anchor = GridBagConstraints.EAST;
 		gbc_lblDuracinTotal.insets = new Insets(0, 0, 5, 5);
 		gbc_lblDuracinTotal.gridx = 5;
 		gbc_lblDuracinTotal.gridy = 6;
 		pnlGeneral.add(lblDuracinTotal, gbc_lblDuracinTotal);
-
-		txtDuracin = new JTextField();
-		GridBagConstraints gbc_txtDuracin = new GridBagConstraints();
-		gbc_txtDuracin.gridwidth = 3;
-		gbc_txtDuracin.insets = new Insets(0, 0, 5, 5);
-		gbc_txtDuracin.fill = GridBagConstraints.HORIZONTAL;
-		gbc_txtDuracin.gridx = 7;
-		gbc_txtDuracin.gridy = 6;
-		pnlGeneral.add(txtDuracin, gbc_txtDuracin);
-		txtDuracin.setColumns(10);
 		ImageIcon lugar = new ImageIcon(new ImageIcon(Guias.class.getResource(
 				"/presentacion/recursos/pueblos_de_espana_finalistas_capital_del_turismo_rural_2018_877093971_940x627.jpg"))
 						.getImage().getScaledInstance(700, 400, Image.SCALE_DEFAULT));
 
-		lblDistancia = new JLabel("Distancia:");
+		sliderDuracion = new JSlider();
+		sliderDuracion.setMinimum(30);
+		sliderDuracion.setPaintLabels(true);
+		sliderDuracion.setPaintTicks(true);
+		sliderDuracion.setMajorTickSpacing(60);
+		sliderDuracion.setMinorTickSpacing(30);
+		sliderDuracion.setMaximum(360);
+		GridBagConstraints gbc_sliderDuracion = new GridBagConstraints();
+		gbc_sliderDuracion.fill = GridBagConstraints.HORIZONTAL;
+		gbc_sliderDuracion.gridwidth = 3;
+		gbc_sliderDuracion.insets = new Insets(0, 0, 5, 5);
+		gbc_sliderDuracion.gridx = 7;
+		gbc_sliderDuracion.gridy = 6;
+		pnlGeneral.add(sliderDuracion, gbc_sliderDuracion);
+
+		lblDistancia = new JLabel("Distancia (km):");
 		GridBagConstraints gbc_lblDistancia = new GridBagConstraints();
 		gbc_lblDistancia.anchor = GridBagConstraints.EAST;
 		gbc_lblDistancia.insets = new Insets(0, 0, 5, 5);
 		gbc_lblDistancia.gridx = 5;
 		gbc_lblDistancia.gridy = 7;
 		pnlGeneral.add(lblDistancia, gbc_lblDistancia);
-
-		txtDistancia = new JTextField();
-		GridBagConstraints gbc_txtDistancia = new GridBagConstraints();
-		gbc_txtDistancia.gridwidth = 3;
-		gbc_txtDistancia.insets = new Insets(0, 0, 5, 5);
-		gbc_txtDistancia.fill = GridBagConstraints.HORIZONTAL;
-		gbc_txtDistancia.gridx = 7;
-		gbc_txtDistancia.gridy = 7;
-		pnlGeneral.add(txtDistancia, gbc_txtDistancia);
-		txtDistancia.setColumns(10);
 
 		pnl_derecha = new JPanel();
 		pnl_derecha.setOpaque(false);
@@ -363,6 +356,16 @@ public class Rutas extends JPanel {
 
 		lblFotos.setIcon(lugar);
 
+		spinnerDistancia = new JSpinner();
+		spinnerDistancia.setModel(new SpinnerNumberModel(new Double(0), null, null, new Double(5)));
+		GridBagConstraints gbc_spinnerDistancia = new GridBagConstraints();
+		gbc_spinnerDistancia.fill = GridBagConstraints.HORIZONTAL;
+		gbc_spinnerDistancia.gridwidth = 3;
+		gbc_spinnerDistancia.insets = new Insets(0, 0, 5, 5);
+		gbc_spinnerDistancia.gridx = 7;
+		gbc_spinnerDistancia.gridy = 7;
+		pnlGeneral.add(spinnerDistancia, gbc_spinnerDistancia);
+
 		lblGuiasDisponibles = new JLabel("Guias disponibles:");
 		GridBagConstraints gbc_lblGuiasDisponibles = new GridBagConstraints();
 		gbc_lblGuiasDisponibles.anchor = GridBagConstraints.EAST;
@@ -371,7 +374,7 @@ public class Rutas extends JPanel {
 		gbc_lblGuiasDisponibles.gridy = 8;
 		pnlGeneral.add(lblGuiasDisponibles, gbc_lblGuiasDisponibles);
 
-		cbGuiasDisponibles = new JComboBox();
+		cbGuiasDisponibles = new JComboBox<Object>();
 		cbGuiasDisponibles
 				.setModel(new DefaultComboBoxModel(new String[] { "", "Lucia A.", "Sergio G.", "Manolito R." }));
 		GridBagConstraints gbc_cbGuiasDisponibles = new GridBagConstraints();
@@ -430,25 +433,24 @@ public class Rutas extends JPanel {
 		gbc_lblPrecio.gridy = 10;
 		pnlGeneral.add(lblPrecio, gbc_lblPrecio);
 
-		txtPrecio = new JTextField();
-		txtPrecio.setText("Precio");
-		GridBagConstraints gbc_txtPrecio = new GridBagConstraints();
-		gbc_txtPrecio.gridwidth = 3;
-		gbc_txtPrecio.insets = new Insets(0, 0, 5, 5);
-		gbc_txtPrecio.fill = GridBagConstraints.HORIZONTAL;
-		gbc_txtPrecio.gridx = 7;
-		gbc_txtPrecio.gridy = 10;
-		pnlGeneral.add(txtPrecio, gbc_txtPrecio);
-		txtPrecio.setColumns(10);
+		spinnerPrecio = new JSpinner();
+		spinnerPrecio.setModel(new SpinnerNumberModel(new Double(0), null, null, new Double(1)));
+		GridBagConstraints gbc_spinnerPrecio = new GridBagConstraints();
+		gbc_spinnerPrecio.fill = GridBagConstraints.HORIZONTAL;
+		gbc_spinnerPrecio.gridwidth = 3;
+		gbc_spinnerPrecio.insets = new Insets(0, 0, 5, 5);
+		gbc_spinnerPrecio.gridx = 7;
+		gbc_spinnerPrecio.gridy = 10;
+		pnlGeneral.add(spinnerPrecio, gbc_spinnerPrecio);
 
-		lblOferta = new JLabel("");
-		lblOferta.setIcon(new ImageIcon(Rutas.class.getResource("/res/icons8-descuento-50.png")));
-		GridBagConstraints gbc_lblOferta = new GridBagConstraints();
-		gbc_lblOferta.anchor = GridBagConstraints.WEST;
-		gbc_lblOferta.insets = new Insets(0, 0, 5, 5);
-		gbc_lblOferta.gridx = 10;
-		gbc_lblOferta.gridy = 10;
-		pnlGeneral.add(lblOferta, gbc_lblOferta);
+		chckbxOferta = new JCheckBox("Oferta");
+		chckbxOferta.setVisible(false);
+		GridBagConstraints gbc_chckbxOferta = new GridBagConstraints();
+		gbc_chckbxOferta.anchor = GridBagConstraints.WEST;
+		gbc_chckbxOferta.insets = new Insets(0, 0, 5, 5);
+		gbc_chckbxOferta.gridx = 10;
+		gbc_chckbxOferta.gridy = 10;
+		pnlGeneral.add(chckbxOferta, gbc_chckbxOferta);
 
 		lblComplejidad = new JLabel("Complejidad:");
 		GridBagConstraints gbc_lblComplejidad = new GridBagConstraints();
@@ -511,6 +513,14 @@ public class Rutas extends JPanel {
 		btnConfirmarCambios.setBackground(new Color(45, 51, 74));
 		btnConfirmarCambios.setForeground(Color.WHITE);
 
+		lblFallos = new JLabel("");
+		GridBagConstraints gbc_lblFallos = new GridBagConstraints();
+		gbc_lblFallos.gridwidth = 5;
+		gbc_lblFallos.insets = new Insets(0, 0, 5, 5);
+		gbc_lblFallos.gridx = 5;
+		gbc_lblFallos.gridy = 14;
+		pnlGeneral.add(lblFallos, gbc_lblFallos);
+
 		txtComentariosAdicionales = new JTextPane();
 		txtComentariosAdicionales.setBorder(
 				new TitledBorder(null, "Comentarios adicionales", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -535,7 +545,7 @@ public class Rutas extends JPanel {
 		scrollPaneComentarios.setViewportView(pnlMapa);
 
 		lblLblmapa = new JLabel("");
-		lblLblmapa.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		lblLblmapa.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
 		lblLblmapa.setIcon(new ImageIcon(Rutas.class.getResource("/presentacion/recursos/Callejero-de-Madrid.jpeg")));
 		pnlMapa.add(lblLblmapa);
 		btnReservar.setBackground(new Color(45, 51, 74));
@@ -562,15 +572,13 @@ public class Rutas extends JPanel {
 		lblNombreRuta.setEditable(false);
 		sliderComplejidad.setEnabled(false);
 		txtComentariosAdicionales.setEditable(false);
-		txtDistancia.setEditable(false);
 		cbGuiasDisponibles.setEnabled(false);
 		cbTipoRuta.setEditable(false);
 		rdbtnEspaol.setEnabled(false);
 		rdbtnIngls.setEnabled(false);
 		rdbtnOtro.setEnabled(false);
-		txtDistancia.setEditable(false);
-		txtDuracin.setEditable(false);
 		cbTipoRuta.setEnabled(false);
+		chckbxOferta.setVisible(false);
 	}
 
 	public class Mover extends MouseInputAdapter {
@@ -640,11 +648,11 @@ public class Rutas extends JPanel {
 			lblNombreRuta.setText("");
 			sliderComplejidad.setValue(5);
 			txtComentariosAdicionales.setText("");
-			txtDistancia.setText("");
-			txtPrecio.setText("");
+			spinnerDistancia.setValue(0);
+			spinnerPrecio.setValue(0);
 			cbGuiasDisponibles.setSelectedItem("");
 			cbTipoRuta.setSelectedItem("");
-			txtDuracin.setText("");
+			sliderDuracion.setValue(0);
 
 			callejero = new Callejero();
 			callejero.constRutas(rutas, lista_rutas);
@@ -692,14 +700,15 @@ public class Rutas extends JPanel {
 		public void valueChanged(ListSelectionEvent e) {
 			int rutaSeleccionada = lista_rutas.getSelectedIndex();
 			if (rutaSeleccionada > -1) {
+
 				lblNombreRuta.setText(rutas.get(rutaSeleccionada).getNombreRuta().toString());
 				sliderComplejidad.setValue(Integer.valueOf(rutas.get(rutaSeleccionada).getComplejidadRuta()));
 				txtComentariosAdicionales.setText(rutas.get(rutaSeleccionada).getComentarioRuta().toString());
-				txtDistancia.setText(rutas.get(rutaSeleccionada).getKmRuta().toString() + " km");
-				txtPrecio.setText(rutas.get(rutaSeleccionada).getPrecioRuta().toString() + " € ");
+				spinnerDistancia.setValue(Integer.valueOf(rutas.get(rutaSeleccionada).getKmRuta()));
+				spinnerPrecio.setValue(Integer.valueOf(rutas.get(rutaSeleccionada).getPrecioRuta()));
 				cbGuiasDisponibles.setSelectedItem(rutas.get(rutaSeleccionada).getNombreGuia().toString());
 				cbTipoRuta.setSelectedItem(rutas.get(rutaSeleccionada).getTipoRuta().toString());
-				txtDuracin.setText(rutas.get(rutaSeleccionada).getDuracionRuta().toString());
+				sliderDuracion.setValue(Integer.valueOf((rutas.get(rutaSeleccionada).getDuracionRuta())));
 				SeleccionarRadioButton(rutaSeleccionada);
 
 				modeloParadas.clear();
@@ -712,6 +721,7 @@ public class Rutas extends JPanel {
 				btnReservar.setVisible(true);
 				btnModificar.setVisible(true);
 				btnEnviar.setVisible(true);
+
 			}
 		}
 	}
@@ -723,15 +733,15 @@ public class Rutas extends JPanel {
 			lblNombreRuta.setEditable(true);
 			sliderComplejidad.setEnabled(true);
 			txtComentariosAdicionales.setEditable(true);
-			txtDistancia.setEditable(true);
+			spinnerDistancia.setEnabled(true);
 			cbGuiasDisponibles.setEnabled(true);
 			cbTipoRuta.setEditable(true);
 			rdbtnEspaol.setEnabled(true);
 			rdbtnIngls.setEnabled(true);
 			rdbtnOtro.setEnabled(true);
-			txtDistancia.setEditable(true);
-			txtDuracin.setEditable(true);
+			sliderComplejidad.setEnabled(true);
 			cbTipoRuta.setEnabled(true);
+			chckbxOferta.setVisible(true);
 
 		}
 	}
@@ -743,12 +753,13 @@ public class Rutas extends JPanel {
 					"¿Desea modificar la ruta " + lista_rutas.getSelectedValue().toString() + "?", "Modificar ruta",
 					JOptionPane.YES_NO_OPTION);
 			if (resp == 0) {
-				rutas.get(rutaSeleccionada).setNombreRuta(lblNombreRuta.toString());
-				rutas.get(rutaSeleccionada).setComplejidadRuta(sliderComplejidad.toString());
-				rutas.get(rutaSeleccionada).setComentarioRuta(txtComentariosAdicionales.toString());
-				rutas.get(rutaSeleccionada).setKmRuta(txtDistancia.toString());
-				rutas.get(rutaSeleccionada).setPrecioRuta(txtPrecio.toString());
+				rutas.get(rutaSeleccionada).setNombreRuta(lblNombreRuta.getText().toString());
+				rutas.get(rutaSeleccionada).setComplejidadRuta(Integer.toString(sliderComplejidad.getValue()));
+				rutas.get(rutaSeleccionada).setComentarioRuta(txtComentariosAdicionales.getText().toString());
+				rutas.get(rutaSeleccionada).setKmRuta(spinnerDistancia.getValue().toString());
+				rutas.get(rutaSeleccionada).setPrecioRuta(spinnerPrecio.getValue().toString());
 				rutas.get(rutaSeleccionada).setTipoRuta(cbTipoRuta.getItemAt(rutaSeleccionada).toString());
+				rutas.get(rutaSeleccionada).setOferta(chckbxOferta.isSelected());
 				desactivar();
 			}
 
@@ -773,18 +784,23 @@ public class Rutas extends JPanel {
 		}
 	}
 
+	private class BtnEnviarActionListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			JOptionPane.showMessageDialog(null, "Este panel no está implementado.");
+		}
+	}
+
 	private void limpiarSeleccion() {
 		lblNombreRuta.setText("");
 		sliderComplejidad.setValue(5);
+		sliderDuracion.setValue(5);
 		txtComentariosAdicionales.setText("");
-		txtDistancia.setText("");
-		txtPrecio.setText("");
 		cbGuiasDisponibles.setSelectedItem("");
 		cbTipoRuta.setSelectedItem("");
-		txtDuracin.setText("");
 		lista_rutas.setSelectedIndex(-1);
 		listParadas.setSelectedIndex(-1);
 		modeloParadas.clear();
+		chckbxOferta.setVisible(false);
 		lblFotos.setIcon(null);
 	}
 

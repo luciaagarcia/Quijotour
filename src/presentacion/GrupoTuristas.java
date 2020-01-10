@@ -491,6 +491,7 @@ public class GrupoTuristas extends JPanel {
 			try {
 				int resp;
 				if (añadir) {
+					
 					resp = JOptionPane.showConfirmDialog(null, "¿Desea añadir este grupo de turistas al sistema?",
 							"Añadir grupo", JOptionPane.YES_NO_OPTION);
 					if (resp == 0) {

@@ -55,6 +55,7 @@ public class GestionCeldas extends DefaultTableCellRenderer {
 			this.setFont(normal);
 			return this;
 		}
+		
 
 		return this;
 	}
